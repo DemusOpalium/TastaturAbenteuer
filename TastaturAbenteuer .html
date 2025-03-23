@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Schreibabenteuer DemusOpalium</title>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@700&family=Roboto:wght@400;700&family=Merriweather:wght@400;700&family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
+  <!-- Animate.css für Animationen -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+  <style>
+    /* Basis-Reset */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* Grundlayout und Themes */
+    body {
+      font-family: 'Roboto', sans-serif;
+      transition: background 0.5s ease, color 0.5s ease;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+    .theme-dark { background: linear-gradient(135deg, #2c3e50, #4ca1af); color: #f0f0f0; }
+    .theme-light { background: #f7f7f7; color: #333; }
+    .theme-vintage { background: #f4e8c1; color: #5a4b3b; }
+
+    /* Rahmen für Buttons, Selects und Labels – farbanpassbar pro Theme */
+    .theme-dark button, 
+    .theme-dark select, 
+    .theme-dark label { 
+      border: 1px solid #444; 
+    }
+    .theme-light button, 
+    .theme-light select, 
+    .theme-light label { 
+      border: 1px solid #ccc; 
+    }
+    .theme-vintage button, 
+    .theme-vintage select, 
+    .theme-vintage label { 
+      border: 1px solid #a67c52; 
+    }
+
+    /* Überschrift */
+    .title {
+      font-family: 'Lora', serif;
+      font-size: 2.5em;
+      margin-bottom: 20px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+      text-transform: uppercase;
+    }
+
+    /* Info Button & Modal */
+    #infoBtn { position: fixed; top: 10px; right: 10px; background: rgba(255,255,255,0.2); border-radius: 50%; padding: 10px; font-size: 1.5em; cursor: pointer; transition: background 0.3s ease; z-index: 100; }
+    #infoBtn:hover { background: rgba(255,255,255,0.4); }
+    .modal { display: none; position: fixed; z-index: 200; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.7); align-items: center; justify-content: center; }
+    .modal-content { background-color: #fff; color: #333; padding: 20px; border-radius: 8px; max-width: 600px; width: 90%; text-align: left; font-family: 'Roboto', sans-serif; }
+    .close-btn { color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer; }
+    .close-btn:hover { color: #000; }
+
+    /* Dropdowns & Buttons (zusätzlicher Rahmen durch oben definierte globale Regeln) */
+    .design-controls, .extra-controls {
+      margin-bottom: 20px; display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;
+    }
+    .design-controls select, .extra-controls select, .extra-controls button {
+      padding: 10px; font-size: 1em; border-radius: 5px;
+      background: rgba(255,255,255,0.2); color: inherit; cursor: pointer; transition: background 0.3s ease;
+    }
+    .design-controls select:hover, .extra-controls select:hover, .extra-controls button:hover {
+      background: rgba(255,255,255,0.4);
+    }
+
+    /* Statusleiste */
+    .status-bar {
+      margin-bottom: 15px; font-size: 1.1em; background: rgba(0,0,0,0.3);
+      padding: 10px 15px; border-radius: 5px; display: flex; flex-wrap: wrap; gap: 15px; justify-content: center;
+    }
+    .status-item { min-width: 100px; text-align: center; }
+    #copyScoreDisplay { display: none; }
+
+    /* Schreibbereich */
+    #writeArea {
+      width: 100%; max-width: 800px; height: 300px;
+      background: rgba(255,255,255,0.1); color: inherit; padding: 15px;
+      border: 2px solid; border-radius: 8px;
+      outline: none; overflow-y: auto; font-size: 1.1em; line-height: 1.5em; transition: background 0.3s ease;
+    }
+    /* Rahmen-Farben für den Eingabebereich je nach Theme */
+    .theme-dark #writeArea { border-color: #444; }
+    .theme-light #writeArea { border-color: #ccc; }
+    .theme-vintage #writeArea { border-color: #a67c52; }
+    #writeArea.warning { background: rgba(200,50,50,0.5); animation: shake 0.5s infinite alternate; }
+    @keyframes shake { from { transform: translateX(0); } to { transform: translateX(3px); } }
+
+    /* Rahmen für den Ziel-Satz (Copy Challenge) */
+    #copyTarget {
+      display: none;
+      border: 2px solid #000;
+      background: #fff;
+      color: #000;
+      padding: 10px;
+      font-size: 1.5em;
+      font-weight: bold;
+      margin-bottom: 10px;
+      border-radius: 5px;
+    }
+    /* Der Ziel-Satz selbst */
+    #targetSentence {
+      font-weight: bold;
+    }
+
+    /* Steuerungselemente */
+    .controls {
+      margin-top: 15px; display: flex; flex-wrap: wrap; justify-content: center; gap: 10px;
+    }
+    .controls label, .controls select, .controls button {
+      padding: 10px 15px; font-size: 1em; border-radius: 5px;
+      background: rgba(255,255,255,0.2); color: inherit; cursor: pointer; transition: background 0.3s ease;
+    }
+    .controls button:hover, .controls select:hover, .controls label:hover {
+      background: rgba(255,255,255,0.4);
+    }
+
+    /* Boss-Anzeige */
+    #bossContainer { display: none; margin-top: 10px; text-align: center; }
+    #bossName { font-size: 1.2em; font-weight: bold; margin-bottom: 5px; }
+    #bossHealthBar { background: red; width: 300px; height: 20px; border-radius: 10px; overflow: hidden; margin: 0 auto; }
+    #bossHealth { background: green; width: 100%; height: 100%; transition: width 0.5s ease; }
+
+    /* Achievement-Popup */
+    .achievement {
+      margin-top: 20px; padding: 15px; background: rgba(255,215,0,0.8); border-radius: 8px;
+      font-size: 1.2em; font-weight: bold; color: #333; display: none;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    }
+
+    /* Rewards-Bereich */
+    .rewards { margin-top: 20px; max-width: 800px; width: 100%; background: rgba(0,0,0,0.3);
+               padding: 15px; border-radius: 8px; }
+    .rewards ul { list-style: none; padding-left: 0; }
+    .rewards li { padding: 5px 0; }
+
+    /* Hot Streak Indicator */
+    #hotStreakIndicator { display: none; font-size: 1.3em; font-weight: bold; color: #ff5500; }
+
+    /* Achievement-Tabelle */
+    .achievement-table {
+      margin-top: 20px; max-width: 800px; width: 100%; background: rgba(0,0,0,0.3);
+      padding: 15px; border-radius: 8px;
+    }
+    .achievement-table table { width: 100%; border-collapse: collapse; }
+    .achievement-table th, .achievement-table td { padding: 10px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.2); }
+    .achievement-table th { background: rgba(255,255,255,0.2); }
+
+    /* Leaderboard */
+    .leaderboard { margin-top: 20px; max-width: 800px; width: 100%; background: rgba(0,0,0,0.3);
+                   padding: 15px; border-radius: 8px; overflow-x: auto; }
+    .leaderboard table { width: 100%; border-collapse: collapse; }
+    .leaderboard th, .leaderboard td { padding: 10px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.2); }
+    .leaderboard th { background: rgba(255,255,255,0.2); }
+
+    /* Responsive Layout */
+    @media (max-width: 600px) {
+      #writeArea { height: 250px; }
+      .status-bar { flex-direction: column; }
+      .controls { flex-direction: column; }
+      .design-controls, .extra-controls { flex-direction: column; }
+    }
+
+    /* End Session Popup */
+    #endSessionPopup {
+      display: none;
+      position: fixed;
+      z-index: 300;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      background: #fff;
+      color: #333;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+      text-align: center;
+      max-width: 90%;
+    }
+    #endSessionPopup button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 1em;
+      cursor: pointer;
+      border-radius: 5px;
+      border: none;
+      background: #0077cc;
+      color: #fff;
+      transition: background 0.3s ease;
+    }
+    #endSessionPopup button:hover {
+      background: #005fa3;
+    }
+  </style>
+</head>
+<body class="theme-dark">
+  <!-- Info Button -->
+  <button id="infoBtn">ℹ️</button>
+  
+  <!-- Info Modal -->
+  <div id="infoModal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn" id="closeInfo">&times;</span>
+      <h2 style="color: #0077cc;">Willkommen bei Schreibabenteuer DemusOpalium! ✨</h2>
+      <p>
+        <strong>📜 Überblick:</strong><br>
+        Schreibabenteuer DemusOpalium ist ein interaktives Schreibspiel, in dem du in variablen Zeitmodi (1-5 Minuten) spannende Schreib-Challenges meisterst. Egal ob du frei schreibst, dich im <strong style="color: #e67e22;">Adventure-Modus</strong> gegen den Wort-Boss stellst, im <strong style="color: #27ae60;">Copy Challenge-Modus</strong> Sätze exakt nachtippst oder im <strong style="color: #c0392b;">Hardcore-Modus</strong> an deine Grenzen gehst – hier zählt nur eins: Nur Tippen, kein Kopieren!
+      </p>
+      <p>
+        <strong>🚀 Modi im Überblick:</strong><br>
+        • <strong>Freewrite:</strong> Entfalte deine Kreativität ohne Druck und Strafe.<br>
+        • <strong>Adventure:</strong> Kämpfe gegen den Wort-Boss, sammle EPIC-Bonus und erlebe spannende Bosskämpfe!<br>
+        • <strong>Copy Challenge:</strong> Tippe vorgegebene Sätze exakt nach, um Punkte zu sammeln und in den Ranglisten aufzusteigen.<br>
+        • <strong>Hardcore:</strong> Schreib was du kannst – aber Achtung: Jede Pause kann Konsequenzen haben!
+      </p>
+      <p>
+        <strong>⚠️ Wichtiger Hinweis:</strong><br>
+        Um Fairness zu gewährleisten, ist Copy-Paste im Textfeld <em>strikt verboten</em>! Wer es dennoch versucht, bekommt einen lustigen Anti-Cheat-Hinweis – also lieber nur mit der Tastatur tippen! 😜
+      </p>
+      <p>
+        <strong>🎉 Belohnungen & Erfolge:</strong><br>
+        Sammle Erfolge, schalte coole Rewards frei und teile deine Fortschritte mit deinen Freunden. Dein Fortschritt wird immer gespeichert – also los, tippe dich nach oben!
+      </p>
+    </div>
+  </div>
+  
+  <!-- Titel -->
+  <div class="title">Schreibabenteuer DemusOpalium</div>
+  
+  <!-- Design Controls: Theme & Schriftart -->
+  <div class="design-controls">
+    <label for="themeSelect">Theme wählen:</label>
+    <select id="themeSelect">
+      <option value="theme-dark" selected>Dark</option>
+      <option value="theme-light">Light</option>
+      <option value="theme-vintage">Vintage</option>
+    </select>
+    <label for="fontSelect">Schriftart wählen:</label>
+    <select id="fontSelect">
+      <option value="'Roboto', sans-serif" selected>Roboto</option>
+      <option value="'Lora', serif">Lora</option>
+      <option value="'Merriweather', serif">Merriweather</option>
+      <option value="'Open Sans', sans-serif">Open Sans</option>
+      <option value="'Courier New', monospace">Courier New</option>
+    </select>
+  </div>
+  
+  <!-- Extra Controls: Schwierigkeitsgrad & Share -->
+  <div class="extra-controls">
+    <label for="difficultySelect">Schwierigkeitsgrad:</label>
+    <select id="difficultySelect">
+      <option value="easy" selected>Einfach</option>
+      <option value="normal">Normal</option>
+      <option value="hard">Schwer</option>
+    </select>
+    <button id="shareBtn">Ergebnisse Teilen</button>
+  </div>
+  
+  <!-- Statusleiste -->
+  <div class="status-bar">
+    <div class="status-item" id="timer">Zeitlimit: 01:00</div>
+    <div class="status-item" id="wordCount">Wortanzahl: 0</div>
+    <div class="status-item" id="goalProgress">Ziel: 0/100</div>
+    <div class="status-item" id="xpDisplay">XP: 0</div>
+    <div class="status-item" id="levelDisplay">Niveau: 1</div>
+    <div class="status-item" id="wpmDisplay">WPM: 0</div>
+    <div class="status-item" id="apmDisplay">APM: 0</div>
+    <div class="status-item" id="hotStreakIndicator">HOT STREAK!</div>
+    <div class="status-item" id="copyScoreDisplay" style="display:none;">Copy Score: 0</div>
+  </div>
+  
+  <!-- Steuerungselemente -->
+  <div class="controls">
+    <label for="modeSelect">Modus:</label>
+    <select id="modeSelect">
+      <option value="free">Freewrite (keine Strafe)</option>
+      <option value="hardcore">Hardcore (Text löschen)</option>
+      <option value="creative">Kreativ (mit Schreibimpuls)</option>
+      <option value="adventure">Adventure (Boss & EPIC)</option>
+      <option value="copy">Copy Challenge</option>
+    </select>
+    <label for="timeSelect">Zeitmodus:</label>
+    <select id="timeSelect">
+      <option value="1">1 Minute</option>
+      <option value="2">2 Minuten</option>
+      <option value="3">3 Minuten</option>
+      <option value="4">4 Minuten</option>
+      <option value="5" selected>5 Minuten</option>
+    </select>
+    <button id="startBtn">Session starten</button>
+    <button id="resetBtn">Reset</button>
+    <button id="promptBtn" style="display:none;">Schreibimpuls anzeigen</button>
+  </div>
+  
+  <!-- Copy Challenge: Ziel-Satz & Check-Button -->
+  <div id="copyTarget">> <span id="targetSentence"></span></div>
+  <button id="checkBtn" style="display:none;">Satz prüfen</button>
+  
+  <!-- Boss-Anzeige für Adventure Mode -->
+  <div id="bossContainer">
+    <div id="bossName"></div>
+    <div id="bossHealthBar">
+      <div id="bossHealth"></div>
+    </div>
+  </div>
+  
+  <!-- Schreibbereich -->
+  <div id="writeArea" contenteditable="true" placeholder="Hier beginnen zu schreiben..."></div>
+  
+  <!-- Achievement-Popup -->
+  <div class="achievement animate__animated" id="achievementPopup">Achievement unlocked! 🎉</div>
+  
+  <!-- Achievement-Tabelle -->
+  <div class="achievement-table">
+    <h2>Erfolge</h2>
+    <table id="achievementTable">
+      <thead>
+        <tr>
+          <th>Erfolg</th>
+          <th>Bedingung</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="achievementBody">
+        <!-- Dynamisch generierte Erfolge -->
+      </tbody>
+    </table>
+  </div>
+  
+  <!-- Rewards-Bereich -->
+  <div class="rewards">
+    <h2>Belohnungen</h2>
+    <ul id="rewardList"></ul>
+  </div>
+  
+  <!-- Leaderboard -->
+  <div class="leaderboard">
+    <h2>Highscore-Liste ⭐</h2>
+    <table id="leaderboardTable">
+      <thead>
+        <tr>
+          <th>Platz</th>
+          <th>Wörter</th>
+          <th>XP</th>
+        </tr>
+      </thead>
+      <tbody id="leaderboardBody">
+        <!-- Dynamisch befüllte Zeilen -->
+      </tbody>
+    </table>
+  </div>
+  
+  <!-- End Session Popup -->
+  <div id="endSessionPopup">
+    <h2>Session beendet!</h2>
+    <p id="endSessionMessage"></p>
+    <button id="closeEndSessionBtn">Schließen</button>
+  </div>
+  
+  <script>
+    /* --- Globale Variablen und Daten --- */
+    let timerInterval, idleTimeout;
+    let sessionActive = false;
+    let sessionStartTime = null;
+    let remainingTime = 60;
+    let keyPressCount = 0;
+    let hotStreakCounter = 0;
+    let lastKeyTime = 0;
+    let hotStreakRequired = 20;
+    let hotStreakTimeThreshold = 250;
+    
+    // GLOBAL ADDED: userStats initialisieren
+    let userStats = {
+      xp: 0,
+      totalWords: 0,
+      longestSession: 0,
+      level: 1
+    };
+
+// Copy Challenge Variablen
+let copyScore = 0;
+let currentTargetSentence = "";
+const copySentences = {
+  easy: [
+    "Der Hund läuft schnell.",
+    "Die Sonne scheint hell.",
+    "Ich mag Eis.",
+    "Der Vogel fliegt hoch.",
+    "Der Baum steht im Garten.",
+    "Die Katze schläft leise.",
+    "Das Auto fährt langsam.",
+    "Das Kind lacht fröhlich.",
+    "Die Blume duftet angenehm.",
+    "Der Regen fällt sanft.",
+    "Die Wolken ziehen langsam.",
+    "Der Wind weht mild.",
+    "Das Wasser glitzert im Licht.",
+    "Der Schnee bedeckt den Boden.",
+    "Die Vögel zwitschern im Frühling.",
+    "Der Mond leuchtet in der Nacht.",
+    "Die Sterne funkeln am Himmel.",
+    "Der Fisch schwimmt im Teich.",
+    "Der Hund bellt laut.",
+    "Das Haus steht am Wegesrand.",
+    "Die Bienen summen im Garten.",
+    "Die Kinder spielen im Park.",
+    "Der Apfel ist reif.",
+    "Das Brot ist frisch gebacken.",
+    "Der Zug fährt pünktlich.",
+    "Das Buch liegt auf dem Tisch.",
+    "Die Uhr zeigt die richtige Zeit.",
+    "Der Wind kühlt an heißen Tagen.",
+    "Die Blumen blühen im Frühling.",
+    "Der Morgen ist ruhig und friedlich."
+    ],
+    normal: [
+    "Die Giraffe tanzt im Mondlicht, als wäre sie ein Superstar.",
+    "Ein Kaktus küsst den Regen, weil er so durstig war.",
+    "Die Eule lacht leise über den nächtlichen Trubel im Wald.",
+    "Ein Elefant jongliert mit Bananen in der Zirkusmanege.",
+    "Die Wolken spielen Verstecken mit der Sonne.",
+    "Ein lustiger Frosch veranstaltet ein Konzert im Teich.",
+    "Die Bienen machen eine Polonaise im Blütenmeer.",
+    "Ein frecher Affe klaut dem Regenbogen die Farben.",
+    "Die Schildkröte reitet auf einem Skateboard durch den Park.",
+    "Ein schelmischer Panda nascht Bambus mit einem Lächeln.",
+    "Die Sterne zwinkern wie kleine Glühwürmchen im Universum.",
+    "Ein schüchterner Pinguin trägt eine bunte Fliege zur Party.",
+    "Die Blumen flüstern Geheimnisse im Wind.",
+    "Ein fliegender Teppich bringt Lachen in die Straßen der Stadt.",
+    "Die Katze veranstaltet eine Comedy-Show auf dem Dach.",
+    "Ein strahlender Marienkäfer führt ein kleines Ballett auf.",
+    "Die Bäume tanzen im Rhythmus des fröhlichen Waldes.",
+    "Ein kluger Maulwurf entdeckt ein Geheimnis unter der Erde.",
+    "Die Sonne macht eine Pause und genießt einen Kaffee.",
+    "Ein mutiger Hase flitzt schneller als der Wind.",
+    "Die Fische feiern eine Disco unter Wasser.",
+    "Ein bunter Schmetterling verteilt Glitzerstaub im Garten.",
+    "Die Schnecke organisiert ein Rennen mit Zeitlupe.",
+    "Ein lustiger Papagei plaudert mit den Wolken.",
+    "Die Wolken spielen Fangen, während der Regen kichert.",
+    "Ein charmantes Lama posiert für das Fotoshooting.",
+    "Der freundliche Hund rennt fröhlich durch den sonnigen Park.",
+    "Die strahlende Sonne taucht den klaren Himmel in ein warmes Licht.",
+    "Ich genieße es, an einem gemütlichen Nachmittag ein leckeres Eis zu essen.",
+    "Der Vogel singt ein fröhliches Lied, während er hoch über den Dächern fliegt.",
+    "Der alte Baum im Garten spendet an heißen Tagen angenehmen Schatten.",
+    "Die schlaue Katze schleicht leise über die bunten Gartenbeete.",
+    "Das moderne Auto fährt ruhig und sicher durch die belebten Straßen.",
+    "Das lachende Kind spielt vergnügt mit seinen Freunden im Park.",
+    "Die duftende Blume erfreut alle mit ihrem angenehmen Aroma.",
+    "Der sanfte Regen beruhigt die Natur an einem trüben Tag.",
+    "Die weißen Wolken ziehen gemächlich über den strahlend blauen Himmel.",
+    "Der laue Wind sorgt für eine erfrischende Brise an einem warmen Nachmittag.",
+    "Das funkelnde Wasser im Bach glitzert im Sonnenlicht und lädt zum Träumen ein.",
+    "Der frisch gefallene Schnee bedeckt die Landschaft in einem weißen Mantel.",
+    "Die fröhlich zwitschernden Vögel begrüßen den neuen Tag mit ihren Liedern.",
+    "Der silberne Mond scheint sanft in der klaren Nacht und erhellt den dunklen Wald.",
+    "Die funkelnden Sterne bilden ein beeindruckendes Bild am dunklen Firmament.",
+    "Der bunte Fisch schwimmt elegant durch das klare Wasser des kleinen Teichs.",
+    "Der lebhafte Hund bellt fröhlich, als er seinen Besitzer begrüßt.",
+    "Das gemütliche Haus am Straßenrand lädt zum Verweilen und Träumen ein.",
+    "Die fleißigen Bienen sammeln emsig Nektar in den blühenden Gärten.",
+    "Die spielenden Kinder genießen einen unbeschwerten Tag im weitläufigen Park.",
+    "Der reife Apfel hängt verlockend an dem alten Obstbaum im Garten.",
+    "Das frisch gebackene Brot duftet verführerisch in der warmen Bäckerei.",
+    "Der pünktliche Zug fährt zuverlässig durch die malerische Landschaft.",
+    "Das spannende Buch erzählt eine fesselnde Geschichte voller Abenteuer.",
+    "Die präzise tickende Uhr erinnert an die kostbare Vergänglichkeit der Zeit.",
+    "Der kühle Wind erfrischt an heißen Sommertagen und sorgt für angenehme Temperaturen.",
+    "Die üppigen Blumen im Garten entfalten ihre volle Pracht im Frühling.",
+    "Der ruhige Morgen verspricht einen Tag voller neuer Möglichkeiten und Freude."
+  ],
+  hard: [
+    "Obwohl der Regen unaufhörlich niederprasselt, spaziert der einsame Wanderer mutig durch die trüben Straßen der Stadt.",
+    "Die komplexen Dialoge zwischen den Charakteren spiegeln die tiefgründigen philosophischen Themen des Romans wider.",
+    "Mit einer Mischung aus Ironie und Ernsthaftigkeit enthüllt der Erzähler die verborgenen Wahrheiten der menschlichen Existenz.",
+    "Während der dichte Nebel die Landschaft in ein geheimnisvolles Grau hüllt, verliert sich der Wanderer in seinen Gedanken.",
+    "Obwohl die Straßen menschenleer erscheinen, erzählt jeder Winkel der Stadt eine Geschichte aus vergangenen Zeiten.",
+    "Die kunstvoll gestalteten Fassaden der alten Gebäude zeugen von einer bewegten Geschichte und kulturellen Vielfalt.",
+    "Inmitten des geschäftigen Treibens enthüllt die ruhige Bibliothek die Schätze alter Weisheiten und vergessener Erzählungen.",
+    "Während der stürmische Wind an den Fenstern zerrt, versinkt das Haus in einer melancholischen Stille.",
+    "Nachdem der Regen aufgehört hat, zeigt sich die Stadt in einem strahlenden Glanz, der alle Herzen erwärmt.",
+    "Trotz der widrigen Umstände setzt der mutige Protagonist seinen Weg fort, um die Wahrheit zu enthüllen.",
+    "Indem er die komplexen Rätsel der Vergangenheit entschlüsselt, eröffnet der Archäologe ein neues Kapitel der Geschichte.",
+    "Obwohl die Dunkelheit die Welt zu verschlingen scheint, leuchten die Sterne als stille Zeugen der Hoffnung.",
+    "Als die Sonne langsam hinter den Bergen verschwindet, erfüllt ein Gefühl der Sehnsucht die einsamen Seelen der Stadt.",
+    "Während der schneidende Wind die winterlichen Straßen durchfegt, trotzt der Wanderer den Elementen mit unbeirrbarem Mut.",
+    "In einem Zusammenspiel aus Licht und Schatten enthüllt der Maler die verborgenen Emotionen der städtischen Szenerie.",
+    "Obwohl die Zeit unaufhaltsam verrinnt, hält der Dichter in seinen Versen die Schönheit des Augenblicks fest.",
+    "Indem sie die geheimnisvollen Legenden der alten Siedlungen erforscht, entdeckt die Historikerin die Wurzeln ihrer Identität.",
+    "Während die Musik in den Gassen widerhallt, entsteht ein faszinierendes Zusammenspiel aus Kultur und Tradition.",
+    "Nachdem der Sturm vorübergezogen ist, erstrahlt die Stadt in einem neuen Licht, das sowohl Hoffnung als auch Erneuerung verkündet.",
+    "Trotz der unzähligen Herausforderungen bewahrt der Protagonist seinen Glauben an eine bessere Zukunft und schreitet unbeirrt voran.",
+    "Als die ersten Sonnenstrahlen den Horizont erhellen, erwacht die Stadt zu einem lebendigen Mosaik aus Farben und Klängen.",
+    "Inmitten eines Meeres aus Geräuschen findet der Musiker die Inspiration, die in seinen Kompositionen widerhallt.",
+    "Obwohl die Erinnerungen an vergangene Zeiten schmerzhaft sein können, birgt jede Geschichte auch die Chance auf einen Neuanfang.",
+    "Während sich die Schatten der Nacht allmählich zurückziehen, erhebt sich die Stadt in einem neuen, hoffnungsvollen Glanz.",
+    "Indem er die komplexen Zusammenhänge der Natur erforscht, gelingt es dem Wissenschaftler, die Geheimnisse des Lebens zu entschlüsseln.",
+    "Als der kalte Winter endgültig weicht, kündigt sich der Frühling mit einem Versprechen von Erneuerung und Wachstum an.",
+    "Trotz der scheinbar unüberwindbaren Hürden bleibt der Abenteurer standhaft und sucht nach dem Funken der Wahrheit.",
+    "Während die Gesellschaft sich ständig wandelt, bewahrt die Kunst ihre zeitlose Fähigkeit, Emotionen und Geschichten lebendig werden zu lassen.",
+    "Nachdem die schweren Wolken vorübergezogen sind, offenbart sich ein strahlend blauer Himmel, der die Hoffnung in den Herzen der Menschen neu entfacht.",
+    "Obwohl die Wege oft steinig und ungewiss sind, leitet der Funke der Inspiration den Suchenden zu einem erfüllten Leben."
+  ]
+};
+
+// Adventure Mode: Boss
+    let boss = null, bossDefeated = false;
+    
+    // Belohnungen & Erfolge
+    let unlockedRewards = [];
+    if (localStorage.getItem("unlockedRewards")) {
+      unlockedRewards = JSON.parse(localStorage.getItem("unlockedRewards"));
+      updateRewardUI();
+    }
+    let sessionAchievements = {};
+    let copyAchieved = {};
+    
+    // Elemente
+    const modeSelect = document.getElementById("modeSelect");
+    const timeSelect = document.getElementById("timeSelect");
+    const difficultySelect = document.getElementById("difficultySelect");
+    const writeArea = document.getElementById("writeArea");
+    const timerDisplay = document.getElementById("timer");
+    const wordCountDisplay = document.getElementById("wordCount");
+    const goalProgressDisplay = document.getElementById("goalProgress");
+    const xpDisplay = document.getElementById("xpDisplay");
+    const levelDisplay = document.getElementById("levelDisplay");
+    const wpmDisplay = document.getElementById("wpmDisplay");
+    const apmDisplay = document.getElementById("apmDisplay");
+    const hotStreakIndicator = document.getElementById("hotStreakIndicator");
+    const achievementPopup = document.getElementById("achievementPopup");
+    const startBtn = document.getElementById("startBtn");
+    const resetBtn = document.getElementById("resetBtn");
+    const promptBtn = document.getElementById("promptBtn");
+    const shareBtn = document.getElementById("shareBtn");
+    const infoBtn = document.getElementById("infoBtn");
+    const infoModal = document.getElementById("infoModal");
+    const closeInfo = document.getElementById("closeInfo");
+    const bossContainer = document.getElementById("bossContainer");
+    const bossNameElem = document.getElementById("bossName");
+    const bossHealthElem = document.getElementById("bossHealth");
+    
+    // Für Copy Challenge
+    const copyTargetElem = document.getElementById("copyTarget");
+    const targetSentenceElem = document.getElementById("targetSentence");
+    const checkBtn = document.getElementById("checkBtn");
+    const copyScoreDisplay = document.getElementById("copyScoreDisplay");
+    
+    // End Session Popup Elemente
+    const endSessionPopup = document.getElementById("endSessionPopup");
+    const endSessionMessage = document.getElementById("endSessionMessage");
+    const closeEndSessionBtn = document.getElementById("closeEndSessionBtn");
+    
+    // Leaderboard
+    let leaderboard = JSON.parse(localStorage.getItem("leaderboard")) || [];
+    
+    // Schreibstarter-Prompts
+    const prompts = [
+      "Es war einmal ein geheimnisvoller Wald, in dem die Zeit stillzustehen schien...",
+      "Als die Sonne hinter den Bergen verschwand, begann ein Abenteuer, das alles verändern sollte...",
+      "Plötzlich ertönte ein seltsames Geräusch, und niemand wusste, was als Nächstes passieren würde..."
+    ];
+    
+    // Sound (optional)
+    const warningSound = new Audio('warning.mp3');
+    
+    /* --- Event Listener --- */
+    infoBtn.addEventListener("click", () => { infoModal.style.display = "flex"; });
+    closeInfo.addEventListener("click", () => { infoModal.style.display = "none"; });
+    window.addEventListener("click", (event) => { if (event.target == infoModal) infoModal.style.display = "none"; });
+    
+    startBtn.addEventListener("click", startSession);
+    resetBtn.addEventListener("click", resetSession);
+    promptBtn.addEventListener("click", showRandomPrompt);
+    shareBtn.addEventListener("click", shareResults);
+    checkBtn.addEventListener("click", checkCopySentence);
+    closeEndSessionBtn.addEventListener("click", () => {
+      endSessionPopup.style.display = "none";
+    });
+    
+    // Erweiterte Keydown-Logik: Bei Copy Challenge wird Enter abgefangen
+    writeArea.addEventListener("keydown", (e) => {
+      if (!sessionActive) return;
+      
+      // Falls wir im Copy-Modus sind und Enter drücken:
+      if (modeSelect.value === "copy" && e.key === "Enter") {
+        e.preventDefault(); // Zeilenumbruch verhindern
+        checkCopySentence();
+        return;
+      }
+      
+      resetIdleTimer();
+      updateWordCount();
+      keyPressCount++;
+      const currentTime = Date.now();
+      if (currentTime - lastKeyTime < hotStreakTimeThreshold) { hotStreakCounter++; }
+      else { hotStreakCounter = 1; }
+      lastKeyTime = currentTime;
+      if (hotStreakCounter >= hotStreakRequired) { showHotStreakIndicator(); }
+    });
+    
+    // Paste-Verbot: Verhindert, dass Inhalte eingefügt werden – ansonsten wird ein lustiger Anti-Cheat-Hinweis angezeigt.
+    writeArea.addEventListener("paste", (e) => {
+      e.preventDefault();
+      showAchievement("Schummeln? Nicht bei uns! Nur Tippen ist erlaubt! 😜");
+    });
+    
+    modeSelect.addEventListener("change", () => {
+      promptBtn.style.display = modeSelect.value === "creative" ? "inline-block" : "none";
+      if (modeSelect.value === "copy") {
+        copyTargetElem.style.display = "block";
+        checkBtn.style.display = "inline-block";
+        copyScoreDisplay.style.display = "block";
+        initCopyMode();
+      } else {
+        copyTargetElem.style.display = "none";
+        checkBtn.style.display = "none";
+        copyScoreDisplay.style.display = "none";
+      }
+    });
+    
+    const themeSelect = document.getElementById("themeSelect");
+    const fontSelect = document.getElementById("fontSelect");
+    themeSelect.addEventListener("change", () => { document.body.className = themeSelect.value; });
+    fontSelect.addEventListener("change", () => { document.body.style.fontFamily = fontSelect.value; });
+    
+    /* --- Funktionen --- */
+    
+    function getTier() {
+      if (difficultySelect.value === "easy") return "Bronze";
+      if (difficultySelect.value === "normal") return "Silber";
+      if (difficultySelect.value === "hard") return "Gold";
+      return "";
+    }
+    
+    function generateAchievements() {
+      sessionAchievements = {};
+      let threshold = 25;
+      while (threshold <= window.baseTarget) {
+        sessionAchievements[threshold] = false;
+        threshold += 25;
+      }
+      updateAchievementsTable();
+    }
+    
+    function updateAchievementsTable() {
+      const tbody = document.getElementById("achievementBody");
+      tbody.innerHTML = "";
+      const tier = getTier();
+      const timeMode = parseInt(timeSelect.value);
+      const timeLabel = (timeMode === 1) ? "Minute" : "Minuten";
+      for (let threshold in sessionAchievements) {
+        const row = document.createElement("tr");
+        row.innerHTML = `<td>${timeMode} ${timeLabel}: ${tier} ${threshold}+ Wörter</td>
+                         <td>Mindestens ${threshold} Wörter in ${timeMode} ${timeLabel}</td>
+                         <td id="achieve${threshold}">Nicht erreicht</td>`;
+        tbody.appendChild(row);
+      }
+    }
+    
+    function generateCopySentence() {
+      let diff = difficultySelect.value;
+      let sentences = copySentences[diff];
+      currentTargetSentence = sentences[Math.floor(Math.random() * sentences.length)];
+      targetSentenceElem.textContent = currentTargetSentence.trim();
+      writeArea.innerText = "";
+    }
+    
+    function checkCopySentence() {
+      let userInput = writeArea.innerText.replace(/\n/g, " ").trim().toLowerCase();
+      let target = currentTargetSentence.trim().toLowerCase();
+      if (userInput === target) {
+        let points = currentTargetSentence.split(" ").length * 10;
+        copyScore += points;
+        userStats.xp += points;
+        showAchievement("Satz korrekt! +" + points + " Punkte.");
+        checkCopyAchievements();
+        writeArea.innerText = "";
+        updateCopyScoreDisplay();
+        generateCopySentence();
+      } else {
+        showAchievement("Nicht exakt! Versuche es erneut.");
+      }
+    }
+    
+    function checkCopyAchievements() {
+      if (copyScore >= 100 && !copyAchieved["100"]) {
+         copyAchieved["100"] = true;
+         showAchievement("Copy Challenge Bronze erreicht! (+100 Punkte)");
+         unlockReward("🥉 Copy-Challenge Bronze");
+      }
+      if (copyScore >= 200 && !copyAchieved["200"]) {
+         copyAchieved["200"] = true;
+         showAchievement("Copy Challenge Silber erreicht! (+200 Punkte)");
+         unlockReward("🥈 Copy-Challenge Silber");
+      }
+      if (copyScore >= 300 && !copyAchieved["300"]) {
+         copyAchieved["300"] = true;
+         showAchievement("Copy Challenge Gold erreicht! (+300 Punkte)");
+         unlockReward("🥇 Copy-Challenge Gold");
+      }
+    }
+    
+    function initCopyMode() {
+      copyScore = 0;
+      copyAchieved = {};
+      generateCopySentence();
+      copyTargetElem.style.display = "block";
+      checkBtn.style.display = "inline-block";
+      copyScoreDisplay.style.display = "block";
+      writeArea.innerText = "";
+      updateCopyScoreDisplay();
+    }
+    
+    function updateCopyScoreDisplay() {
+      copyScoreDisplay.textContent = "Copy Score: " + copyScore;
+    }
+    
+    function startSession() {
+      // Verstecke evtl. offenes End-Session-Popup
+      endSessionPopup.style.display = "none";
+      
+      sessionActive = true;
+      keyPressCount = 0;
+      hotStreakCounter = 0;
+      let idleLimit, thresholdTime;
+      if (difficultySelect.value === "normal") { idleLimit = 2000; thresholdTime = 200; }
+      else if (difficultySelect.value === "hard") { idleLimit = 1000; thresholdTime = 150; }
+      else { idleLimit = 3000; thresholdTime = 250; }
+      hotStreakTimeThreshold = thresholdTime;
+      idleTimeout = setTimeout(triggerInactivityWarning, idleLimit);
+      
+      const timeMode = parseInt(timeSelect.value);
+      remainingTime = timeMode * 60;
+      if (modeSelect.value === "copy") {
+        copyScore = 0;
+        initCopyMode();
+      } else {
+        if (difficultySelect.value === "easy") { window.baseTarget = timeMode * 65; }
+        else if (difficultySelect.value === "normal") { window.baseTarget = timeMode * 85; }
+        else if (difficultySelect.value === "hard") { window.baseTarget = timeMode * 100; }
+        generateAchievements();
+      }
+      
+      updateTimerDisplay();
+      updateWordCount();
+      sessionStartTime = Date.now();
+      
+      if (modeSelect.value === "adventure") { initBoss(); }
+      
+      timerInterval = setInterval(() => {
+        remainingTime--;
+        updateTimerDisplay();
+        updateWPM();
+        updateAPM();
+        if (modeSelect.value === "adventure" && boss) { updateBossStatus(); }
+        if (remainingTime <= 0) { endSession(); }
+      }, 1000);
+    }
+    
+    function resetSession() {
+      clearInterval(timerInterval);
+      clearTimeout(idleTimeout);
+      sessionActive = false;
+      remainingTime = parseInt(timeSelect.value) * 60;
+      writeArea.innerText = "";
+      updateTimerDisplay();
+      updateWordCount();
+      writeArea.classList.remove("warning");
+      keyPressCount = 0;
+      boss = null;
+      bossDefeated = false;
+      bossContainer.style.display = "none";
+      hotStreakIndicator.style.display = "none";
+      copyTargetElem.style.display = "none";
+      checkBtn.style.display = "none";
+      copyScoreDisplay.style.display = "none";
+      // Verstecke evtl. offenes End-Session-Popup
+      endSessionPopup.style.display = "none";
+    }
+    
+    function endSession() {
+      clearInterval(timerInterval);
+      clearTimeout(idleTimeout);
+      sessionActive = false;
+      let message = "";
+      if (modeSelect.value === "copy") {
+        message = "Deine Copy Challenge Punkte: " + copyScore;
+      } else {
+        message = "Session beendet!";
+      }
+      // Statt alert: modernes End-Session-Popup anzeigen
+      endSessionMessage.textContent = message;
+      endSessionPopup.style.display = "block";
+      
+      const currentWords = countWords(writeArea.innerText);
+      for (let threshold in sessionAchievements) {
+        if (currentWords >= threshold && !sessionAchievements[threshold]) {
+          sessionAchievements[threshold] = true;
+          const achieveElem = document.getElementById("achieve" + threshold);
+          if (achieveElem) { achieveElem.textContent = "Erreicht"; }
+        }
+      }
+      const sessionDuration = Math.floor((Date.now() - sessionStartTime) / 1000);
+      const xpEarned = currentWords + Math.floor(sessionDuration / 10);
+      userStats.xp += xpEarned;
+      userStats.totalWords += currentWords;
+      if (sessionDuration > userStats.longestSession) { userStats.longestSession = sessionDuration; }
+      checkLevelUp();
+      saveSessionToLeaderboard();
+      updateLeaderboard();
+      copyTargetElem.style.display = "none";
+      checkBtn.style.display = "none";
+      copyScoreDisplay.style.display = "none";
+    }
+    
+    function updateTimerDisplay() {
+      let min = Math.floor(remainingTime / 60);
+      let sec = remainingTime % 60;
+      timerDisplay.textContent = `Time: ${min}:${sec.toString().padStart(2, "0")}`;
+    }
+    
+    function updateWordCount() {
+      const text = writeArea.innerText;
+      const count = countWords(text);
+      wordCountDisplay.textContent = `Words: ${count}`;
+      goalProgressDisplay.textContent = `Goal: ${count}/${window.baseTarget || "-"}`;
+      if (modeSelect.value === "adventure" && boss) { updateBossStatus(); }
+      for (let threshold in sessionAchievements) {
+        if (count >= threshold && !sessionAchievements[threshold]) {
+          sessionAchievements[threshold] = true;
+          const achieveElem = document.getElementById("achieve" + threshold);
+          if (achieveElem) { achieveElem.textContent = "Erreicht"; }
+        }
+      }
+    }
+    
+    function updateWPM() {
+      if (!sessionStartTime) return;
+      const elapsedMinutes = (Date.now() - sessionStartTime) / 60000;
+      const wpm = Math.round(countWords(writeArea.innerText) / elapsedMinutes);
+      wpmDisplay.textContent = `WPM: ${wpm}`;
+    }
+    
+    function updateAPM() {
+      if (!sessionStartTime) return;
+      let elapsedMinutes = (Date.now() - sessionStartTime) / 60000;
+      let apm = elapsedMinutes > 0 ? Math.round(keyPressCount / elapsedMinutes) : 0;
+      apmDisplay.textContent = `APM: ${apm} max`;
+    }
+    
+    function countWords(text) {
+      return text.trim().split(/\s+/).filter(w => w.length > 0).length;
+    }
+    
+    function resetIdleTimer() {
+      clearTimeout(idleTimeout);
+      let idleLimit = (difficultySelect.value === "easy") ? 3000 : (difficultySelect.value === "normal") ? 2000 : 1000;
+      idleTimeout = setTimeout(triggerInactivityWarning, idleLimit);
+      writeArea.classList.remove("warning");
+    }
+    
+    function triggerInactivityWarning() {
+      writeArea.classList.add("warning");
+      playWarningSound();
+      if (modeSelect.value === "hardcore") {
+        setTimeout(() => {
+          if (writeArea.classList.contains("warning")) {
+            writeArea.innerText = "";
+            updateWordCount();
+          }
+        }, 2000);
+      }
+    }
+    
+    function playWarningSound() {
+      warningSound.play().catch(e => console.log("Sound konnte nicht abgespielt werden:", e));
+    }
+    
+    function showRandomPrompt() {
+      const randomPrompt = prompts[Math.floor(Math.random() * prompts.length)];
+      writeArea.innerText = randomPrompt + "\n\n";
+      updateWordCount();
+    }
+    
+    function showAchievement(message) {
+      achievementPopup.textContent = message;
+      achievementPopup.style.display = "block";
+      achievementPopup.classList.add("animate__bounceIn");
+      setTimeout(() => {
+        achievementPopup.classList.remove("animate__bounceIn");
+        achievementPopup.style.display = "none";
+      }, 3000);
+    }
+    
+    function showHotStreakIndicator() {
+      hotStreakIndicator.style.display = "block";
+      hotStreakIndicator.classList.add("animate__flash");
+      setTimeout(() => {
+        hotStreakIndicator.classList.remove("animate__flash");
+        hotStreakIndicator.style.display = "none";
+      }, 2000);
+      hotStreakCounter = 0;
+    }
+    
+    // Adventure Mode: Boss initialisieren
+    function initBoss() {
+      boss = { name: "Wort Boss", maxHealth: 100, currentHealth: 100, targetWords: window.baseTarget * 1.5 };
+      bossDefeated = false;
+      bossContainer.style.display = "block";
+      bossNameElem.textContent = boss.name;
+      updateBossUI();
+    }
+    
+    function updateBossStatus() {
+      const typedWords = countWords(writeArea.innerText);
+      let damage = (typedWords / boss.targetWords) * boss.maxHealth;
+      boss.currentHealth = Math.max(boss.maxHealth - damage, 0);
+      updateBossUI();
+      if (boss.currentHealth <= 0 && !bossDefeated) {
+        bossDefeated = true;
+        showAchievement("Boss besiegt! Bonus XP erhalten!");
+        userStats.xp += 50;
+        unlockReward("🏆 Boss-Besieger Emoji");
+      }
+    }
+    
+    function updateBossUI() {
+      let healthPercent = (boss.currentHealth / boss.maxHealth) * 100;
+      bossHealthElem.style.width = healthPercent + "%";
+    }
+    
+    // Belohnungen freischalten und speichern
+    function unlockReward(rewardName) {
+      if (!unlockedRewards.includes(rewardName)) {
+        unlockedRewards.push(rewardName);
+        updateRewardUI();
+        showAchievement(`Belohnung freigeschaltet: ${rewardName}`);
+        localStorage.setItem("unlockedRewards", JSON.stringify(unlockedRewards));
+      }
+    }
+    
+    function updateRewardUI() {
+      const rewardList = document.getElementById("rewardList");
+      rewardList.innerHTML = "";
+      unlockedRewards.forEach(reward => {
+        const li = document.createElement("li");
+        li.textContent = reward;
+        rewardList.appendChild(li);
+      });
+    }
+    
+    // XP und Level-Up Logik
+    function checkLevelUp() {
+      const newLevel = Math.floor(userStats.xp / 100) + 1;
+      if (newLevel > userStats.level) {
+        userStats.level = newLevel;
+        alert(`Level Up! Du bist jetzt Level ${newLevel}.`);
+        if (newLevel === 2) { unlockReward("😀 Emoji Profil"); }
+        if (newLevel === 3) { unlockReward("😎 Cool Emoji"); }
+        if (newLevel === 4) { unlockReward("🔥 Hot Emoji"); }
+        if (newLevel === 5) { unlockReward("🏆 Champion Emoji"); }
+      }
+      xpDisplay.textContent = `XP: ${userStats.xp}`;
+      levelDisplay.textContent = `Level: ${userStats.level}`;
+    }
+    
+    // Leaderboard-Funktionen
+    function saveSessionToLeaderboard() {
+      const currentWords = countWords(writeArea.innerText);
+      const sessionData = { words: currentWords, xp: userStats.xp, timestamp: Date.now() };
+      leaderboard.push(sessionData);
+      leaderboard.sort((a, b) => b.words - a.words);
+      localStorage.setItem("leaderboard", JSON.stringify(leaderboard));
+    }
+    
+    function updateLeaderboard() {
+      const leaderboardBody = document.getElementById("leaderboardBody");
+      leaderboardBody.innerHTML = "";
+      leaderboard.slice(0, 10).forEach((session, index) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `<td>${index + 1} ⭐</td><td>${session.words} ✍️</td><td>${session.xp} 🏆</td>`;
+        leaderboardBody.appendChild(row);
+      });
+    }
+    
+    // Share-Funktion
+    function shareResults() {
+      const summary = `Schreibabenteuer DemusOpalium Ergebnisse:\nWörter: ${countWords(writeArea.innerText)}\nXP: ${userStats.xp}\nLevel: ${userStats.level}`;
+      navigator.clipboard.writeText(summary).then(() => {
+        alert("Ergebnisse kopiert! Teile sie mit deinen Freunden!");
+      });
+    }
+    
+    updateLeaderboard();
+  </script>
+</body>
+</html>

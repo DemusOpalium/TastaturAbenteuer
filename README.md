@@ -1,93 +1,104 @@
 TastaturAbenteuer – Schreibabenteuer DemusOpalium
 
-TastaturAbenteuer (auch bekannt als Schreibabenteuer DemusOpalium) ist ein interaktives Schreibspiel, das dir dabei hilft, deine Tippfähigkeiten zu verbessern und deine Schreibkunst zu optimieren. Unser erstes Open-Source-Projekt entstand aus reiner Freude an der Technik und dem Wunsch, ein nützliches Tool zu schaffen – ganz ohne Anmeldezwang, damit jeder ungehindert loslegen kann.
+TastaturAbenteuer (auch bekannt als Schreibabenteuer DemusOpalium) ist ein interaktives Schreibspiel, das dir dabei hilft, deine Tippfähigkeiten zu verbessern und deine Schreibkunst zu optimieren. Dieses Open-Source-Projekt entstand aus reiner Freude an der Technik und dem Wunsch, ein nützliches Tool zu schaffen – ganz ohne Anmeldezwang, sodass jeder ungehindert loslegen kann.
+Inhaltsverzeichnis
+
+    Hintergrund
+
+    Features & Spielmodi
+
+    Fokus auf Inhalt und Funktionalität
+
+    Code-Struktur und Aufbau
+
+    Installation und Nutzung
+
+    Beitrag und Weiterentwicklung
+
+    Lizenz
+
 Hintergrund
 
-Nach 17 Jahren intensiver Tipp-Erfahrung und dem Experimentieren mit meiner neuen HotSwap 60%-Tastatur – inklusive einer mit Kork gedämmten Unterlage – stellte sich die Frage: Wie schnell kann ich wirklich tippen? Auf der Suche nach einem passenden Tool stieß ich auf „Write or Die“, das jedoch nicht mehr aktiv weiterentwickelt wurde. Andere Lösungen erforderten oftmals eine aufwendige Registrierung, was mir nicht zusagte.
+Nach 17 Jahren intensiver Tipp-Erfahrung und dem Experimentieren mit meiner neuen HotSwap 60%-Tastatur – inklusive einer mit Kork gedämmten Unterlage – stellte sich die Frage: Wie schnell kann ich wirklich tippen? Auf der Suche nach einem passenden Tool stieß ich auf „Write or Die“, das jedoch nicht mehr aktiv weiterentwickelt wurde. Andere Lösungen erforderten oftmals eine aufwendige Registrierung – etwas, das mir nicht zusagte.
 
-Als Legastheniker und Mensch, der mit MS lebt, nutze ich zudem KI-Unterstützung für die Textgestaltung und Grammatik. Diese persönlichen Erfahrungen flossen direkt in die Entwicklung von TastaturAbenteuer ein, um ein Tool zu schaffen, das authentisch und praxisnah ist.
-Hauptfunktionen
+Als Legastheniker und jemand, der mit MS lebt, nutze ich zudem KI-Unterstützung bei der Textgestaltung und Grammatik. Diese persönlichen Erfahrungen flossen direkt in TastaturAbenteuer ein, um ein authentisches und praxisnahes Tool zu schaffen, das jedem hilft, seine Tippfähigkeiten zu trainieren.
+Features & Spielmodi
+
+TastaturAbenteuer bietet eine Vielzahl von Modi und Funktionen, die für ein motivierendes Schreiberlebnis sorgen:
 
     Verschiedene Spielmodi:
 
         Freewrite: Entfalte deine Kreativität ohne Einschränkungen.
 
-        Adventure: Stelle dich spannenden Bosskämpfen, sammle EPIC-Boni und meistere herausfordernde Schreibaufgaben.
+        Adventure: Tritt in spannenden Bosskämpfen gegen den „Wort Boss“ an, sammle EPIC-Boni und meistere herausfordernde Schreibaufgaben.
 
-        Copy Challenge: Tippe vorgegebene Sätze exakt nach, sammle Punkte und klettere in der Rangliste nach oben.
+        Copy Challenge: Tippe vorgegebene Sätze exakt nach, sammle Punkte und steige in der Rangliste auf.
 
-        Hardcore: Teste deine Fähigkeiten unter extremen Bedingungen – hier zählt jede unterbrochene Pause.
+        Hardcore: Teste deine Fähigkeiten unter extremen Bedingungen – jede unterbrochene Pause zählt!
 
     Anpassbare Themes und Schriftarten:
 
-        Nutze verschiedene Farbschemata (Dark, Light, Vintage) und wähle die für dich angenehmste Schriftart. Wir haben bewusst vorerst auf Bilder, Sounds und Musik verzichtet, um den Fokus auf Inhalt und Funktionalität zu legen. Es geht darum, dass du nicht unnötig abgelenkt wirst – Lernen und Präzision stehen im Mittelpunkt.
+        Wähle zwischen verschiedenen Farbschemata (Dark, Light, Vintage) und passe die Schriftart an deine Vorlieben an.
 
     Detaillierte Statusleiste:
 
-        Behalte alle wichtigen Informationen im Blick: Zeitlimit, Wortanzahl, XP, Niveau, WPM (Wörter pro Minute) und APM (Tastenanschläge pro Minute).
+        Behalte wichtige Informationen wie Zeitlimit, Wortanzahl, XP, Niveau, WPM (Wörter pro Minute) und APM (Tastenanschläge pro Minute) stets im Blick.
 
-    Belohnungen und Erfolge:
+    Belohnungs- und Achievement-System:
 
-        Sammle Erfolge, schalte coole Rewards frei und vergleiche deine Leistung in der Highscore-Liste mit anderen Spielern.
+        Schalte Erfolge frei, sammle Rewards und vergleiche deine Leistungen in der Highscore-Liste.
 
-    Modernes, ansprechendes Design:
+    Interaktive UI-Elemente:
 
-        Stilvolle Animationen, ein klares Layout und intuitive Bedienelemente sorgen für ein motivierendes und spaßiges Trainingserlebnis.
+        Modernes, ansprechendes Design mit Animationen (unterstützt durch Animate.css) und einer intuitiven Benutzeroberfläche.
 
-Code-Architektur & Aufbau
+Fokus auf Inhalt und Funktionalität
 
-Für alle technisch Interessierten bieten wir einen detaillierten Einblick in den Aufbau des Codes:
+Um den Lern- und Schreiberfolg in den Vordergrund zu stellen, haben wir bewusst auf ablenkende Elemente wie Bilder, Sounds und Musik verzichtet. Der Hauptfokus liegt auf der reinen Textinteraktion und dem Erreichen von Lernzielen – so wird ein effektives Training ohne unnötige Ablenkungen gewährleistet.
+Code-Struktur und Aufbau
 
-    Projektstruktur:
+Obwohl alle Funktionalitäten und Elemente in einer einzigen HTML-Datei zusammengefasst sind, ist der Code klar strukturiert und gut kommentiert, sodass:
 
-        /src
-        Hier findest du den gesamten Quellcode, aufgeteilt in mehrere Module, die jeweils einzelne Aspekte des Spiels abdecken.
+    UI-Elemente und Styles:
+    Alle CSS-Regeln für Layout, Themes und Animationen sind direkt im <head> eingebunden, was eine einfache Anpassung und Erweiterung ermöglicht.
 
-            /core – Enthält die Hauptlogik des Spiels, beispielsweise die Spielmodi, die Steuerung und das Punktesystem.
+    JavaScript-Funktionalität:
+    Der gesamte Spielablauf – von der Steuerung und den Spielmodi über die Statusanzeige bis hin zu Belohnungen und Leaderboards – wird über eingebettetes JavaScript umgesetzt.
 
-            /ui – Verantwortlich für das Frontend, das Layout, die Statusleiste sowie die dynamische Anzeige von Text und Animationen.
+        Interaktive Steuerung: Die Logik zur Bearbeitung der Tastatureingaben, zur Aktualisierung von Zählern (WPM, APM) und zur Steuerung der verschiedenen Spielmodi ist detailliert implementiert.
 
-            /utils – Hilfsfunktionen und gemeinsame Logik, die in mehreren Bereichen zum Einsatz kommen (z. B. Timer, Event-Handler und Konfigurationsparser).
+        Belohnungs- und Achievement-System: Mechanismen zur Erfassung von Erfolgen und zur Anzeige von Fortschritten sind vollständig integriert.
 
-    Modulare Entwicklung:
+        Boss-Kampf im Adventure-Modus: Dynamische Berechnung der Boss-Gesundheit und Animationen sorgen für ein spannendes Spielerlebnis.
 
-        Jedes Modul wurde so konzipiert, dass es unabhängig getestet und bei Bedarf erweitert werden kann. Dies gewährleistet eine hohe Flexibilität und erleichtert das Hinzufügen neuer Features oder das Optimieren bestehender Funktionen.
+Diese kompakte, zentrale Organisation fördert eine übersichtliche Darstellung aller Funktionen – so, wie es in unserer ursprünglichen Vision vorgesehen war.
+Installation und Nutzung
 
-    Saubere Code-Struktur:
+So startest du:
 
-        Klare Trennung von Logik und Darstellung: Die Trennung zwischen Geschäftslogik (Gameplay, Punktesystem, Events) und UI-Komponenten (Animationen, Layout) steht im Vordergrund. Dadurch können Entwickler schnell den Überblick gewinnen und spezifische Komponenten isoliert bearbeiten.
+    Repository klonen oder herunterladen:
+    Besuche https://github.com/DemusOpaalium/TastaturAbenteuer und lade das Repository herunter.
 
-        Kommentare und Dokumentation: Der Code ist ausführlich kommentiert. Ein README-Dokument im Hauptverzeichnis bietet eine Übersicht über die Module, ihre Funktion und die Interaktion untereinander.
+    Projekt öffnen:
+    Öffne die Datei TastaturAbenteuer.html in deinem bevorzugten Browser. Alle Funktionen stehen sofort zur Verfügung – kein Installationsprozess oder zusätzliche Abhängigkeiten notwendig.
 
-    Build- und Deployment-Tools:
+    Loslegen:
+    Wähle über die Steuerungselemente deinen gewünschten Modus, passe das Theme und die Schriftart an und starte deine Schreib-Session. Teste die verschiedenen Modi, sammle XP und schalte Erfolge frei!
 
-        Das Projekt nutzt moderne Tools und Skripte, um den Build-Prozess, das Testing und das Deployment zu automatisieren. Dies gewährleistet eine konsistente Codebasis und erleichtert zukünftige Beiträge durch die Community.
+Beitrag und Weiterentwicklung
 
-    Best Practices:
+TastaturAbenteuer ist ein Open-Source-Projekt, das von der Community lebt. Beiträge sind herzlich willkommen!
+Wenn du Anregungen, Bugfixes oder neue Features einbringen möchtest, folge diesen Schritten:
 
-        Es werden gängige Designmuster (wie MVC oder modulare Architektur) angewandt, um eine saubere und wartbare Codebasis zu gewährleisten. Dies erleichtert auch erfahrenen Entwicklern, sich schnell in den Code einzuarbeiten und den Entwicklungsprozess aktiv mitzugestalten.
+    Fork das Repository
 
-Zielgruppe
+    Erstelle einen neuen Branch für deine Änderungen
 
-TastaturAbenteuer richtet sich an alle, die ihre Schreibfähigkeiten verbessern möchten – egal ob Anfänger oder Fortgeschrittene. Die Vielfalt der Modi und Anpassungsmöglichkeiten bietet jedem Spieler genau die richtige Herausforderung. Insbesondere technisch versierte Nutzer und Entwickler finden in der übersichtlichen Code-Struktur und den klar getrennten Modulen wertvolle Einblicke und Anknüpfungspunkte für eigene Erweiterungen.
-Projektziele
+    Sende einen Pull Request mit einer detaillierten Beschreibung der vorgenommenen Änderungen
 
-    Verbesserung der Tippgeschwindigkeit:
+Jeder Beitrag hilft dabei, das Projekt weiter zu verbessern und die Schreibkunst auf ein neues Level zu heben.
+Lizenz
 
-        Trainiere deine Fingerfertigkeit und steigere deine Geschwindigkeit für Alltag und Beruf.
+Dieses Projekt steht unter der MIT-Lizenz. Jeder ist eingeladen, den Code zu verwenden, zu modifizieren und weiterzuverbreiten – solange die Lizenzbedingungen eingehalten werden.
 
-    Steigerung der Schreibgenauigkeit:
-
-        Lerne, Fehler zu minimieren und Sätze exakt wiederzugeben.
-
-    Spaß am Lernen:
-
-        Durch spannende Herausforderungen und kreative Modi wird das Üben zur unterhaltsamen Erfahrung.
-
-    Transparente Entwicklung:
-
-        Als Open-Source-Projekt fördern wir den Austausch mit der Community, sodass jeder seine Ideen einbringen und von einer klar strukturierten Codebasis profitieren kann.
-
-Diese umfassende Beschreibung soll nicht nur den Inhalt und die Funktionen von TastaturAbenteuer erläutern, sondern auch einen detaillierten Einblick in den strukturierten Aufbau des Codes bieten. Wir glauben daran, dass eine transparente und gut dokumentierte Codebasis der Schlüssel zur kontinuierlichen Verbesserung und zum gemeinsamen Erfolg ist.
-
-Mit viel Herzblut, persönlicher Note und dem Anspruch, ein effektives Lernwerkzeug zu schaffen, laden wir dich ein, TastaturAbenteuer auszuprobieren – sowohl als Spieler als auch als Entwickler!
+Mit viel Herzblut, persönlicher Note und dem Ziel, ein effektives Lernwerkzeug zu schaffen, laden wir dich ein, TastaturAbenteuer auszuprobieren – sowohl als Spieler als auch als Entwickler. Viel Spaß und Erfolg beim Tippen!

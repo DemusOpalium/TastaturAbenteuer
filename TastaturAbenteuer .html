@@ -60,7 +60,7 @@
     .close-btn { color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer; }
     .close-btn:hover { color: #000; }
 
-    /* Dropdowns & Buttons (zusätzlicher Rahmen durch oben definierte globale Regeln) */
+    /* Dropdowns & Buttons */
     .design-controls, .extra-controls {
       margin-bottom: 20px; display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;
     }
@@ -87,14 +87,13 @@
       border: 2px solid; border-radius: 8px;
       outline: none; overflow-y: auto; font-size: 1.1em; line-height: 1.5em; transition: background 0.3s ease;
     }
-    /* Rahmen-Farben für den Eingabebereich je nach Theme */
     .theme-dark #writeArea { border-color: #444; }
     .theme-light #writeArea { border-color: #ccc; }
     .theme-vintage #writeArea { border-color: #a67c52; }
     #writeArea.warning { background: rgba(200,50,50,0.5); animation: shake 0.5s infinite alternate; }
     @keyframes shake { from { transform: translateX(0); } to { transform: translateX(3px); } }
 
-    /* Rahmen für den Ziel-Satz (Copy Challenge) */
+    /* Copy Challenge Ziel-Satz */
     #copyTarget {
       display: none;
       border: 2px solid #000;
@@ -106,10 +105,7 @@
       margin-bottom: 10px;
       border-radius: 5px;
     }
-    /* Der Ziel-Satz selbst */
-    #targetSentence {
-      font-weight: bold;
-    }
+    #targetSentence { font-weight: bold; }
 
     /* Steuerungselemente */
     .controls {
@@ -141,18 +137,6 @@
                padding: 15px; border-radius: 8px; }
     .rewards ul { list-style: none; padding-left: 0; }
     .rewards li { padding: 5px 0; }
-
-    /* Hot Streak Indicator */
-    #hotStreakIndicator { display: none; font-size: 1.3em; font-weight: bold; color: #ff5500; }
-
-    /* Achievement-Tabelle */
-    .achievement-table {
-      margin-top: 20px; max-width: 800px; width: 100%; background: rgba(0,0,0,0.3);
-      padding: 15px; border-radius: 8px;
-    }
-    .achievement-table table { width: 100%; border-collapse: collapse; }
-    .achievement-table th, .achievement-table td { padding: 10px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.2); }
-    .achievement-table th { background: rgba(255,255,255,0.2); }
 
     /* Leaderboard */
     .leaderboard { margin-top: 20px; max-width: 800px; width: 100%; background: rgba(0,0,0,0.3);
@@ -253,7 +237,7 @@
     </select>
   </div>
   
-  <!-- Extra Controls: Schwierigkeitsgrad, Kategorie & Share -->
+  <!-- Extra Controls: Schwierigkeitsgrad, Kategorie, Share & Profilmanagement -->
   <div class="extra-controls">
     <label for="difficultySelect">Schwierigkeitsgrad:</label>
     <select id="difficultySelect">
@@ -271,6 +255,9 @@
       <option value="tierwelt">Tierwelt</option>
     </select>
     <button id="shareBtn">Ergebnisse Teilen</button>
+    <button id="saveProfileBtn">Profil Speichern</button>
+    <button id="loadProfileBtn">Profil Laden</button>
+    <input type="file" id="loadProfileInput" style="display:none;" accept=".txt, .json">
   </div>
   
   <!-- Statusleiste -->
@@ -376,18 +363,18 @@
   
   <script>
     /* --- Globale Variablen und Daten --- */
-    let timerInterval, idleTimeout;
+    let timerInterval = null, idleTimeout = null;
     let sessionActive = false;
     let sessionStartTime = null;
     let remainingTime = 60;
     let keyPressCount = 0;
     let hotStreakCounter = 0;
     let lastKeyTime = 0;
-    // Hot-Streak Animation bleibt bei 20, aber die Bedingung wird im Copy-Modus angepasst
+    // Hot-Streak Animation: 20, Bedingung kann im Copy-Modus angepasst werden
     let hotStreakRequired = 20; 
     let hotStreakTimeThreshold = 250;
     
-    // GLOBAL ADDED: userStats initialisieren
+    // Benutzer-Statistiken
     let userStats = {
       xp: 0,
       totalWords: 0,
@@ -395,7 +382,7 @@
       level: 1
     };
 
-    // Variablen für Copy Challenge
+    // Copy Challenge Variablen
     let copyScore = 0;
     let currentTargetSentence = "";
     
@@ -1470,10 +1457,8 @@
     };
     // Adventure Mode: Boss
     let boss = null, bossDefeated = false;
-    
-    // Variablen für den neuen Boss-Schaden
-    let lastProcessedIndex = 0;       // Für inkrementelle Schadensberechnung
-    let lastHotStreakWordCount = 0;     // Für Hot-Streak Bonus
+    let lastProcessedIndex = 0; // Für inkrementelle Schadensberechnung
+    let lastHotStreakWordCount = 0; // Für Hot-Streak Bonus
     
     // Belohnungen & Erfolge
     let unlockedRewards = [];
@@ -1484,7 +1469,7 @@
     let sessionAchievements = {};
     let copyAchieved = {};
     
-    // Elemente
+    // DOM-Elemente
     const modeSelect = document.getElementById("modeSelect");
     const timeSelect = document.getElementById("timeSelect");
     const difficultySelect = document.getElementById("difficultySelect");
@@ -1502,20 +1487,19 @@
     const resetBtn = document.getElementById("resetBtn");
     const promptBtn = document.getElementById("promptBtn");
     const shareBtn = document.getElementById("shareBtn");
+    const saveProfileBtn = document.getElementById("saveProfileBtn");
+    const loadProfileBtn = document.getElementById("loadProfileBtn");
+    const loadProfileInput = document.getElementById("loadProfileInput");
     const infoBtn = document.getElementById("infoBtn");
     const infoModal = document.getElementById("infoModal");
     const closeInfo = document.getElementById("closeInfo");
     const bossContainer = document.getElementById("bossContainer");
     const bossNameElem = document.getElementById("bossName");
     const bossHealthElem = document.getElementById("bossHealth");
-    
-    // Für Copy Challenge
     const copyTargetElem = document.getElementById("copyTarget");
     const targetSentenceElem = document.getElementById("targetSentence");
     const checkBtn = document.getElementById("checkBtn");
     const copyScoreDisplay = document.getElementById("copyScoreDisplay");
-    
-    // End Session Popup Elemente
     const endSessionPopup = document.getElementById("endSessionPopup");
     const endSessionMessage = document.getElementById("endSessionMessage");
     const closeEndSessionBtn = document.getElementById("closeEndSessionBtn");
@@ -1527,136 +1511,134 @@
     const prompts = [
       "Es war einmal ein geheimnisvoller Wald, in dem die Zeit stillzustehen schien...",
       "Als die Sonne hinter den Bergen verschwand, begann ein Abenteuer, das alles verändern sollte...",
-      "Plötzlich ertönte ein seltsames Geräusch, und niemand wusste, was als Nächstes passieren würde...",
-      "In einem verborgenen Tal, wo Drachen über uralte Ruinen kreisen, erwachte eine längst vergessene Magie, die das Schicksal eines jungen Abenteurers für immer verändern sollte.",
-      "Während im Schatten der großen Pyramiden Ägyptens ein geheimnisvoller Pharao sein verlorenes Erbe suchte, brach ein Abenteuer auf, das die Grenzen von Zeit und Raum sprengte.",
-      "Als in einem abgelegenen Krankenhaus plötzlich Patienten mit rätselhaften Symptomen eingeliefert wurden, begann eine Ärztin, ein medizinisches Geheimnis zu lüften, das die Welt erschüttern könnte.",
-      "In den düsteren Gassen einer regnerischen Großstadt entdeckte ein abgeklärter Ermittler einen mysteriösen Hinweis, der ihn mitten ins Netz eines perfiden Verbrechens führte.",
-      "Es war einmal in einem kleinen Dorf, in dem ein geheimnisvoller Fremder erschien – jemand, der mit einem verzauberten Artefakt die Zukunft der Bewohner in seinen Händen hielt.",
-      "In einer Welt, in der die Sterne magische Portale zu anderen Dimensionen öffnen, trat ein junger Held an, um das Gleichgewicht zwischen Licht und Dunkelheit wiederherzustellen.",
-      "Im stürmischen Mittelalter, als Burgen, Ritter und Intrigen das Land beherrschten, entdeckte ein einfacher Schmied ein Geheimnis, das die Kriege beenden könnte.",
-      "Als ein renommierter Forscher in einem alten Kloster auf uralte medizinische Schriften stieß, entfaltete sich ein Wettlauf gegen die Zeit, um ein tödliches Rätsel zu lösen.",
-      "In einer Stadt voller Lügen und dunkler Geheimnisse fand ein Privatdetektiv einen Beweis, der ihn auf die Spur eines kaltblütigen Serienverbrechers brachte.",
-      "In einem verzauberten Wald, in dem sprechende Tiere und magische Wesen lebten, kündigte sich das Unheil an – und nur ein mutiges Mädchen konnte den Fluch brechen.",
-      "Ein verfluchter König, der in einem alten Zauberspiegel gefangen war, wartete auf den Tag, an dem ein tapferer Krieger seine Macht brechen und das Reich befreien würde.",
-      "Während in einem mittelalterlichen Kloster geheime Manuskripte über verlorenes Wissen verbreitet wurden, zeichnete sich ein mysteriöser Schatten ab, der die Wahrheit bedrohte.",
-      "Als in einem futuristischen Labor Experimente an menschlichen Genen schiefgingen, stellte sich eine Wissenschaftlerin der ethischen Frage, die ihr Leben und das aller Menschen verändern könnte.",
-      "Ein unerwarteter Anruf in einer stürmischen Nacht führte einen abgebrühten Detective in ein verlassenes Haus – und dort entdeckte er ein Rätsel, das selbst die Polizei in Staunen versetzte.",
-      "In einem Königreich, in dem die Natur selbst verzaubert schien, begab sich ein junger Prinz auf die Suche nach einer sagenumwobenen Blume, die ewige Jugend versprach.",
-      "Tief in den Schatten eines magischen Waldes, wo die Bäume flüsterten und der Wind Geheimnisse trug, erwachte ein uraltes Wesen, das den Lauf der Zeit beeinflussen konnte.",
-      "In den Ruinen einer längst vergangenen Stadt, deren Mauern Geschichten von Triumph und Tragödie erzählten, stieß ein Archäologe auf einen Fund, der die Geschichtsbücher neu schreiben könnte.",
-      "Ein mysteriöser Virus, der in einer alten, verlassenen Klinik seinen Ursprung zu haben schien, forderte einen jungen Arzt heraus, die Grenze zwischen Wissenschaft und Aberglauben zu überwinden.",
-      "Als in einer mondlosen Nacht ein wertvolles Kunstwerk aus einem Museum verschwand, nahm ein unkonventioneller Ermittler die Spur auf – und stieß dabei auf ein Netz aus Verrat und Gier.",
-      "In einem Land, wo jede Blume und jeder Bach eine Geschichte erzählte, erschien plötzlich ein verzauberter Wanderer, der mit einem geheimnisvollen Lächeln die Herzen der Menschen eroberte.",
-      "Ein uralter Drache, der über den Wolken kreiste, bewachte ein Portal zu einer Welt jenseits der Vorstellungskraft – und nur ein unerschrockener Held konnte das Tor öffnen.",
-      "In den Schatten der Renaissance, als Kunst und Wissenschaft in einem explosiven Tanz miteinander verflochten waren, zeichnete sich ein Geheimnis ab, das die Macht der Mächtigen ins Wanken bringen sollte.",
-      "Ein geheimnisvoller Fall in einer renommierten Forschungseinrichtung führte eine junge Medizinerin auf eine Reise in die Tiefen menschlicher Emotionen und uralter Heilkunst.",
-      "In einer Stadt, in der jeder Bewohner ein Geheimnis hatte, wurde ein unscheinbarer Brief gefunden – ein Dokument, das eine Kette von Ereignissen in Gang setzte, die niemand vorhersehen konnte.",
-      "Es hieß, tief im verwunschenen Wald verbarg sich ein verzaubertes Schloss, in dem ein alter Fluch lag – und nur der Glaube eines reinen Herzens konnte ihn brechen.",
-      "Eine Prophezeiung, in uralten Schriften verborgen, kündigte das Kommen eines Auserwählten an, der das Schicksal der Welten entscheiden würde – und der in den Träumen eines Kindes erwachte.",
-      "In den verwitterten Mauern eines alten Klosters entdeckte ein Historiker ein Tagebuch, das von dunklen Geheimnissen und verborgenen Schätzen erzählte – ein Erbe, das das Land für immer verändern sollte.",
-      "Als in einem abgelegenen Forschungszentrum unerklärliche Phänomene auftraten, stellte sich ein Team von Spezialisten der Frage, ob die Natur selbst ein Heilmittel bereithielt – oder ein tödliches Rätsel war.",
-      "In einer trüben Nacht, als der Nebel über der Stadt lag, enthüllte ein anonym zugestellter Hinweis einen perfiden Plan, der das Leben unschuldiger Menschen für immer verändern sollte.",
-      "In einem Land, wo jeder Sonnenaufgang ein neues Wunder versprach, tauchte plötzlich ein geheimnisvoller Wanderer auf, dessen Worte die Herzen der Menschen mit Hoffnung und Magie erfüllten."
+      "Plötzlich ertönte ein seltsames Geräusch, und niemand wusste, was als Nächstes passieren würde..."
+      // Weitere Prompts können hier ergänzt werden
     ];
-
-    // Sound (optional)
+    
+    // Optional: Sound für Warnungen
     const warningSound = new Audio('warning.mp3');
     
-    /* --- Neue Funktionen für den angepassten Boss-Modus --- */
-    // Überprüft, ob ein Wort (nur Buchstaben, inklusive deutscher Umlaute, ß, Bindestriche und Apostrophe) korrekt geschrieben ist.
-    function isCorrectSpelling(word) {
-      return /^[A-Za-zÄÖÜäöüß'-]+$/.test(word);
+    /* --- Funktionen --- */
+    
+    function updateTimerDisplay() {
+      let min = Math.floor(remainingTime / 60);
+      let sec = remainingTime % 60;
+      timerDisplay.textContent = `Time: ${min}:${sec.toString().padStart(2, "0")}`;
     }
     
-    // Simuliert einen W20-Wurf (Zufallszahl zwischen 1 und 20).
+    function countWords(text) {
+      return text.trim().split(/\s+/).filter(w => w.length > 0).length;
+    }
+    
+    function updateWordCount() {
+      const text = writeArea.innerText;
+      const count = countWords(text);
+      wordCountDisplay.textContent = `Words: ${count}`;
+      goalProgressDisplay.textContent = `Goal: ${count}/${window.baseTarget || "-"}`;
+      if (modeSelect.value === "adventure" && boss) { updateBossStatus(); }
+      // Hot-Streak Bonus im Adventure-Modus
+      if (modeSelect.value === "adventure" && boss) {
+         if (count - lastHotStreakWordCount >= 8) {
+             let bonus = rollD20();
+             boss.currentHealth = Math.max(boss.currentHealth - bonus, 0);
+             updateBossUI();
+             showDicePopup(bonus);
+             lastHotStreakWordCount = count;
+         }
+      }
+      for (let threshold in sessionAchievements) {
+        if (count >= threshold && !sessionAchievements[threshold]) {
+          sessionAchievements[threshold] = true;
+          const achieveElem = document.getElementById("achieve" + threshold);
+          if (achieveElem) { achieveElem.textContent = "Erreicht"; }
+        }
+      }
+    }
+    
+    function updateWPM() {
+      if (!sessionStartTime) return;
+      const elapsedMinutes = (Date.now() - sessionStartTime) / 60000;
+      const wpm = Math.round(countWords(writeArea.innerText) / elapsedMinutes);
+      wpmDisplay.textContent = `WPM: ${wpm}`;
+    }
+    
+    function updateAPM() {
+      if (!sessionStartTime) return;
+      const elapsedMinutes = (Date.now() - sessionStartTime) / 60000;
+      const apm = elapsedMinutes > 0 ? Math.round(keyPressCount / elapsedMinutes) : 0;
+      apmDisplay.textContent = `APM: ${apm} max`;
+    }
+    
+    function resetIdleTimer() {
+      clearTimeout(idleTimeout);
+      let idleLimit = (difficultySelect.value === "easy") ? 3000 : (difficultySelect.value === "normal") ? 2000 : 1000;
+      idleTimeout = setTimeout(triggerInactivityWarning, idleLimit);
+      writeArea.classList.remove("warning");
+    }
+    
+    function triggerInactivityWarning() {
+      writeArea.classList.add("warning");
+      playWarningSound();
+      if (modeSelect.value === "hardcore") {
+        setTimeout(() => {
+          if (writeArea.classList.contains("warning")) {
+            writeArea.innerText = "";
+            updateWordCount();
+          }
+        }, 2000);
+      }
+    }
+    
+    function playWarningSound() {
+      warningSound.play().catch(e => console.log("Sound konnte nicht abgespielt werden:", e));
+    }
+    
+    function showRandomPrompt() {
+      const randomPrompt = prompts[Math.floor(Math.random() * prompts.length)];
+      writeArea.innerText = randomPrompt + "\n\n";
+      updateWordCount();
+    }
+    
+    function showAchievement(message) {
+      achievementPopup.textContent = message;
+      achievementPopup.style.display = "block";
+      achievementPopup.classList.add("animate__bounceIn");
+      setTimeout(() => {
+        achievementPopup.classList.remove("animate__bounceIn");
+        achievementPopup.style.display = "none";
+      }, 3000);
+    }
+    
+    function showHotStreakIndicator() {
+      hotStreakIndicator.style.display = "block";
+      hotStreakIndicator.classList.add("animate__flash");
+      setTimeout(() => {
+        hotStreakIndicator.classList.remove("animate__flash");
+        hotStreakIndicator.style.display = "none";
+      }, 2000);
+      hotStreakCounter = 0;
+    }
+    
+    // Adventure Mode: Boss
+    function initBoss() {
+      boss = { name: "Wort Boss", maxHealth: 500, currentHealth: 500, targetWords: window.baseTarget * 1.5 };
+      bossDefeated = false;
+      bossContainer.style.display = "block";
+      bossNameElem.textContent = boss.name;
+      updateBossUI();
+    }
+    
+    function updateBossUI() {
+      let healthPercent = (boss.currentHealth / boss.maxHealth) * 100;
+      bossHealthElem.style.width = healthPercent + "%";
+    }
+    
+    // Würfelt einen W20 (Zufallszahl zwischen 1 und 20)
     function rollD20() {
       return Math.floor(Math.random() * 20) + 1;
     }
     
-    // Prüft, ob eine Hot Streak erreicht wurde und gibt den entsprechenden Bonus-Schaden zurück.
-    function checkHotStreakBonus() {
-      const HOT_STREAK_THRESHOLD = 8; // Mindestanzahl korrekt getippter Wörter in Folge
-      if (hotStreakCounter >= HOT_STREAK_THRESHOLD) {
-        let bonus = rollD20();
-        showDicePopup(bonus);
-        hotStreakCounter = 0; // Hot-Streak zurücksetzen
-        return bonus;
-      }
-      return 0;
-    }
-    
-    // Verarbeitet den neu eingegebenen Text (seit dem letzten Aufruf) und berechnet Schaden.
-    // Pro korrekt geschriebenem Wort wird Schaden in Höhe der Wortlänge zugefügt.
-// Aktualisierte Funktion: Zuerst in Sätze aufteilen und dann pro Satz Schaden berechnen
-function processNewTextForBossDamage() {
-  let fullText = writeArea.innerText;
-  let newText = fullText.substring(lastProcessedIndex);
-  if(newText.trim().length === 0) return 0;
-  
-  let damage = 0;
-  
-  // Teile den neuen Text in Sätze auf. Dabei werden Sätze als Textblöcke definiert,
-  // die mit . ! oder ? enden (inkl. möglicher Leerzeichen danach).
-  let sentenceRegex = /[^\.!\?]+[\.!\?]+/g;
-  let sentences = newText.match(sentenceRegex);
-  // Falls keine vollständigen Sätze gefunden werden, den gesamten Text als einen Satz behandeln
-  if (!sentences) {
-    sentences = [newText];
-  }
-  
-  // Verarbeite jeden Satz einzeln
-  sentences.forEach(sentence => {
-    let sentenceDamage = 0;
-    let sentenceCorrect = true;
-    
-    // Entferne führende und abschließende Leerzeichen
-    sentence = sentence.trim();
-    // Zerlege den Satz in Wörter (auf Basis von Leerzeichen)
-    let words = sentence.split(/\s+/);
-    
-    words.forEach(word => {
-      // Entferne führende und abschließende Satzzeichen (z. B. . , ! ? ;)
-      let cleanedWord = word.replace(/^[^A-Za-zÄÖÜäöüß'-]+|[^A-Za-zÄÖÜäöüß'-]+$/g, '');
-      if (cleanedWord.length === 0) return;
-      if (isCorrectSpelling(cleanedWord)) {
-        let wordDamage = cleanedWord.length;
-        sentenceDamage += wordDamage;
-        // Hier könntest du auch die Hot-Streak-Logik erweitern (z. B. hotStreakCounter++)
-      } else {
-        sentenceCorrect = false;
-      }
-    });
-    
-    damage += sentenceDamage;
-    if (sentenceCorrect) {
-      // Füge 50 % Bonus zum Satz-Schaden hinzu, wenn der gesamte Satz korrekt ist
-      let bonus = Math.round(sentenceDamage * 0.2);
-      damage += bonus;
-    }
-  });
-  
-  // Füge zusätzlich den Hot-Streak-Bonus hinzu (falls erreicht)
-  damage += checkHotStreakBonus();
-  
-  lastProcessedIndex = fullText.length;
-  return damage;
-}  
-    // Aktualisiert den Boss-Status anhand des neu eingegebenen, korrekt geschriebenen Textes.
-    // Wird der Boss besiegt, endet das Spiel sofort (Gewinn) und Bonuspunkte werden vergeben.
-    function updateBossStatus() {
-      let newDamage = processNewTextForBossDamage();
-      if(newDamage > 0) {
-        boss.currentHealth = Math.max(boss.currentHealth - newDamage, 0);
-      }
-      updateBossUI();
-      if (boss.currentHealth <= 0 && !bossDefeated) {
-        bossDefeated = true;
-        winGame();
-      }
-    }
-    
-    // Zeigt ein cooles Pop-up mit dem W20-Ergebnis an.
+    // Zeigt ein Pop-up mit dem W20-Ergebnis
     function showDicePopup(bonus) {
       const dicePopup = document.createElement("div");
       dicePopup.textContent = "W20: " + bonus;
@@ -1681,10 +1663,67 @@ function processNewTextForBossDamage() {
       }, 2000);
     }
     
-    // Bei Boss-Sieg: Spiel gewinnen, Bonuspunkte vergeben und Session sofort beenden.
+    // Verarbeitet neuen Text für Boss-Schaden (Sätze werden analysiert)
+    function processNewTextForBossDamage() {
+      let fullText = writeArea.innerText;
+      let newText = fullText.substring(lastProcessedIndex);
+      if(newText.trim().length === 0) return 0;
+      
+      let damage = 0;
+      let sentenceRegex = /[^\.!\?]+[\.!\?]+/g;
+      let sentences = newText.match(sentenceRegex);
+      if (!sentences) {
+        sentences = [newText];
+      }
+      sentences.forEach(sentence => {
+        let sentenceDamage = 0;
+        let sentenceCorrect = true;
+        sentence = sentence.trim();
+        let words = sentence.split(/\s+/);
+        words.forEach(word => {
+          let cleanedWord = word.replace(/^[^A-Za-zÄÖÜäöüß'-]+|[^A-Za-zÄÖÜäöüß'-]+$/g, '');
+          if (cleanedWord.length === 0) return;
+          // Hier wird angenommen, dass die Rechtschreibung korrekt ist (kann erweitert werden)
+          let wordDamage = cleanedWord.length;
+          sentenceDamage += wordDamage;
+        });
+        damage += sentenceDamage;
+        if (sentenceCorrect) {
+          let bonus = Math.round(sentenceDamage * 0.2);
+          damage += bonus;
+        }
+      });
+      damage += checkHotStreakBonus();
+      lastProcessedIndex = fullText.length;
+      return damage;
+    }
+    
+    function checkHotStreakBonus() {
+      const HOT_STREAK_THRESHOLD = 8;
+      if (hotStreakCounter >= HOT_STREAK_THRESHOLD) {
+        let bonus = rollD20();
+        showDicePopup(bonus);
+        hotStreakCounter = 0;
+        return bonus;
+      }
+      return 0;
+    }
+    
+    function updateBossStatus() {
+      let newDamage = processNewTextForBossDamage();
+      if(newDamage > 0) {
+        boss.currentHealth = Math.max(boss.currentHealth - newDamage, 0);
+      }
+      updateBossUI();
+      if (boss.currentHealth <= 0 && !bossDefeated) {
+        bossDefeated = true;
+        winGame();
+      }
+    }
+    
     function winGame() {
       showAchievement("Boss besiegt! Du hast das Spiel gewonnen! Bonus XP erhalten!");
-      userStats.xp += 50; // Bonus XP
+      userStats.xp += 50;
       unlockReward("🏆 Boss-Besieger Emoji");
       clearInterval(timerInterval);
       clearTimeout(idleTimeout);
@@ -1692,68 +1731,7 @@ function processNewTextForBossDamage() {
       endSessionPopup.style.display = "block";
     }
     
-    /* --- Event Listener --- */
-    infoBtn.addEventListener("click", () => { infoModal.style.display = "flex"; });
-    closeInfo.addEventListener("click", () => { infoModal.style.display = "none"; });
-    window.addEventListener("click", (event) => { if (event.target == infoModal) infoModal.style.display = "none"; });
-    
-    startBtn.addEventListener("click", startSession);
-    resetBtn.addEventListener("click", resetSession);
-    promptBtn.addEventListener("click", showRandomPrompt);
-    shareBtn.addEventListener("click", shareResults);
-    checkBtn.addEventListener("click", checkCopySentence);
-    closeEndSessionBtn.addEventListener("click", () => {
-      endSessionPopup.style.display = "none";
-    });
-    
-    // Erweiterte Keydown-Logik: Bei Copy Challenge wird Enter abgefangen
-    writeArea.addEventListener("keydown", (e) => {
-      if (!sessionActive) return;
-      
-      // Falls wir im Copy-Modus sind und Enter drücken:
-      if (modeSelect.value === "copy" && e.key === "Enter") {
-        e.preventDefault(); // Zeilenumbruch verhindern
-        checkCopySentence();
-        return;
-      }
-      
-      resetIdleTimer();
-      updateWordCount();
-      keyPressCount++;
-      const currentTime = Date.now();
-      if (currentTime - lastKeyTime < hotStreakTimeThreshold) { hotStreakCounter++; }
-      else { hotStreakCounter = 1; }
-      lastKeyTime = currentTime;
-      if (hotStreakCounter >= hotStreakRequired) { showHotStreakIndicator(); }
-    });
-    
-    // Paste-Verbot: Verhindert, dass Inhalte eingefügt werden – ansonsten wird ein lustiger Anti-Cheat-Hinweis angezeigt.
-    writeArea.addEventListener("paste", (e) => {
-      e.preventDefault();
-      showAchievement("Schummeln? Nicht bei uns! Nur Tippen ist erlaubt! 😜");
-    });
-    
-    modeSelect.addEventListener("change", () => {
-      promptBtn.style.display = modeSelect.value === "creative" ? "inline-block" : "none";
-      if (modeSelect.value === "copy") {
-        copyTargetElem.style.display = "block";
-        checkBtn.style.display = "inline-block";
-        copyScoreDisplay.style.display = "block";
-        initCopyMode();
-      } else {
-        copyTargetElem.style.display = "none";
-        checkBtn.style.display = "none";
-        copyScoreDisplay.style.display = "none";
-      }
-    });
-    
-    const themeSelect = document.getElementById("themeSelect");
-    const fontSelect = document.getElementById("fontSelect");
-    themeSelect.addEventListener("change", () => { document.body.className = themeSelect.value; });
-    fontSelect.addEventListener("change", () => { document.body.style.fontFamily = fontSelect.value; });
-    
-    /* --- Funktionen --- */
-    
+    // Achievements
     function getTier() {
       if (difficultySelect.value === "easy") return "Bronze";
       if (difficultySelect.value === "normal") return "Silber";
@@ -1786,7 +1764,7 @@ function processNewTextForBossDamage() {
       }
     }
     
-    // Neue Funktion: Generiert den Ziel-Satz für den Copy Challenge-Modus anhand der ausgewählten Kategorie und Schwierigkeit.
+    // Copy Challenge Funktionen
     function generateCopySentence() {
       let lib = document.getElementById("librarySelect").value;
       let diff = difficultySelect.value;
@@ -1846,10 +1824,9 @@ function processNewTextForBossDamage() {
       copyScoreDisplay.textContent = "Copy Score: " + copyScore;
     }
     
+    // Start, Reset und End Session
     function startSession() {
-      // Verstecke evtl. offenes End-Session-Popup
       endSessionPopup.style.display = "none";
-      
       sessionActive = true;
       keyPressCount = 0;
       hotStreakCounter = 0;
@@ -1872,7 +1849,6 @@ function processNewTextForBossDamage() {
         generateAchievements();
       }
       
-      // Bei Adventure-Modus: Boss initialisieren und neue Variablen zurücksetzen
       if (modeSelect.value === "adventure") {
         initBoss();
         lastProcessedIndex = 0;
@@ -1910,7 +1886,6 @@ function processNewTextForBossDamage() {
       copyTargetElem.style.display = "none";
       checkBtn.style.display = "none";
       copyScoreDisplay.style.display = "none";
-      // Verstecke evtl. offenes End-Session-Popup
       endSessionPopup.style.display = "none";
     }
     
@@ -1918,13 +1893,7 @@ function processNewTextForBossDamage() {
       clearInterval(timerInterval);
       clearTimeout(idleTimeout);
       sessionActive = false;
-      let message = "";
-      if (modeSelect.value === "copy") {
-        message = "Deine Copy Challenge Punkte: " + copyScore;
-      } else {
-        message = "Session beendet!";
-      }
-      // Statt alert: modernes End-Session-Popup anzeigen
+      let message = (modeSelect.value === "copy") ? "Deine Copy Challenge Punkte: " + copyScore : "Session beendet!";
       endSessionMessage.textContent = message;
       endSessionPopup.style.display = "block";
       
@@ -1949,142 +1918,40 @@ function processNewTextForBossDamage() {
       copyScoreDisplay.style.display = "none";
     }
     
-    function updateTimerDisplay() {
-      let min = Math.floor(remainingTime / 60);
-      let sec = remainingTime % 60;
-      timerDisplay.textContent = `Time: ${min}:${sec.toString().padStart(2, "0")}`;
+    // Profil speichern & laden
+    function saveProfile() {
+      const data = JSON.stringify(userStats, null, 2);
+      const blob = new Blob([data], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "profile.json";
+      a.click();
+      URL.revokeObjectURL(url);
     }
     
-    // Aktualisiert die Wortanzahl und führt im Adventure-Modus die Boss-Status-Updates durch.
-    // Zusätzlich wird hier der Hot-Streak-Bonus ausgelöst, falls seit dem letzten Bonus 8 oder mehr Wörter neu getippt wurden.
-    function updateWordCount() {
-      const text = writeArea.innerText;
-      const count = countWords(text);
-      wordCountDisplay.textContent = `Words: ${count}`;
-      goalProgressDisplay.textContent = `Goal: ${count}/${window.baseTarget || "-"}`;
-      if (modeSelect.value === "adventure" && boss) { updateBossStatus(); }
-      // Hot-Streak Bonus: Bei 8 oder mehr neuen Wörtern
-      if (modeSelect.value === "adventure" && boss) {
-         if (count - lastHotStreakWordCount >= 8) {
-             let bonus = rollD20();
-             boss.currentHealth = Math.max(boss.currentHealth - bonus, 0);
-             updateBossUI();
-             showDicePopup(bonus);
-             lastHotStreakWordCount = count;
-         }
-      }
-      for (let threshold in sessionAchievements) {
-        if (count >= threshold && !sessionAchievements[threshold]) {
-          sessionAchievements[threshold] = true;
-          const achieveElem = document.getElementById("achieve" + threshold);
-          if (achieveElem) { achieveElem.textContent = "Erreicht"; }
+    function loadProfile(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const loadedProfile = JSON.parse(e.target.result);
+          userStats = loadedProfile;
+          updateXPAndLevelDisplay();
+          alert("Profil erfolgreich geladen.");
+        } catch (error) {
+          alert("Fehler beim Laden des Profils: " + error);
         }
-      }
+      };
+      reader.readAsText(file);
     }
     
-    function updateWPM() {
-      if (!sessionStartTime) return;
-      const elapsedMinutes = (Date.now() - sessionStartTime) / 60000;
-      const wpm = Math.round(countWords(writeArea.innerText) / elapsedMinutes);
-      wpmDisplay.textContent = `WPM: ${wpm}`;
+    function updateXPAndLevelDisplay() {
+      xpDisplay.textContent = `XP: ${userStats.xp}`;
+      levelDisplay.textContent = `Level: ${userStats.level}`;
     }
     
-    function updateAPM() {
-      if (!sessionStartTime) return;
-      let elapsedMinutes = (Date.now() - sessionStartTime) / 60000;
-      let apm = elapsedMinutes > 0 ? Math.round(keyPressCount / elapsedMinutes) : 0;
-      apmDisplay.textContent = `APM: ${apm} max`;
-    }
-    
-    function countWords(text) {
-      return text.trim().split(/\s+/).filter(w => w.length > 0).length;
-    }
-    
-    function resetIdleTimer() {
-      clearTimeout(idleTimeout);
-      let idleLimit = (difficultySelect.value === "easy") ? 3000 : (difficultySelect.value === "normal") ? 2000 : 1000;
-      idleTimeout = setTimeout(triggerInactivityWarning, idleLimit);
-      writeArea.classList.remove("warning");
-    }
-    
-    function triggerInactivityWarning() {
-      writeArea.classList.add("warning");
-      playWarningSound();
-      if (modeSelect.value === "hardcore") {
-        setTimeout(() => {
-          if (writeArea.classList.contains("warning")) {
-            writeArea.innerText = "";
-            updateWordCount();
-          }
-        }, 2000);
-      }
-    }
-    
-    function playWarningSound() {
-      warningSound.play().catch(e => console.log("Sound konnte nicht abgespielt werden:", e));
-    }
-    
-    function showRandomPrompt() {
-      const randomPrompt = prompts[Math.floor(Math.random() * prompts.length)];
-      writeArea.innerText = randomPrompt + "\n\n";
-      updateWordCount();
-    }
-    
-    function showAchievement(message) {
-      achievementPopup.textContent = message;
-      achievementPopup.style.display = "block";
-      achievementPopup.classList.add("animate__bounceIn");
-      setTimeout(() => {
-        achievementPopup.classList.remove("animate__bounceIn");
-        achievementPopup.style.display = "none";
-      }, 3000);
-    }
-    
-    function showHotStreakIndicator() {
-      hotStreakIndicator.style.display = "block";
-      hotStreakIndicator.classList.add("animate__flash");
-      setTimeout(() => {
-        hotStreakIndicator.classList.remove("animate__flash");
-        hotStreakIndicator.style.display = "none";
-      }, 2000);
-      hotStreakCounter = 0;
-    }
-    
-    // Adventure Mode: Boss initialisieren
-    function initBoss() {
-      boss = { name: "Wort Boss", maxHealth: 500, currentHealth: 500, targetWords: window.baseTarget * 1.5 };
-      bossDefeated = false;
-      bossContainer.style.display = "block";
-      bossNameElem.textContent = boss.name;
-      updateBossUI();
-    }
-    
-    function updateBossUI() {
-      let healthPercent = (boss.currentHealth / boss.maxHealth) * 100;
-      bossHealthElem.style.width = healthPercent + "%";
-    }
-    
-    // Belohnungen freischalten und speichern
-    function unlockReward(rewardName) {
-      if (!unlockedRewards.includes(rewardName)) {
-        unlockedRewards.push(rewardName);
-        updateRewardUI();
-        showAchievement(`Belohnung freigeschaltet: ${rewardName}`);
-        localStorage.setItem("unlockedRewards", JSON.stringify(unlockedRewards));
-      }
-    }
-    
-    function updateRewardUI() {
-      const rewardList = document.getElementById("rewardList");
-      rewardList.innerHTML = "";
-      unlockedRewards.forEach(reward => {
-        const li = document.createElement("li");
-        li.textContent = reward;
-        rewardList.appendChild(li);
-      });
-    }
-    
-    // XP und Level-Up Logik
     function checkLevelUp() {
       const newLevel = Math.floor(userStats.xp / 100) + 1;
       if (newLevel > userStats.level) {
@@ -2095,11 +1962,10 @@ function processNewTextForBossDamage() {
         if (newLevel === 4) { unlockReward("🔥 Hot Emoji"); }
         if (newLevel === 5) { unlockReward("🏆 Champion Emoji"); }
       }
-      xpDisplay.textContent = `XP: ${userStats.xp}`;
-      levelDisplay.textContent = `Level: ${userStats.level}`;
+      updateXPAndLevelDisplay();
     }
     
-    // Leaderboard-Funktionen
+    // Leaderboard Funktionen
     function saveSessionToLeaderboard() {
       const currentWords = countWords(writeArea.innerText);
       const sessionData = { words: currentWords, xp: userStats.xp, timestamp: Date.now() };
@@ -2125,6 +1991,63 @@ function processNewTextForBossDamage() {
         alert("Ergebnisse kopiert! Teile sie mit deinen Freunden!");
       });
     }
+    
+    // Event Listener
+    infoBtn.addEventListener("click", () => { infoModal.style.display = "flex"; });
+    closeInfo.addEventListener("click", () => { infoModal.style.display = "none"; });
+    window.addEventListener("click", (event) => { if (event.target == infoModal) infoModal.style.display = "none"; });
+    
+    startBtn.addEventListener("click", startSession);
+    resetBtn.addEventListener("click", resetSession);
+    promptBtn.addEventListener("click", showRandomPrompt);
+    shareBtn.addEventListener("click", shareResults);
+    checkBtn.addEventListener("click", checkCopySentence);
+    closeEndSessionBtn.addEventListener("click", () => { endSessionPopup.style.display = "none"; });
+    
+    saveProfileBtn.addEventListener("click", saveProfile);
+    loadProfileBtn.addEventListener("click", () => { loadProfileInput.click(); });
+    loadProfileInput.addEventListener("change", loadProfile);
+    
+    writeArea.addEventListener("keydown", (e) => {
+      if (!sessionActive) return;
+      if (modeSelect.value === "copy" && e.key === "Enter") {
+        e.preventDefault();
+        checkCopySentence();
+        return;
+      }
+      resetIdleTimer();
+      updateWordCount();
+      keyPressCount++;
+      const currentTime = Date.now();
+      if (currentTime - lastKeyTime < hotStreakTimeThreshold) { hotStreakCounter++; }
+      else { hotStreakCounter = 1; }
+      lastKeyTime = currentTime;
+      if (hotStreakCounter >= hotStreakRequired) { showHotStreakIndicator(); }
+    });
+    
+    writeArea.addEventListener("paste", (e) => {
+      e.preventDefault();
+      showAchievement("Schummeln? Nicht bei uns! Nur Tippen ist erlaubt! 😜");
+    });
+    
+    modeSelect.addEventListener("change", () => {
+      promptBtn.style.display = modeSelect.value === "creative" ? "inline-block" : "none";
+      if (modeSelect.value === "copy") {
+        copyTargetElem.style.display = "block";
+        checkBtn.style.display = "inline-block";
+        copyScoreDisplay.style.display = "block";
+        initCopyMode();
+      } else {
+        copyTargetElem.style.display = "none";
+        checkBtn.style.display = "none";
+        copyScoreDisplay.style.display = "none";
+      }
+    });
+    
+    const themeSelect = document.getElementById("themeSelect");
+    const fontSelect = document.getElementById("fontSelect");
+    themeSelect.addEventListener("change", () => { document.body.className = themeSelect.value; });
+    fontSelect.addEventListener("change", () => { document.body.style.fontFamily = fontSelect.value; });
     
     updateLeaderboard();
   </script>

@@ -253,13 +253,22 @@
     </select>
   </div>
   
-  <!-- Extra Controls: Schwierigkeitsgrad & Share -->
+  <!-- Extra Controls: Schwierigkeitsgrad, Kategorie & Share -->
   <div class="extra-controls">
     <label for="difficultySelect">Schwierigkeitsgrad:</label>
     <select id="difficultySelect">
       <option value="easy" selected>Einfach</option>
       <option value="normal">Normal</option>
       <option value="hard">Schwer</option>
+    </select>
+    <label for="librarySelect">Kategorie:</label>
+    <select id="librarySelect">
+      <option value="standard" selected>Standard</option>
+      <option value="realschule">Realschule</option>
+      <option value="gymnasium">Gymnasium</option>
+      <option value="medizin">Medizin</option>
+      <option value="bank">Bank</option>
+      <option value="tierwelt">Tierwelt</option>
     </select>
     <button id="shareBtn">Ergebnisse Teilen</button>
   </div>
@@ -374,7 +383,8 @@
     let keyPressCount = 0;
     let hotStreakCounter = 0;
     let lastKeyTime = 0;
-    let hotStreakRequired = 20;
+    // Hot-Streak Animation bleibt bei 20, aber die Bedingung wird im Copy-Modus angepasst
+    let hotStreakRequired = 20; 
     let hotStreakTimeThreshold = 250;
     
     // GLOBAL ADDED: userStats initialisieren
@@ -385,136 +395,1085 @@
       level: 1
     };
 
-// Copy Challenge Variablen
-let copyScore = 0;
-let currentTargetSentence = "";
-const copySentences = {
-  easy: [
-    "Der Hund läuft schnell.",
-    "Die Sonne scheint hell.",
-    "Ich mag Eis.",
-    "Der Vogel fliegt hoch.",
-    "Der Baum steht im Garten.",
-    "Die Katze schläft leise.",
-    "Das Auto fährt langsam.",
-    "Das Kind lacht fröhlich.",
-    "Die Blume duftet angenehm.",
-    "Der Regen fällt sanft.",
-    "Die Wolken ziehen langsam.",
-    "Der Wind weht mild.",
-    "Das Wasser glitzert im Licht.",
-    "Der Schnee bedeckt den Boden.",
-    "Die Vögel zwitschern im Frühling.",
-    "Der Mond leuchtet in der Nacht.",
-    "Die Sterne funkeln am Himmel.",
-    "Der Fisch schwimmt im Teich.",
-    "Der Hund bellt laut.",
-    "Das Haus steht am Wegesrand.",
-    "Die Bienen summen im Garten.",
-    "Die Kinder spielen im Park.",
-    "Der Apfel ist reif.",
-    "Das Brot ist frisch gebacken.",
-    "Der Zug fährt pünktlich.",
-    "Das Buch liegt auf dem Tisch.",
-    "Die Uhr zeigt die richtige Zeit.",
-    "Der Wind kühlt an heißen Tagen.",
-    "Die Blumen blühen im Frühling.",
-    "Der Morgen ist ruhig und friedlich."
-    ],
-    normal: [
-    "Die Giraffe tanzt im Mondlicht, als wäre sie ein Superstar.",
-    "Ein Kaktus küsst den Regen, weil er so durstig war.",
-    "Die Eule lacht leise über den nächtlichen Trubel im Wald.",
-    "Ein Elefant jongliert mit Bananen in der Zirkusmanege.",
-    "Die Wolken spielen Verstecken mit der Sonne.",
-    "Ein lustiger Frosch veranstaltet ein Konzert im Teich.",
-    "Die Bienen machen eine Polonaise im Blütenmeer.",
-    "Ein frecher Affe klaut dem Regenbogen die Farben.",
-    "Die Schildkröte reitet auf einem Skateboard durch den Park.",
-    "Ein schelmischer Panda nascht Bambus mit einem Lächeln.",
-    "Die Sterne zwinkern wie kleine Glühwürmchen im Universum.",
-    "Ein schüchterner Pinguin trägt eine bunte Fliege zur Party.",
-    "Die Blumen flüstern Geheimnisse im Wind.",
-    "Ein fliegender Teppich bringt Lachen in die Straßen der Stadt.",
-    "Die Katze veranstaltet eine Comedy-Show auf dem Dach.",
-    "Ein strahlender Marienkäfer führt ein kleines Ballett auf.",
-    "Die Bäume tanzen im Rhythmus des fröhlichen Waldes.",
-    "Ein kluger Maulwurf entdeckt ein Geheimnis unter der Erde.",
-    "Die Sonne macht eine Pause und genießt einen Kaffee.",
-    "Ein mutiger Hase flitzt schneller als der Wind.",
-    "Die Fische feiern eine Disco unter Wasser.",
-    "Ein bunter Schmetterling verteilt Glitzerstaub im Garten.",
-    "Die Schnecke organisiert ein Rennen mit Zeitlupe.",
-    "Ein lustiger Papagei plaudert mit den Wolken.",
-    "Die Wolken spielen Fangen, während der Regen kichert.",
-    "Ein charmantes Lama posiert für das Fotoshooting.",
-    "Der freundliche Hund rennt fröhlich durch den sonnigen Park.",
-    "Die strahlende Sonne taucht den klaren Himmel in ein warmes Licht.",
-    "Ich genieße es, an einem gemütlichen Nachmittag ein leckeres Eis zu essen.",
-    "Der Vogel singt ein fröhliches Lied, während er hoch über den Dächern fliegt.",
-    "Der alte Baum im Garten spendet an heißen Tagen angenehmen Schatten.",
-    "Die schlaue Katze schleicht leise über die bunten Gartenbeete.",
-    "Das moderne Auto fährt ruhig und sicher durch die belebten Straßen.",
-    "Das lachende Kind spielt vergnügt mit seinen Freunden im Park.",
-    "Die duftende Blume erfreut alle mit ihrem angenehmen Aroma.",
-    "Der sanfte Regen beruhigt die Natur an einem trüben Tag.",
-    "Die weißen Wolken ziehen gemächlich über den strahlend blauen Himmel.",
-    "Der laue Wind sorgt für eine erfrischende Brise an einem warmen Nachmittag.",
-    "Das funkelnde Wasser im Bach glitzert im Sonnenlicht und lädt zum Träumen ein.",
-    "Der frisch gefallene Schnee bedeckt die Landschaft in einem weißen Mantel.",
-    "Die fröhlich zwitschernden Vögel begrüßen den neuen Tag mit ihren Liedern.",
-    "Der silberne Mond scheint sanft in der klaren Nacht und erhellt den dunklen Wald.",
-    "Die funkelnden Sterne bilden ein beeindruckendes Bild am dunklen Firmament.",
-    "Der bunte Fisch schwimmt elegant durch das klare Wasser des kleinen Teichs.",
-    "Der lebhafte Hund bellt fröhlich, als er seinen Besitzer begrüßt.",
-    "Das gemütliche Haus am Straßenrand lädt zum Verweilen und Träumen ein.",
-    "Die fleißigen Bienen sammeln emsig Nektar in den blühenden Gärten.",
-    "Die spielenden Kinder genießen einen unbeschwerten Tag im weitläufigen Park.",
-    "Der reife Apfel hängt verlockend an dem alten Obstbaum im Garten.",
-    "Das frisch gebackene Brot duftet verführerisch in der warmen Bäckerei.",
-    "Der pünktliche Zug fährt zuverlässig durch die malerische Landschaft.",
-    "Das spannende Buch erzählt eine fesselnde Geschichte voller Abenteuer.",
-    "Die präzise tickende Uhr erinnert an die kostbare Vergänglichkeit der Zeit.",
-    "Der kühle Wind erfrischt an heißen Sommertagen und sorgt für angenehme Temperaturen.",
-    "Die üppigen Blumen im Garten entfalten ihre volle Pracht im Frühling.",
-    "Der ruhige Morgen verspricht einen Tag voller neuer Möglichkeiten und Freude."
-  ],
-  hard: [
-    "Obwohl der Regen unaufhörlich niederprasselt, spaziert der einsame Wanderer mutig durch die trüben Straßen der Stadt.",
-    "Die komplexen Dialoge zwischen den Charakteren spiegeln die tiefgründigen philosophischen Themen des Romans wider.",
-    "Mit einer Mischung aus Ironie und Ernsthaftigkeit enthüllt der Erzähler die verborgenen Wahrheiten der menschlichen Existenz.",
-    "Während der dichte Nebel die Landschaft in ein geheimnisvolles Grau hüllt, verliert sich der Wanderer in seinen Gedanken.",
-    "Obwohl die Straßen menschenleer erscheinen, erzählt jeder Winkel der Stadt eine Geschichte aus vergangenen Zeiten.",
-    "Die kunstvoll gestalteten Fassaden der alten Gebäude zeugen von einer bewegten Geschichte und kulturellen Vielfalt.",
-    "Inmitten des geschäftigen Treibens enthüllt die ruhige Bibliothek die Schätze alter Weisheiten und vergessener Erzählungen.",
-    "Während der stürmische Wind an den Fenstern zerrt, versinkt das Haus in einer melancholischen Stille.",
-    "Nachdem der Regen aufgehört hat, zeigt sich die Stadt in einem strahlenden Glanz, der alle Herzen erwärmt.",
-    "Trotz der widrigen Umstände setzt der mutige Protagonist seinen Weg fort, um die Wahrheit zu enthüllen.",
-    "Indem er die komplexen Rätsel der Vergangenheit entschlüsselt, eröffnet der Archäologe ein neues Kapitel der Geschichte.",
-    "Obwohl die Dunkelheit die Welt zu verschlingen scheint, leuchten die Sterne als stille Zeugen der Hoffnung.",
-    "Als die Sonne langsam hinter den Bergen verschwindet, erfüllt ein Gefühl der Sehnsucht die einsamen Seelen der Stadt.",
-    "Während der schneidende Wind die winterlichen Straßen durchfegt, trotzt der Wanderer den Elementen mit unbeirrbarem Mut.",
-    "In einem Zusammenspiel aus Licht und Schatten enthüllt der Maler die verborgenen Emotionen der städtischen Szenerie.",
-    "Obwohl die Zeit unaufhaltsam verrinnt, hält der Dichter in seinen Versen die Schönheit des Augenblicks fest.",
-    "Indem sie die geheimnisvollen Legenden der alten Siedlungen erforscht, entdeckt die Historikerin die Wurzeln ihrer Identität.",
-    "Während die Musik in den Gassen widerhallt, entsteht ein faszinierendes Zusammenspiel aus Kultur und Tradition.",
-    "Nachdem der Sturm vorübergezogen ist, erstrahlt die Stadt in einem neuen Licht, das sowohl Hoffnung als auch Erneuerung verkündet.",
-    "Trotz der unzähligen Herausforderungen bewahrt der Protagonist seinen Glauben an eine bessere Zukunft und schreitet unbeirrt voran.",
-    "Als die ersten Sonnenstrahlen den Horizont erhellen, erwacht die Stadt zu einem lebendigen Mosaik aus Farben und Klängen.",
-    "Inmitten eines Meeres aus Geräuschen findet der Musiker die Inspiration, die in seinen Kompositionen widerhallt.",
-    "Obwohl die Erinnerungen an vergangene Zeiten schmerzhaft sein können, birgt jede Geschichte auch die Chance auf einen Neuanfang.",
-    "Während sich die Schatten der Nacht allmählich zurückziehen, erhebt sich die Stadt in einem neuen, hoffnungsvollen Glanz.",
-    "Indem er die komplexen Zusammenhänge der Natur erforscht, gelingt es dem Wissenschaftler, die Geheimnisse des Lebens zu entschlüsseln.",
-    "Als der kalte Winter endgültig weicht, kündigt sich der Frühling mit einem Versprechen von Erneuerung und Wachstum an.",
-    "Trotz der scheinbar unüberwindbaren Hürden bleibt der Abenteurer standhaft und sucht nach dem Funken der Wahrheit.",
-    "Während die Gesellschaft sich ständig wandelt, bewahrt die Kunst ihre zeitlose Fähigkeit, Emotionen und Geschichten lebendig werden zu lassen.",
-    "Nachdem die schweren Wolken vorübergezogen sind, offenbart sich ein strahlend blauer Himmel, der die Hoffnung in den Herzen der Menschen neu entfacht.",
-    "Obwohl die Wege oft steinig und ungewiss sind, leitet der Funke der Inspiration den Suchenden zu einem erfüllten Leben."
-  ]
-};
-
-// Adventure Mode: Boss
+    // Variablen für Copy Challenge
+    let copyScore = 0;
+    let currentTargetSentence = "";
+    
+    // Ursprüngliche Copy-Sätze in Standardbibliothek
+    const standardSentences = {
+      easy: [
+        "Der Hund läuft schnell.",
+        "Die Sonne scheint hell.",
+        "Ich mag Eis.",
+        "Der Vogel fliegt hoch.",
+        "Der Baum steht im Garten.",
+        "Die Katze schläft leise.",
+        "Das Auto fährt langsam.",
+        "Das Kind lacht fröhlich.",
+        "Die Blume duftet angenehm.",
+        "Der Regen fällt sanft.",
+        "Die Wolken ziehen langsam.",
+        "Der Wind weht mild.",
+        "Das Wasser glitzert im Licht.",
+        "Der Schnee bedeckt den Boden.",
+        "Die Vögel zwitschern im Frühling.",
+        "Der Mond leuchtet in der Nacht.",
+        "Die Sterne funkeln am Himmel.",
+        "Der Fisch schwimmt im Teich.",
+        "Der Hund bellt laut.",
+        "Das Haus steht am Wegesrand.",
+        "Die Bienen summen im Garten.",
+        "Die Kinder spielen im Park.",
+        "Der Apfel ist reif.",
+        "Das Brot ist frisch gebacken.",
+        "Der Zug fährt pünktlich.",
+        "Das Buch liegt auf dem Tisch.",
+        "Die Uhr zeigt die richtige Zeit.",
+        "Der Wind kühlt an heißen Tagen.",
+        "Die Blumen blühen im Frühling.",
+        "Der Morgen ist ruhig und friedlich.",
+        "Der Hund bellt im Garten.",
+        "Die Katze jagt die Maus.",
+        "Der Vogel singt am Morgen.",
+        "Das Kind malt ein Bild.",
+        "Die Blume duftet süß.",
+        "Der Regen tropft leise.",
+        "Die Sonne wärmt den Tag.",
+        "Der Wind weht sanft.",
+        "Das Auto parkt am Haus.",
+        "Die Vögel fliegen hoch.",
+        "Der Baum spendet Schatten.",
+        "Die Wolken ziehen am Himmel.",
+        "Der Fluss fließt ruhig.",
+        "Das Wasser glitzert im See.",
+        "Die Sterne leuchten in der Nacht.",
+        "Der Mond scheint hell.",
+        "Das Brot riecht frisch.",
+        "Die Kinder rennen im Park.",
+        "Der Hund rennt im Feld.",
+        "Die Blätter fallen leise.",
+        "Der Fuchs schleicht durch den Wald.",
+        "Die Bienen sammeln Nektar.",
+        "Das Pferd galoppiert schnell.",
+        "Die Kuh grast auf der Wiese.",
+        "Der Vogel baut ein Nest.",
+        "Die Blumen leuchten bunt.",
+        "Das Licht strahlt durch das Fenster.",
+        "Die Musik klingt harmonisch.",
+        "Der Regenbogen zeigt sich am Himmel.",
+        "Die Schneeflocken tanzen im Wind.",
+        "Das Eis schmilzt in der Sonne.",
+        "Der Frosch quakt im Teich.",
+        "Die Ameisen laufen emsig.",
+        "Das Haus ist bunt gestrichen.",
+        "Die Gans schwimmt im Teich.",
+        "Der Adler fliegt majestätisch.",
+        "Die Eule ruft in der Nacht.",
+        "Das Feuer brennt warm.",
+        "Die Wolken bedecken den Himmel.",
+        "Der Berg ragt in den Himmel.",
+        "Die Blume wächst im Frühling.",
+        "Der See ist still und klar.",
+        "Die Bäume rauschen im Wind.",
+        "Das Kind spielt fröhlich im Garten.",
+        "Der Hund schläft friedlich im Körbchen.",
+        "Die Katze schnurrt leise.",
+        "Das Wasser sprudelt im Bach.",
+        "Die Vögel zwitschern fröhlich.",
+        "Der Wind bringt frische Luft.",
+        "Die Sonne geht langsam unter."
+      ],
+      normal: [
+        "Ein majestätischer Adler kreist hoch am azurblauen Himmel und inspiriert alle, die ihn beobachten.",
+        "Der schimmernde Fluss schlängelt sich elegant durch die grüne Landschaft, während die Sonne funkelnde Reflexionen wirft.",
+        "In einem belebten Markt flanieren Menschen, während exotische Düfte die Luft erfüllen.",
+        "Die alten Gemäuer einer Burg erzählen Geschichten von Mut und Verrat in jeder Steinplatte.",
+        "Ein schlauer Fuchs schleicht durch den nebelverhangenen Wald, immer auf der Suche nach seiner Beute.",
+        "Die zarten Rosen im Garten verströmen einen betörenden Duft, der Erinnerungen an vergangene Zeiten weckt.",
+        "Ein einsamer Wanderer erklimmt beharrlich den steilen Berg, getrieben von der Sehnsucht nach Freiheit.",
+        "Die goldenen Felder im Sommer wiegen sanft im Wind, als ob sie ein geheimes Lied singen würden.",
+        "Ein mystischer Nebel legt sich über das Tal und verwandelt die Landschaft in ein Märchenland.",
+        "Die alten Eichen, Zeugen vieler Jahre, flüstern leise von vergangenen Abenteuern.",
+        "Ein kleiner Bach murmelt fröhlich vor sich hin, während er durch üppiges Grün plätschert.",
+        "Die sanfte Brise trägt den Geruch von frisch gemähtem Gras und blühenden Blumen heran.",
+        "Ein eleganter Schwan gleitet majestätisch über den stillen See, als wäre er die Königin der Gewässer.",
+        "Die tiefblauen Tiefen des Meeres verbergen Geheimnisse, die nur die Mutigsten zu lüften wagen.",
+        "Ein geheimnisvoller Regenbogen spannt sich über den Horizont und verheißt magische Zeiten.",
+        "Bunte Schmetterlinge tanzen fröhlich zwischen den duftenden Frühlingsblumen.",
+        "Ein alter Seemann erzählt in verrauchten Tavernen Geschichten von fernen Ländern und verlorenen Schätzen.",
+        "Die flackernden Lichter einer nächtlichen Stadt spiegeln sich in den ruhigen Wasserwegen wider.",
+        "Ein junger Künstler malt mit leuchtenden Farben ein Bild, das die Seele berührt.",
+        "Die kühle Nachtluft füllt sich mit dem sanften Klang einer einsamen Geige.",
+        "Ein tapferer Ritter reitet durch den nebligen Morgen, bereit, für seine Ehre zu kämpfen.",
+        "Die funkelnden Sterne am klaren Himmel erzählen von unendlichen Möglichkeiten und Träumen.",
+        "Ein geheimnisvoller Wald, in dem jeder Schritt ein neues Abenteuer verspricht, zieht den Suchenden in seinen Bann.",
+        "Die alten Straßen einer Stadt sind Zeugen vergangener Zeiten, in denen Legenden geboren wurden.",
+        "Ein sanfter Regen hüllt die Welt in einen Schleier aus Frische und Neubeginn.",
+        "Die zarten Klänge eines Klaviers verweben sich mit dem Rauschen der Bäume zu einer Natur-Symphonie.",
+        "Ein fröhlicher Vogel singt ein Lied, das Hoffnung und Freude in jedes Herz trägt.",
+        "Funkenartige Tautropfen auf den Blättern malen ein Bild der Reinheit in der Morgensonne.",
+        "Ein alter Leuchtturm wacht still über die stürmische Küste und weist verlorenen Seefahrern den Weg.",
+        "Die ersten Sonnenstrahlen brechen durch den Morgennebel und erwecken die Welt zu neuem Leben.",
+        "Ein weiser alter Mann sitzt im Schatten eines Baumes und teilt seine Lebenserfahrungen mit den Jungen.",
+        "Die majestätischen Berge erheben sich stolz gegen den klaren Himmel und erzählen Geschichten von unerschütterlicher Kraft.",
+        "Ein sanfter Wind spielt mit den Blättern und trägt leise Melodien durch die Luft.",
+        "Die glitzernde Oberfläche eines Sees spiegelt die unendliche Weite des Himmels wider.",
+        "Ein eleganter Pfau präsentiert sein farbenfrohes Gefieder in einem Fest der Natur.",
+        "Die glühende Abenddämmerung taucht die Welt in ein warmes, goldenes Licht.",
+        "Ein neugieriger Fuchs erkundet die geheimen Pfade des Waldes mit unermüdlicher Neugier.",
+        "Tautropfen auf einem Spinnennetz glänzen wie kleine Diamanten im Morgengrauen.",
+        "Ein sanfter Bach windet sich durch ein Tal, als erzähle er die Geschichten der Erde.",
+        "Die alten Ruinen einer Stadt flüstern von vergangenen Reichen und vergessenen Heldentaten.",
+        "Ein leiser Windhauch trägt den Klang alter Legenden in die Herzen derer, die zuhören.",
+        "Die sternenklare Nacht enthüllt das verborgene Glitzern der Milchstraße, das den Himmel verzaubert.",
+        "Ein lebhafter Markt erfüllt die Straßen mit fröhlichen Stimmen und dem Duft von frisch gebackenem Brot.",
+        "Die sanfte Wärme eines Sommers lässt die Zeit stillzustehen und erfüllt die Seele mit Glück.",
+        "Ein tapferer Krieger steht am Rande eines gewaltigen Schlachtfelds und blickt entschlossen in die Zukunft.",
+        "Die leuchtenden Farben eines Herbstwaldes malen ein Bild, das die Vergänglichkeit der Zeit feiert.",
+        "Ein junger Dichter sitzt am Ufer eines Flusses und lässt sich von den sanften Wellen inspirieren.",
+        "Die klare Luft eines Berggipfels erfüllt den Geist mit frischer Energie und unendlicher Weite.",
+        "Ein geheimnisvoller Nebel senkt sich über die Felder und hüllt die Welt in einen Schleier des Unbekannten.",
+        "Die ersten Frühlingsblumen brechen tapfer durch den Schnee und verkünden das Ende des Winters.",
+        "Ein leuchtender Regenbogen spannt sich über den Himmel und verbindet die Erde mit dem Firmament.",
+        "Die sanften Klänge einer Geige erklingen in einem alten Theater und erwecken Erinnerungen an vergangene Zeiten.",
+        "Ein junger Abenteurer tritt mutig in die weite Welt hinaus, getrieben von der Sehnsucht nach Freiheit.",
+        "Die goldene Stunde verzaubert die Landschaft mit warmen, sanften Tönen, die die Seele berühren.",
+        "Ein mystischer Nebel umgibt die alten Wälder und lässt die Grenzen zwischen Realität und Traum verschwimmen.",
+        "Die ruhige See reflektiert den klaren Himmel und schenkt jedem, der sie betrachtet, einen Moment der Stille.",
+        "Ein funkelnder Wasserfall stürzt in einem verborgenen Tal herab und erzeugt ein Rauschen, das an Magie erinnert.",
+        "Die sanfte Berührung eines kühlen Windes bringt den Duft des Frühlings direkt in dein Herz.",
+        "Ein alter Weinstock erzählt in seinen knorrigen Ästen Geschichten von vielen vergangenen Wintern und Sommern.",
+        "Die lebhafte Melodie eines Flötenspiels erfüllt den Wald und lässt die Tiere in Harmonie schwingen.",
+        "Ein weiser Lehrer teilt seine Erkenntnisse mit seinen Schülern, die gebannt seinen Worten lauschen.",
+        "Die funkelnde Oberfläche eines ruhigen Sees lädt dazu ein, in die unendlichen Weiten der Natur zu blicken.",
+        "Ein zarter Sonnenstrahl bricht durch die Wolkendecke und erweckt die Welt zu neuem Leben.",
+        "Die majestätischen Gipfel der Berge leuchten im Morgenlicht und kündigen einen Tag voller Abenteuer an.",
+        "Ein geheimnisvoller Pfad führt durch dichte Wälder, in denen jeder Schritt ein neues Geheimnis offenbart.",
+        "Die sanfte Brise trägt den süßen Duft blühender Obstbäume in die weite Landschaft.",
+        "Ein alter Dichter schreibt in sein Tagebuch und bewahrt so die Geschichten vergangener Zeiten auf.",
+        "Die klare Nachtluft erfüllt die Seele mit einer stillen, tiefen Ruhe, die alle Sorgen vergessen lässt.",
+        "Ein strahlendes Feuerwerk erleuchtet den Nachthimmel und füllt die Herzen mit kindlicher Freude.",
+        "Die glitzernde Oberfläche eines Flusses spiegelt die Schönheit eines unendlichen Himmels wider.",
+        "Die Giraffe tanzt im Mondlicht, als wäre sie ein Superstar.",
+        "Ein Kaktus küsst den Regen, weil er so durstig war.",
+        "Die Eule lacht leise über den nächtlichen Trubel im Wald.",
+        "Ein Elefant jongliert mit Bananen in der Zirkusmanege.",
+        "Die Wolken spielen Verstecken mit der Sonne.",
+        "Ein lustiger Frosch veranstaltet ein Konzert im Teich.",
+        "Die Bienen machen eine Polonaise im Blütenmeer.",
+        "Ein frecher Affe klaut dem Regenbogen die Farben.",
+        "Die Schildkröte reitet auf einem Skateboard durch den Park.",
+        "Ein schelmischer Panda nascht Bambus mit einem Lächeln.",
+        "Die Sterne zwinkern wie kleine Glühwürmchen im Universum.",
+        "Ein schüchterner Pinguin trägt eine bunte Fliege zur Party.",
+        "Die Blumen flüstern Geheimnisse im Wind.",
+        "Ein fliegender Teppich bringt Lachen in die Straßen der Stadt.",
+        "Die Katze veranstaltet eine Comedy-Show auf dem Dach.",
+        "Ein strahlender Marienkäfer führt ein kleines Ballett auf.",
+        "Die Bäume tanzen im Rhythmus des fröhlichen Waldes.",
+        "Ein kluger Maulwurf entdeckt ein Geheimnis unter der Erde.",
+        "Die Sonne macht eine Pause und genießt einen Kaffee.",
+        "Ein mutiger Hase flitzt schneller als der Wind.",
+        "Die Fische feiern eine Disco unter Wasser.",
+        "Ein bunter Schmetterling verteilt Glitzerstaub im Garten.",
+        "Die Schnecke organisiert ein Rennen mit Zeitlupe.",
+        "Ein lustiger Papagei plaudert mit den Wolken.",
+        "Die Wolken spielen Fangen, während der Regen kichert.",
+        "Ein charmantes Lama posiert für das Fotoshooting.",
+        "Der freundliche Hund rennt fröhlich durch den sonnigen Park.",
+        "Die strahlende Sonne taucht den klaren Himmel in ein warmes Licht.",
+        "Ich genieße es, an einem gemütlichen Nachmittag ein leckeres Eis zu essen.",
+        "Der Vogel singt ein fröhliches Lied, während er hoch über den Dächern fliegt.",
+        "Der alte Baum im Garten spendet an heißen Tagen angenehmen Schatten.",
+        "Die schlaue Katze schleicht leise über die bunten Gartenbeete.",
+        "Das moderne Auto fährt ruhig und sicher durch die belebten Straßen.",
+        "Das lachende Kind spielt vergnügt mit seinen Freunden im Park.",
+        "Die duftende Blume erfreut alle mit ihrem angenehmen Aroma.",
+        "Der sanfte Regen beruhigt die Natur an einem trüben Tag.",
+        "Die weißen Wolken ziehen gemächlich über den strahlend blauen Himmel.",
+        "Der laue Wind sorgt für eine erfrischende Brise an einem warmen Nachmittag.",
+        "Das funkelnde Wasser im Bach glitzert im Sonnenlicht und lädt zum Träumen ein.",
+        "Der frisch gefallene Schnee bedeckt die Landschaft in einem weißen Mantel.",
+        "Die fröhlich zwitschernden Vögel begrüßen den neuen Tag mit ihren Liedern.",
+        "Der silberne Mond scheint sanft in der klaren Nacht und erhellt den dunklen Wald.",
+        "Die funkelnden Sterne bilden ein beeindruckendes Bild am dunklen Firmament.",
+        "Der bunte Fisch schwimmt elegant durch das klare Wasser des kleinen Teichs.",
+        "Der lebhafte Hund bellt fröhlich, als er seinen Besitzer begrüßt.",
+        "Das gemütliche Haus am Straßenrand lädt zum Verweilen und Träumen ein.",
+        "Die fleißigen Bienen sammeln emsig Nektar in den blühenden Gärten.",
+        "Die spielenden Kinder genießen einen unbeschwerten Tag im weitläufigen Park.",
+        "Der reife Apfel hängt verlockend an dem alten Obstbaum im Garten.",
+        "Das frisch gebackene Brot duftet verführerisch in der warmen Bäckerei.",
+        "Der pünktliche Zug fährt zuverlässig durch die malerische Landschaft.",
+        "Das spannende Buch erzählt eine fesselnde Geschichte voller Abenteuer.",
+        "Die präzise tickende Uhr erinnert an die kostbare Vergänglichkeit der Zeit.",
+        "Der kühle Wind erfrischt an heißen Sommertagen und sorgt für angenehme Temperaturen.",
+        "Die üppigen Blumen im Garten entfalten ihre volle Pracht im Frühling.",
+        "Der ruhige Morgen verspricht einen Tag voller neuer Möglichkeiten und Freude."
+      ],
+      hard: [
+        "Inmitten eines tobenden Sturms bahnt sich ein einsamer Held seinen Weg durch die übersäteten Trümmer der verlassenen Stadt, während der Wind unerbittlich heult.",
+        "Die unaufhörlichen Regentropfen verschmelzen mit den Tränen des Verzweifelten, der in den dunklen Gassen nach einem Funken Hoffnung sucht.",
+        "Während die finsteren Wolken den Himmel verdunkeln, enthüllt ein mutiger Dichter in seinen Versen die tiefen Abgründe menschlicher Emotionen.",
+        "In den verfallenen Ruinen einer alten Festung, wo einst heldenhafte Taten vollbracht wurden, erkundet ein entschlossener Abenteurer das Geheimnis der Vergangenheit.",
+        "Obwohl die Zeit gnadenlos voranschreitet, bewahrt ein alter Gelehrter in seinen Schriften die unvergänglichen Wahrheiten vergangener Zeiten.",
+        "Mit jeder Zeile, die er schreibt, enthüllt der Dichter eine verborgene Welt, in der die Grenzen zwischen Realität und Traum verschwimmen.",
+        "Der kalte Hauch des Winters mischt sich mit dem warmen Glanz eines verblassenden Sonnenaufgangs, während ein Reisender in die endlosen Weiten der Ungewissheit zieht.",
+        "In den Schatten einer längst vergessenen Zivilisation findet ein Archäologe Hinweise auf ein Mysterium, das das Schicksal ganzer Reiche beeinflussen könnte.",
+        "Die düsteren Geheimnisse eines verlassenen Schlosses werden nach und nach von einem entschlossenen Detektiv enthüllt, der sich den Abgründen der menschlichen Seele stellt.",
+        "Während die Sterne unermüdlich am nächtlichen Firmament leuchten, erzählt eine alte Legende von einem Helden, der einst das Unmögliche möglich machte.",
+        "In einem Labyrinth aus Erinnerungen und vergessenen Träumen kämpft ein einsamer Geist darum, die verlorene Schönheit vergangener Zeiten wiederzufinden.",
+        "Mit unerschütterlicher Entschlossenheit durchquert ein Wanderer das trostlose Ödland, dessen karge Schönheit von unerklärlichen Geheimnissen durchdrungen ist.",
+        "Die leisen Melodien eines vergessenen Liedes hallen durch die verfallenen Gänge einer alten Bibliothek, in der das Wissen vergangener Generationen bewahrt wird.",
+        "Tief in den dunklen Tiefen einer verlassenen Mine entdeckt ein mutiger Abenteurer funkelnde Edelsteine, die von uralten Geheimnissen zeugen.",
+        "Obwohl der Himmel von dunklen Wolken verhüllt ist, kämpft ein tapferer Krieger mit unbeirrbarem Mut gegen die Schatten seiner eigenen Vergangenheit.",
+        "Während der Wind durch die verwitterten Bäume rauscht, offenbart sich ein verborgener Pfad, der zu einer Welt führt, die in Vergessenheit geraten ist.",
+        "Inmitten eines tosenden Sturms steht ein alter Leuchtturm als stiller Wächter, der den Schiffen den Weg durch die tückischen Gewässer weist.",
+        "Die melancholischen Klänge eines einsamen Klaviers erfüllen einen verlassenen Ballsaal und lassen die Geister vergangener Feste wieder lebendig werden.",
+        "Mit jeder verstreichenden Sekunde enthüllt sich ein neues Kapitel des Lebens, während ein alter Chronist die unvergänglichen Geschichten der Menschheit niederschreibt.",
+        "Obwohl der kalte Nebel die Landschaft umhüllt, durchdringt ein strahlender Lichtstrahl die Dunkelheit und schenkt dem Verlorenen einen Hauch von Hoffnung.",
+        "In den bröckelnden Mauern einer uralten Kathedrale finden sich verborgene Inschriften, die von einem göttlichen Mysterium berichten.",
+        "Die unendlichen Weiten einer stillen Wüste werden von den Spuren eines reisenden Nomaden durchzogen, der in den Sanden nach dem Sinn des Lebens sucht.",
+        "Mit jedem Schritt, den der müde Wanderer setzt, hallt das Echo vergangener Zeiten wider und erinnert an verlorene Träume.",
+        "Während der Regen unablässig auf die staubigen Straßen prasselt, enthüllt ein alter Geschichtenerzähler die Legenden einer längst vergangenen Epoche.",
+        "Die funkelnden Lichter einer Metropole spiegeln sich in den nassen Pflastersteinen, während ein einsamer Beobachter den Puls der Stadt spürt.",
+        "In den verworrenen Gassen einer alten Stadt, in der jeder Winkel von Geheimnissen durchdrungen ist, sucht ein unermüdlicher Detektiv nach der Wahrheit.",
+        "Obwohl die Schatten der Vergangenheit unheilvoll über den Ruinen liegen, leuchtet der Funke des Neuanfangs in den Augen eines Träumers.",
+        "Mit der Präzision eines erfahrenen Meisters enthüllt ein Künstler in seinen Gemälden die tiefen, unergründlichen Facetten der menschlichen Seele.",
+        "Die unerbittliche Kälte eines frostigen Abends wird nur von der flammenden Leidenschaft eines jungen Poeten durchbrochen, der seine Worte wie Feuer in die Nacht schickt.",
+        "In den verlassenen Gassen einer historischen Stadt, in der die Zeit stillzustehen scheint, werden die Geheimnisse einer verlorenen Ära behutsam offenbart.",
+        "Während der stürmische Wind die Dächer der alten Häuser zum Beben bringt, kämpft ein entschlossener Held gegen die Dunkelheit, die seine Welt bedroht.",
+        "Die unendlichen Weiten des nächtlichen Himmels inspirieren einen Schriftsteller, dessen Worte die Grenzen zwischen Traum und Wirklichkeit auflösen.",
+        "Obwohl die Straßen von den Schatten vergangener Zeiten heimgesucht werden, erstrahlt das Licht der Hoffnung in den Herzen derer, die daran glauben.",
+        "Mit jeder Zeile, die ein alter Dichter schreibt, erwacht ein Hauch der Vergangenheit zum Leben und erzählt von vergessenen Heldentaten.",
+        "In einem verfallenen Schloss, das von Legenden umwoben ist, findet ein junger Abenteurer den Schlüssel zu einem unerwarteten Geheimnis.",
+        "Die funkelnden Sterne am dunklen Firmament scheinen die verlorenen Träume der Menschheit zu bewahren und sie in einem silbernen Licht zu umhüllen.",
+        "Während ein kalter Wind die blühenden Wiesen überzieht, enthüllt ein alter Wanderer in seinen Geschichten die unvergängliche Schönheit der Natur.",
+        "In den Tiefen einer verlassenen Mine, wo das Echo vergangener Tage widerhallt, entdeckt ein mutiger Forscher die Schätze der Erde.",
+        "Obwohl der Tag sich dem Ende zuneigt, bringt die sanfte Melodie eines fernen Liedes Trost und Zuversicht in die Herzen der Menschen.",
+        "Mit unerbittlicher Entschlossenheit bahnt sich ein Held seinen Weg durch ein Labyrinth aus Intrigen und dunklen Geheimnissen.",
+        "Die dichten Nebelschwaden, die über das Land ziehen, verbergen die Spuren einer längst vergessenen Zivilisation, die nur darauf wartet, entdeckt zu werden.",
+        "Während der Regen in silbernen Tropfen vom Himmel fällt, erinnert ein weiser Geschichtenerzähler an die Macht der Erinnerungen.",
+        "Die glühenden Farben eines Sonnenuntergangs verschmelzen mit den Schatten der Nacht, während ein einsamer Wanderer seinen Weg ins Unbekannte findet.",
+        "In einem alten Theater, in dem einst große Dramen aufgeführt wurden, hallen noch immer die Echos vergangener Emotionen wider.",
+        "Obwohl die Welt von Chaos und Dunkelheit überschattet wird, erhebt sich der Geist der Hoffnung in den stillen Augen eines Kindes.",
+        "Mit jeder verstreichenden Stunde enthüllt sich ein neues Mosaik aus Licht und Schatten, das die Seele tief berührt.",
+        "Die melancholischen Klänge eines einsamen Saxophons erfüllen die verlassene Gasse und erzählen von verlorener Liebe und Sehnsucht.",
+        "In den verwitterten Archiven einer alten Bibliothek werden die Geheimnisse der Menschheit bewahrt, bereit, von neugierigen Geistern entschlüsselt zu werden.",
+        "Während der kalte Mond am Himmel thront, tanzen die Schatten der Vergangenheit auf den Pflastersteinen einer stillen Stadt.",
+        "Die verhängnisvolle Stille einer verlassenen Straße wird nur durch das entfernte Rauschen eines Flusses durchbrochen, der von alten Legenden erzählt.",
+        "Obwohl der Frost die Landschaft in ein glitzerndes Wunderland verwandelt, sucht ein einsamer Reisender nach der Wärme vergangener Zeiten.",
+        "Mit der Präzision eines Uhrwerks enthüllt ein alter Chronist in seinen Aufzeichnungen die geheimen Rhythmen der Zeit.",
+        "Die schattenhaften Konturen eines verfallenen Gebäudes erzählen von einer Ära, in der Heldentum und Tragik untrennbar miteinander verbunden waren.",
+        "Während der Wind durch die zerfallenen Mauern eines alten Forts pfeift, wird das Echo vergangener Schlachten lebendig.",
+        "In den dunklen Tiefen eines alten Waldes, wo jedes Geräusch eine Geschichte birgt, findet ein Suchender den Schlüssel zur Wahrheit.",
+        "Obwohl die Sterne über einer stillen Landschaft wachen, entfaltet sich ein Drama, das nur die Nacht zu erzählen vermag.",
+        "Mit der Anmut eines Tänzers durchschreitet ein Krieger das Schlachtfeld, dessen Boden von den Spuren vergangener Kämpfe zeugt.",
+        "Die leisen Töne eines entfernten Chors erfüllen die Luft, während der Abendhimmel in einem Farbenmeer aus Gold und Purpur erstrahlt.",
+        "Inmitten der rauen Elemente kämpft ein Held mit unerschütterlichem Willen gegen die Naturgewalten und seine eigenen Dämonen.",
+        "Die mystische Atmosphäre einer alten Ruine, umgeben von dichten Nebelschwaden, lässt die Zeit stillzustehen und verzaubert die Sinne.",
+        "Obwohl der Tag in die Dunkelheit übergeht, bewahrt der Schein eines letzten Sonnenstrahls den Glanz vergangener Tage.",
+        "Mit jeder neuen Herausforderung wächst die innere Stärke eines Abenteurers, der den Pfad der Erkenntnis unerschrocken beschreitet.",
+        "Die eisige Kälte einer stürmischen Nacht wird von der warmen Glut eines unerschütterlichen Herzens überwunden.",
+        "Während die Schatten der Vergangenheit sich über die verfallenen Straßen legen, strahlt ein einzelner Funke der Hoffnung wie ein Leuchtfeuer.",
+        "In den vergilbten Seiten alter Manuskripte entdeckt ein Gelehrter die verborgenen Wahrheiten einer längst vergangenen Zivilisation.",
+        "Die funkelnden Augen eines alten Weisen erzählen Geschichten von uraltem Wissen und zeitloser Weisheit.",
+        "Obwohl die Welt in Dunkelheit gehüllt ist, erhellt der Schimmer eines verlorenen Sterns den Weg zu unerforschten Geheimnissen.",
+        "Mit jeder sich drehenden Jahreszeit enthüllt die Natur ihre wechselnde Pracht, die in unvergänglichen Momenten festgehalten wird.",
+        "Die tiefgründige Stille eines abgelegenen Tals lässt die Seele in die Weite des Universums eintauchen und unendliche Träume weben.",
+        "Während die schweren Wolken endlich aufziehen und der Himmel in einem dramatischen Farbenspiel erstrahlt, offenbart sich das Geheimnis eines neuen Morgens.",
+        "Obwohl der Regen unaufhörlich niederprasselt, spaziert der einsame Wanderer mutig durch die trüben Straßen der Stadt.",
+        "Die komplexen Dialoge zwischen den Charakteren spiegeln die tiefgründigen philosophischen Themen des Romans wider.",
+        "Mit einer Mischung aus Ironie und Ernsthaftigkeit enthüllt der Erzähler die verborgenen Wahrheiten der menschlichen Existenz.",
+        "Während der dichte Nebel die Landschaft in ein geheimnisvolles Grau hüllt, verliert sich der Wanderer in seinen Gedanken.",
+        "Obwohl die Straßen menschenleer erscheinen, erzählt jeder Winkel der Stadt eine Geschichte aus vergangenen Zeiten.",
+        "Die kunstvoll gestalteten Fassaden der alten Gebäude zeugen von einer bewegten Geschichte und kulturellen Vielfalt.",
+        "Inmitten des geschäftigen Treibens enthüllt die ruhige Bibliothek die Schätze alter Weisheiten und vergessener Erzählungen.",
+        "Während der stürmische Wind an den Fenstern zerrt, versinkt das Haus in einer melancholischen Stille.",
+        "Nachdem der Regen aufgehört hat, zeigt sich die Stadt in einem strahlenden Glanz, der alle Herzen erwärmt.",
+        "Trotz der widrigen Umstände setzt der mutige Protagonist seinen Weg fort, um die Wahrheit zu enthüllen.",
+        "Indem er die komplexen Rätsel der Vergangenheit entschlüsselt, eröffnet der Archäologe ein neues Kapitel der Geschichte.",
+        "Obwohl die Dunkelheit die Welt zu verschlingen scheint, leuchten die Sterne als stille Zeugen der Hoffnung.",
+        "Als die Sonne langsam hinter den Bergen verschwindet, erfüllt ein Gefühl der Sehnsucht die einsamen Seelen der Stadt.",
+        "Während der schneidende Wind die winterlichen Straßen durchfegt, trotzt der Wanderer den Elementen mit unbeirrbarem Mut.",
+        "In einem Zusammenspiel aus Licht und Schatten enthüllt der Maler die verborgenen Emotionen der städtischen Szenerie.",
+        "Obwohl die Zeit unaufhaltsam verrinnt, hält der Dichter in seinen Versen die Schönheit des Augenblicks fest.",
+        "Indem sie die geheimnisvollen Legenden der alten Siedlungen erforscht, entdeckt die Historikerin die Wurzeln ihrer Identität.",
+        "Während die Musik in den Gassen widerhallt, entsteht ein faszinierendes Zusammenspiel aus Kultur und Tradition.",
+        "Nachdem der Sturm vorübergezogen ist, erstrahlt die Stadt in einem neuen Licht, das sowohl Hoffnung als auch Erneuerung verkündet.",
+        "Trotz der unzähligen Herausforderungen bewahrt der Protagonist seinen Glauben an eine bessere Zukunft und schreitet unbeirrt voran.",
+        "Als die ersten Sonnenstrahlen den Horizont erhellen, erwacht die Stadt zu einem lebendigen Mosaik aus Farben und Klängen.",
+        "Inmitten eines Meeres aus Geräuschen findet der Musiker die Inspiration, die in seinen Kompositionen widerhallt.",
+        "Obwohl die Erinnerungen an vergangene Zeiten schmerzhaft sein können, birgt jede Geschichte auch die Chance auf einen Neuanfang.",
+        "Während sich die Schatten der Nacht allmählich zurückziehen, erhebt sich die Stadt in einem neuen, hoffnungsvollen Glanz.",
+        "Indem er die komplexen Zusammenhänge der Natur erforscht, gelingt es dem Wissenschaftler, die Geheimnisse des Lebens zu entschlüsseln.",
+        "Als der kalte Winter endgültig weicht, kündigt sich der Frühling mit einem Versprechen von Erneuerung und Wachstum an.",
+        "Trotz der scheinbar unüberwindbaren Hürden bleibt der Abenteurer standhaft und sucht nach dem Funken der Inspiration.",
+        "Während die Gesellschaft sich ständig wandelt, bewahrt die Kunst ihre zeitlose Fähigkeit, Emotionen und Geschichten lebendig werden zu lassen.",
+        "Nachdem die schweren Wolken vorübergezogen sind, offenbart sich ein strahlend blauer Himmel, der die Hoffnung in den Herzen der Menschen neu entfacht.",
+        "Obwohl die Wege oft steinig und ungewiss sind, leitet der Funke der Inspiration den Suchenden zu einem erfüllten Leben."
+      ]
+    };
+     // Neue Satzbibliotheken, die als Erweiterung genutzt werden können
+     const sentenceLibraries = {
+      standard: standardSentences,
+      realschule: {
+        easy: [
+          "Der Schüler lernt täglich in der Realschule.",
+          "Die Lehrerin erklärt den Stoff verständlich.",
+          "Die Realschule bietet praxisnahe Fächer an.",
+          "Die Schüler üben sich im Rechnen mit Zahlen.",
+          "Der Unterricht in der Realschule ist abwechslungsreich.",
+          "In der Realschule werden wichtige Alltagsfähigkeiten vermittelt.",
+          "Die Klassenzimmer sind modern und freundlich eingerichtet.",
+          "Die Schüler arbeiten an spannenden Projekten.",
+          "Der Sportunterricht fördert Teamgeist und Ausdauer.",
+          "In der Realschule wird auf praktische Anwendung geachtet.",
+          "Die Lehrer motivieren die Schüler zu guten Leistungen.",
+          "Die Realschule bereitet auf das Berufsleben vor.",
+          "Schüler lernen, selbstständig zu arbeiten.",
+          "Die Realschule bietet vielfältige Wahlpflichtfächer an.",
+          "Experimente im Naturwissenschaftsunterricht begeistern die Schüler.",
+          "Der Unterricht ist praxisnah und anschaulich gestaltet.",
+          "Die Realschule legt Wert auf Teamarbeit.",
+          "Schüler diskutieren aktuelle Themen in der Klasse.",
+          "Die Lehrer fördern das kritische Denken der Schüler.",
+          "Die Realschule integriert digitale Medien in den Unterricht.",
+          "Praktische Übungen im Technikunterricht machen Spaß.",
+          "Die Schulbibliothek der Realschule ist gut bestückt.",
+          "Die Realschule organisiert regelmäßige Exkursionen.",
+          "Schüler lernen, ihre Hausaufgaben sorgfältig zu erledigen.",
+          "Der Unterricht in Mathematik ist systematisch aufgebaut.",
+          "Die Realschule vermittelt auch kreative Fächer.",
+          "Der Sportunterricht stärkt Körper und Geist.",
+          "Die Schüler nehmen an praxisnahen Schulprojekten teil.",
+          "Die Realschule bietet Kurse in Wirtschaft und Technik an.",
+          "Die Lehrer erklären komplexe Themen mit Geduld.",
+          "Schüler lernen, Verantwortung für ihre Aufgaben zu übernehmen.",
+          "Die Realschule fördert individuelle Stärken.",
+          "Die Lehrpläne der Realschule sind gut strukturiert.",
+          "Die Schüler bereiten Präsentationen zu verschiedenen Themen vor.",
+          "Die Realschule legt Wert auf interdisziplinäres Lernen.",
+          "Digitale Unterrichtsmaterialien bereichern den Unterricht.",
+          "Die Schüler arbeiten in Gruppen an Projekten.",
+          "Die Realschule organisiert regelmäßige Leistungsüberprüfungen.",
+          "Die Lehrer geben konstruktives Feedback zu den Arbeiten.",
+          "Praktische Fächer fördern das handwerkliche Geschick der Schüler.",
+          "Die Realschule bereitet die Schüler auf eine vielfältige Zukunft vor.",
+          "Schüler lernen, Informationen kritisch zu hinterfragen.",
+          "Die Realschule vermittelt wichtige soziale Kompetenzen.",
+          "Im Fach Englisch werden kommunikative Fähigkeiten gestärkt.",
+          "Die Realschule bietet auch künstlerische Kurse an.",
+          "Die Schüler lernen, ihre Zeit effizient zu nutzen.",
+          "Die Realschule fördert kreatives und analytisches Denken.",
+          "Lehrer nutzen moderne Methoden, um den Unterricht interessant zu gestalten.",
+          "Schüler werden ermutigt, eigene Ideen einzubringen.",
+          "Die Realschule bildet eine solide Basis für die Zukunft.",
+          "Schüler entwickeln ein tiefgreifendes Verständnis für Bildung."
+        ],
+        normal: [
+          "Im Realschulunterricht werden theoretische Konzepte mit praxisnahen Anwendungen verknüpft, um den Schülern ein umfassendes Verständnis zu vermitteln.",
+          "Die Lehrer legen großen Wert darauf, dass die Schüler ihre analytischen Fähigkeiten durch interdisziplinäre Projekte weiterentwickeln.",
+          "Durch die Integration moderner Technologien wird der Unterricht an der Realschule stets an die Anforderungen der heutigen Arbeitswelt angepasst.",
+          "Die Realschule fördert das kritische Denken, indem sie komplexe Fragestellungen aus verschiedenen Fachbereichen miteinander verknüpft.",
+          "Schüler erarbeiten in Gruppen innovative Lösungen für praxisnahe Probleme, was ihre Teamfähigkeit und Kreativität stärkt.",
+          "Ein interaktiver Lehransatz ermöglicht es den Schülern, theoretisches Wissen unmittelbar in praktischen Übungen anzuwenden.",
+          "Der Unterricht in Mathematik an der Realschule ist so strukturiert, dass er sowohl logisches Denken als auch kreative Problemlösungen fördert.",
+          "Die Kombination aus theoretischem Unterricht und praktischen Experimenten verleiht dem Lernprozess eine besondere Dynamik.",
+          "In den naturwissenschaftlichen Fächern werden komplexe Zusammenhänge anhand von anschaulichen Beispielen erläutert.",
+          "Die Realschule setzt auf einen interdisziplinären Ansatz, der den Schülern hilft, Verbindungen zwischen den Fächern zu erkennen.",
+          "Durch regelmäßige Leistungsüberprüfungen wird der individuelle Fortschritt jedes Schülers dokumentiert und gefördert.",
+          "Praxisnahe Unterrichtseinheiten bereiten die Schüler gezielt auf die Herausforderungen des Berufslebens vor.",
+          "Schüler lernen, Informationen kritisch zu analysieren und eigenständig Lösungsstrategien zu entwickeln.",
+          "Der Einsatz digitaler Medien im Unterricht ermöglicht einen flexiblen und zeitgemäßen Zugang zu Lerninhalten.",
+          "Die Realschule schafft ein motivierendes Lernumfeld, in dem jeder Schüler sein volles Potenzial entfalten kann.",
+          "Fächerübergreifende Projekte fördern das Verständnis für komplexe Zusammenhänge zwischen Theorie und Praxis.",
+          "Die Vermittlung von Wirtschaftskompetenzen und technischem Know-how bereitet die Schüler auf eine zukunftsorientierte Berufswelt vor.",
+          "Durch praxisnahe Fallstudien werden die Schüler in die Lage versetzt, ihr theoretisches Wissen in realen Situationen anzuwenden.",
+          "Die Realschule legt besonderen Wert auf die Förderung sozialer Kompetenzen und kooperativen Lernens.",
+          "Die enge Zusammenarbeit zwischen Lehrern und Schülern schafft eine lernförderliche Atmosphäre, die zum selbstständigen Denken anregt.",
+          "Innovative Lehrmethoden und moderne Unterrichtsmaterialien machen den Lernprozess abwechslungsreich und effektiv.",
+          "Schüler werden dazu ermutigt, ihre eigenen Ideen einzubringen und kritisch zu hinterfragen, was zu einer tiefgreifenden Auseinandersetzung mit dem Lernstoff führt.",
+          "Der interdisziplinäre Unterricht ermöglicht es den Schülern, komplexe Probleme aus verschiedenen Blickwinkeln zu betrachten.",
+          "Die Realschule fördert ein systematisches Verständnis von Naturwissenschaften, das die Basis für weiterführende Studien bildet.",
+          "Durch den gezielten Einsatz von Gruppenarbeiten lernen die Schüler, ihre individuellen Stärken in den Dienst gemeinsamer Projekte zu stellen.",
+          "Die Lehrer setzen auf einen methodisch vielfältigen Unterricht, der sowohl traditionelle als auch innovative Ansätze integriert.",
+          "Die Realschule schafft durch praxisnahe Projekte eine direkte Verbindung zwischen theoretischem Wissen und praktischer Anwendung.",
+          "Schüler lernen, komplexe Sachverhalte selbstständig zu erarbeiten und kritisch zu reflektieren.",
+          "Der Unterricht legt großen Wert auf die Förderung analytischer Fähigkeiten und kreativer Problemlösungsstrategien.",
+          "Durch den Einsatz moderner Lernplattformen wird der Zugang zu umfangreichen digitalen Ressourcen erleichtert.",
+          "Die enge Verzahnung von Theorie und Praxis ermöglicht den Schülern, wissenschaftliche Methoden in realen Projekten anzuwenden.",
+          "Die Realschule fördert ein tiefgehendes Verständnis für mathematische und naturwissenschaftliche Konzepte.",
+          "Schüler lernen, die Bedeutung von Kooperation und Kommunikation im Lernprozess zu schätzen.",
+          "Die kontinuierliche Integration digitaler Technologien macht den Unterricht stets aktuell und praxisrelevant.",
+          "Die Zusammenarbeit in interdisziplinären Teams stärkt die Fähigkeit, komplexe Problemstellungen gemeinsam zu bewältigen.",
+          "Der Unterricht an der Realschule legt den Grundstein für eine fundierte Ausbildung und spätere berufliche Erfolge.",
+          "Durch praxisnahe Experimente wird das theoretische Wissen anschaulich untermauert und vertieft.",
+          "Die Realschule fördert ein gesundes Miteinander, in dem Teamgeist und Eigenverantwortung gleichermaßen wichtig sind.",
+          "Innovative Unterrichtsmethoden regen die Schüler dazu an, ihre kreative Seite zu entdecken und zu fördern.",
+          "Die gezielte Förderung von Schlüsselkompetenzen bereitet die Schüler optimal auf die Herausforderungen der modernen Arbeitswelt vor.",
+          "Durch regelmäßige Feedbackrunden wird der individuelle Lernfortschritt systematisch verbessert und angepasst.",
+          "Die praxisorientierte Ausrichtung des Unterrichts ermöglicht es den Schülern, theoretisches Wissen direkt in die Praxis umzusetzen.",
+          "Der interdisziplinäre Unterricht fördert nicht nur das fachliche Wissen, sondern auch die Fähigkeit zur kritischen Selbstreflexion.",
+          "Die Verbindung von digitalen und traditionellen Lehrmethoden schafft eine dynamische und zukunftsweisende Lernumgebung.",
+          "Die Realschule vermittelt den Schülern fundierte Kenntnisse, die sie zu kompetenten und verantwortungsbewussten Bürgern heranbilden.",
+          "Der Unterricht fördert die Fähigkeit, komplexe Probleme zu analysieren und innovative Lösungsstrategien zu entwickeln.",
+          "Durch die Zusammenarbeit in kleinen Gruppen lernen die Schüler, ihre individuellen Talente gezielt einzusetzen.",
+          "Der Einsatz moderner Medien und interaktiver Lernmethoden macht den Unterricht abwechslungsreich und ansprechend.",
+          "Die Realschule bietet ein umfassendes Bildungsangebot, das sowohl intellektuelle als auch praktische Fähigkeiten fördert.",
+          "Schüler entwickeln ein tiefgreifendes Verständnis für die Bedeutung von Bildung als Grundlage für eine erfolgreiche Zukunft."
+        ],
+        hard: [
+          "Die Realschule implementiert einen anspruchsvollen Lehrplan, der theoretische Konzepte mit praxisorientierten Projekten verknüpft, um den Schülern ein fundiertes Verständnis komplexer Zusammenhänge zu vermitteln.",
+          "Interdisziplinäre Projekte fördern nicht nur das analytische Denken, sondern auch die Fähigkeit, kreative Lösungen für reale Herausforderungen zu entwickeln.",
+          "Die Integration moderner digitaler Medien in den Unterricht ermöglicht einen flexiblen und zeitgemäßen Zugang zu umfangreichem Fachwissen.",
+          "Die systematische Vermittlung naturwissenschaftlicher und mathematischer Inhalte bereitet die Schüler gezielt auf die Anforderungen des modernen Arbeitsmarktes vor.",
+          "Durch die enge Verzahnung von Theorie und Praxis wird ein nachhaltiges Bildungsverständnis geschaffen, das über den reinen Wissenserwerb hinausgeht.",
+          "Der Einsatz innovativer Lehrmethoden und digitaler Tools fördert die Selbstständigkeit der Schüler und stärkt ihre Problemlösungsfähigkeiten.",
+          "Fächerübergreifende Lernprojekte ermöglichen es den Schülern, die Komplexität realer Probleme zu erfassen und interdisziplinäre Lösungsansätze zu entwickeln.",
+          "Die Realschule setzt auf einen ganzheitlichen Bildungsansatz, der sowohl kognitive als auch soziale Kompetenzen in den Mittelpunkt stellt.",
+          "Durch intensive praktische Übungen werden theoretische Inhalte greifbar und die Lernmotivation nachhaltig gesteigert.",
+          "Die kontinuierliche Reflexion des eigenen Lernprozesses fördert die Entwicklung kritischer Denkfähigkeiten und eigenverantwortlicher Arbeitsweisen.",
+          "Innovative digitale Lernplattformen ermöglichen es den Schülern, interaktiv mit umfangreichen Lerninhalten zu arbeiten und individuelle Lernstrategien zu entwickeln.",
+          "Die Realschule kombiniert traditionelle Unterrichtsmethoden mit modernen Ansätzen, um einen vielseitigen und zukunftsorientierten Bildungsrahmen zu schaffen.",
+          "Durch gezielte Förderprogramme werden individuelle Stärken der Schüler erkannt und systematisch ausgebaut, um das volle Potenzial zu entfalten.",
+          "Interdisziplinäre Arbeitsgruppen verknüpfen naturwissenschaftliche, mathematische und geisteswissenschaftliche Inhalte zu einem umfassenden Verständnis komplexer Themen.",
+          "Die enge Zusammenarbeit zwischen Lehrkräften und Schülern schafft ein lernförderliches Umfeld, das eigenständiges und kritisches Denken unterstützt.",
+          "Die praxisnahe Vermittlung von Wissen erfolgt durch den gezielten Einsatz von Experimenten, Fallstudien und projektbasiertem Lernen.",
+          "Die systematische Analyse und Reflexion des eigenen Lernprozesses bildet die Grundlage für kontinuierliche Verbesserungen im Unterricht.",
+          "Digitale Medien und interaktive Lernmethoden werden genutzt, um abstrakte Inhalte anschaulich und verständlich zu präsentieren.",
+          "Durch fächerübergreifende Projekte wird die Fähigkeit gefördert, komplexe Sachverhalte ganzheitlich zu erfassen und praxisnah zu lösen.",
+          "Die Realschule legt großen Wert auf die Entwicklung von Schlüsselkompetenzen, die den Schülern als Grundlage für den späteren beruflichen Erfolg dienen.",
+          "Innovative Lehrkonzepte kombinieren theoretischen Unterricht mit praktischen Anwendungen, um ein tiefgreifendes Verständnis der Materie zu ermöglichen.",
+          "Die kontinuierliche Integration neuer Technologien in den Unterricht ermöglicht eine zeitgemäße und zukunftssichere Wissensvermittlung.",
+          "Durch kooperative Lernformen und interdisziplinäre Projekte werden die Schüler dazu angeregt, ihre kreativen und analytischen Fähigkeiten zu schärfen.",
+          "Die Realschule fördert eine Kultur des eigenverantwortlichen Lernens, die die Schüler befähigt, sich den Herausforderungen einer sich ständig wandelnden Welt zu stellen.",
+          "Die Verbindung von klassischen Lehrmethoden mit modernen digitalen Ansätzen schafft ein dynamisches und vielseitiges Lernumfeld.",
+          "Durch regelmäßige Feedbackrunden und Leistungsüberprüfungen wird der individuelle Fortschritt systematisch dokumentiert und gefördert.",
+          "Interdisziplinäre Projekte ermöglichen es den Schülern, theoretisches Wissen in realen Szenarien anzuwenden und innovative Lösungsstrategien zu entwickeln.",
+          "Die Realschule vermittelt nicht nur fachliches Wissen, sondern fördert auch die Entwicklung sozialer Kompetenzen und kritischer Reflexionsfähigkeit.",
+          "Moderne Lernplattformen und digitale Tools bieten den Schülern einen flexiblen und zeitgemäßen Zugang zu umfangreichen Bildungsressourcen.",
+          "Die enge Förderung individueller Talente bildet die Grundlage für den Erfolg der Schüler in einer zunehmend komplexen Berufswelt.",
+          "Durch praxisorientierte Projekte und Experimente wird die Relevanz theoretischer Inhalte eindrucksvoll verdeutlicht.",
+          "Die enge Verzahnung von Theorie und Praxis ermöglicht eine nachhaltige und praxisnahe Wissensvermittlung.",
+          "Die kontinuierliche Weiterentwicklung digitaler Lehrmethoden gewährleistet eine stets aktuelle und effektive Bildungsumgebung.",
+          "Fächerübergreifende Projekte stärken die Fähigkeit der Schüler, komplexe Fragestellungen aus unterschiedlichen Perspektiven zu analysieren.",
+          "Die Realschule legt großen Wert auf die Vermittlung von Kompetenzen, die über reines Faktenwissen hinausgehen und die Persönlichkeit der Schüler formen.",
+          "Durch innovative Unterrichtskonzepte werden die Schüler dazu befähigt, ihr Wissen eigenständig zu vertiefen und kritisch zu reflektieren.",
+          "Die Integration moderner digitaler Technologien fördert die Entwicklung von Medienkompetenz und selbstgesteuertem Lernen.",
+          "Schüler werden ermutigt, in interdisziplinären Teams zu arbeiten und ihre individuellen Stärken gewinnbringend einzusetzen.",
+          "Die enge Zusammenarbeit zwischen Lehrkräften und Schülern schafft ein harmonisches Lernklima, das Kreativität und kritisches Denken gleichermaßen fördert.",
+          "Die Realschule bietet ein umfassendes Bildungsangebot, das die Grundlage für eine erfolgreiche akademische und berufliche Laufbahn legt.",
+          "Die praxisnahe Umsetzung theoretischer Inhalte durch Experimente und Projekte ermöglicht es den Schülern, abstrakte Konzepte konkret zu erfassen.",
+          "Durch kontinuierliche Leistungsüberprüfungen und individuelle Förderung wird das Potenzial jedes Schülers bestmöglich ausgeschöpft.",
+          "Die Realschule setzt auf einen integrativen Bildungsansatz, der sowohl kognitive als auch soziale Kompetenzen gezielt fördert.",
+          "Innovative Lehrmethoden und der Einsatz moderner Technologien tragen dazu bei, dass der Unterricht stets an den neuesten wissenschaftlichen Erkenntnissen orientiert ist.",
+          "Die Kombination aus traditioneller Unterrichtsstruktur und modernen digitalen Tools schafft ein zeitgemäßes und praxisnahes Lernumfeld.",
+          "Schüler entwickeln ein tiefgehendes Verständnis für die Bedeutung von Bildung als Grundlage für eine erfolgreiche Zukunft."
+        ]
+      },
+      gymnasium: {
+        easy: [
+          "Der Schüler liest ein anspruchsvolles Buch.",
+          "Die Lehrerin erklärt komplexe Themen geduldig.",
+          "Im Unterricht diskutieren die Schüler lebhaft über philosophische Fragen.",
+          "Der Stundenplan des Gymnasiums ist sehr abwechslungsreich.",
+          "Die Schüler schreiben fehlerfreie Aufsätze.",
+          "Die Bibliothek bietet zahlreiche Klassiker der Literatur.",
+          "Der Lehrer verwendet moderne Medien im Unterricht.",
+          "Schulprojekte fördern kreatives Denken.",
+          "Die Klassenzimmer sind modern ausgestattet.",
+          "Die Schüler bereiten Referate zu historischen Ereignissen vor.",
+          "Das Gymnasium legt großen Wert auf exzellente Leistungen.",
+          "Die Lehrer motivieren die Schüler zu kritischem Denken.",
+          "In den Pausen diskutieren die Schüler angeregt über aktuelle Themen.",
+          "Der Unterricht ist durchdacht und anspruchsvoll.",
+          "Die Schüler erhalten fundierte Kenntnisse in Naturwissenschaften.",
+          "Literaturstunden inspirieren zu tiefgründigen Analysen.",
+          "Die Klassenarbeiten im Gymnasium sind herausfordernd.",
+          "Die Schüler lernen, komplexe Probleme zu lösen.",
+          "Der Lehrer gibt konstruktives Feedback zu jedem Aufsatz.",
+          "Diskussionen im Unterricht fördern präzises Argumentieren.",
+          "Die Schulbibliothek ist reich an literarischen Klassikern.",
+          "Der Lehrer erklärt mathematische Konzepte anschaulich.",
+          "Schüler schätzen den interdisziplinären Ansatz des Gymnasiums.",
+          "Der Kunstunterricht regt zu kreativen Ideen an.",
+          "Die Schüler schreiben analytische Essays über gesellschaftliche Themen.",
+          "Der Geschichtsunterricht vermittelt lebendige Einblicke in vergangene Epochen.",
+          "Naturwissenschaften werden mit modernen Experimenten verknüpft.",
+          "Lehrer fördern eigenständiges Denken und Forschen.",
+          "Die Schüler diskutieren in Gruppen über komplexe Fragestellungen.",
+          "Der Unterricht im Gymnasium ist strukturiert und herausfordernd.",
+          "Lehrer integrieren klassische Literatur in den Unterricht.",
+          "Schüler analysieren philosophische Texte mit großer Sorgfalt.",
+          "Unterrichtsstunden sind geprägt von tiefgründigen Diskussionen.",
+          "Schüler bereiten anspruchsvolle Präsentationen vor.",
+          "Exkursionen bieten neue Perspektiven.",
+          "Schüler üben sich in präziser Ausdrucksweise.",
+          "Lehrer legen Wert auf detaillierte schriftliche Arbeiten.",
+          "Komplexe Theorien werden verständlich gemacht.",
+          "Schüler schreiben anspruchsvolle Aufsätze über Kultur und Geschichte.",
+          "Der Lehrer fordert kritische Auseinandersetzung mit den Themen.",
+          "Schüler lernen, differenziert zu argumentieren.",
+          "Interdisziplinäre Unterrichtseinheiten fördern kreative Lösungsansätze.",
+          "Schulprojekte des Gymnasiums sind stets innovativ gestaltet.",
+          "Schüler entwickeln ein tiefes Verständnis für wissenschaftliche Methoden.",
+          "Der Unterricht regt zur intensiven Auseinandersetzung mit Texten an.",
+          "Klassenarbeiten sind anspruchsvoll und lehrreich.",
+          "Lehrer fördern den Austausch von Ideen und Meinungen.",
+          "Schüler werden zu selbstständigen Denkern erzogen.",
+          "Der Gymnasialunterricht legt den Grundstein für akademischen Erfolg.",
+          "Schüler schätzen die intellektuelle Atmosphäre des Gymnasiums."
+        ],
+        normal: [
+          "Im Gymnasium wird ein anspruchsvoller Lehrplan verfolgt, der klassische und moderne Bildungselemente miteinander verknüpft.",
+          "Schüler analysieren literarische Werke und gewinnen dadurch ein tiefes Verständnis für die kulturellen Hintergründe vergangener Epochen.",
+          "Interdisziplinäre Projekte fördern das Erkennen komplexer Zusammenhänge zwischen verschiedenen Fachbereichen.",
+          "Der Unterricht regt sowohl analytisches als auch kreatives Denken auf hohem Niveau an.",
+          "Lehrer kombinieren traditionelle Methoden mit modernen Medien, um den Unterricht abwechslungsreich zu gestalten.",
+          "Die intensive Auseinandersetzung mit philosophischen und historischen Texten schärft das kritische Urteilsvermögen der Schüler.",
+          "Anspruchsvolle mathematische Aufgaben vermitteln den Schülern abstrakte Konzepte auf verständliche Weise.",
+          "Der interdisziplinäre Ansatz ermöglicht es, literarische, naturwissenschaftliche und gesellschaftliche Themen zu verbinden.",
+          "Schüler werden ermutigt, eigenständig zu forschen und komplexe Fragestellungen kreativ zu lösen.",
+          "In Diskussionsrunden formulieren die Schüler ihre Argumente präzise und fundiert.",
+          "Der Unterricht fördert ein kritisches Bewusstsein, das die Schüler befähigt, gesellschaftliche Entwicklungen zu hinterfragen.",
+          "Die Auseinandersetzung mit klassischen Texten ermöglicht ein tiefes Verständnis evolutionärer literarischer Veränderungen.",
+          "Intensive Naturwissenschaftsübungen schärfen das analytische Denken und vertiefen das Verständnis der Welt.",
+          "Handlungsorientierte Projekte zeigen den Schülern, wie theoretisches Wissen praktisch angewendet werden kann.",
+          "Lehrer motivieren die Schüler, kreative Lösungsansätze zu entwickeln und überzeugende Präsentationen zu halten.",
+          "Fächerübergreifende Projekte veranschaulichen das Zusammenspiel von Theorie und Praxis.",
+          "Differenzierte Auseinandersetzung mit komplexen Themen fördert das selbstständige Denken nachhaltig.",
+          "Das Gymnasium legt Wert auf eine umfassende Bildung, die intellektuelle und soziale Kompetenzen vereint.",
+          "Schüler lernen, wissenschaftliche Methoden anzuwenden, um fundierte Ergebnisse zu erzielen.",
+          "Die Integration moderner Technologien eröffnet neue Perspektiven auf die Herausforderungen der globalen Gesellschaft.",
+          "Die intensive Auseinandersetzung mit historischen Ereignissen fördert tiefgreifende Diskussionen über kulturelle Entwicklungen.",
+          "Interdisziplinäre Lehrkonzepte eröffnen den Schülern neue Perspektiven auf gesellschaftliche Herausforderungen.",
+          "Fundierte Literaturarbeit erweitert das Sprachgefühl und den Wortschatz der Schüler erheblich.",
+          "Schüler werden angehalten, eigene Forschungsprojekte zu entwickeln und kritisch zu reflektieren.",
+          "Der Unterricht stellt hohe Anforderungen, die die Schüler zu exzellenten Leistungen anspornen.",
+          "Kritische Auseinandersetzung mit ethischen Fragestellungen stärkt das moralische Bewusstsein der Jugendlichen.",
+          "Die Kombination von Theorie und Praxis ermöglicht den Schülern, komplexe wissenschaftliche Prozesse zu verstehen.",
+          "Die Lehrer motivieren die Schüler, innovative Ideen zu entwickeln und in kreativen Projekten umzusetzen.",
+          "Interdisziplinäre Einheiten eröffnen den Schülern neue Perspektiven auf die Herausforderungen der modernen Welt.",
+          "Fundierte wissenschaftliche Analyse stärkt das analytische Denkvermögen der Schüler nachhaltig.",
+          "Schüler lernen, komplexe Probleme systematisch zu analysieren und eigenständige Lösungsstrategien zu entwickeln.",
+          "Digitale Medien werden eingesetzt, um den Unterricht interaktiv und selbstständig zu gestalten.",
+          "Die anspruchsvollen Aufgaben fordern die Schüler, abstrakte Konzepte in konkrete Ideen umzusetzen.",
+          "Intensive Literaturanalysen fördern das Verständnis für sprachliche Nuancen und kulturelle Kontexte.",
+          "Schüler werden ermutigt, über den Tellerrand hinauszublicken und interdisziplinäre Lösungsansätze zu entwickeln.",
+          "Im Gymnasium wird großer Wert auf die Förderung der Kreativität und des kritischen Denkens gelegt.",
+          "Fächerübergreifende Projekte ermöglichen den Schülern, ihr Wissen praxisnah anzuwenden.",
+          "Innovative Lehrmethoden gestalten den Lernprozess dynamisch und abwechslungsreich.",
+          "Schüler lernen, ihre Erkenntnisse präzise in schriftlichen und mündlichen Präsentationen darzustellen.",
+          "Die Analyse komplexer mathematischer Probleme stärkt das logische Denkvermögen der Schüler nachhaltig.",
+          "Der interdisziplinäre Ansatz fördert eine ganzheitliche Bildung, die umfassende Kompetenzen vermittelt.",
+          "Die engagierte Betreuung motiviert die Schüler, ihr volles Potenzial auszuschöpfen.",
+          "Durch kritische Reflexion eigener Lernprozesse wird die persönliche Weiterentwicklung kontinuierlich gefördert.",
+          "Interdisziplinäre Fragestellungen eröffnen den Schülern neue Einsichten in die Zusammenhänge von Kunst, Wissenschaft und Gesellschaft.",
+          "Die intensive Auseinandersetzung mit komplexen Themen erweitert den Horizont der Schüler und bereitet sie auf akademische Herausforderungen vor."
+        ],
+        hard: [
+          "Im Gymnasium wird ein rigoroser Lehrplan verfolgt, der die Schüler dazu anregt, tiefgreifende Analysen literarischer, historischer und naturwissenschaftlicher Phänomene durchzuführen.",
+          "Die intensive Auseinandersetzung mit klassischen Texten fördert ein kritisches Verständnis, das es den Schülern ermöglicht, die kulturellen Wurzeln moderner Gesellschaften zu erkennen.",
+          "Interdisziplinäre Projekte ermutigen die Schüler, komplexe Zusammenhänge zwischen Wissenschaft, Kunst und Philosophie zu erforschen.",
+          "Abstrakte mathematische Konzepte werden in einem Kontext vermittelt, der sowohl theoretische als auch praktische Aspekte berücksichtigt.",
+          "Die Lehrer kombinieren traditionelle Methoden mit modernsten digitalen Medien, um den Unterricht facettenreich und interaktiv zu gestalten.",
+          "In anspruchsvollen Diskussionsrunden werden die Schüler angehalten, ihre Argumente präzise zu formulieren und kritisch zu hinterfragen.",
+          "Der Unterricht fördert ein tiefes Verständnis für die Wechselwirkungen zwischen historischen Ereignissen und kulturellen Entwicklungen.",
+          "Die systematische Analyse klassischer Literatur schärft das Bewusstsein für subtile sprachliche Nuancen und künstlerische Ausdrucksformen.",
+          "Die intensive Beschäftigung mit philosophischen Fragestellungen erweitert das abstrakte Denkvermögen der Schüler nachhaltig.",
+          "Interdisziplinäre Lehrkonzepte verbinden wissenschaftliche und künstlerische Perspektiven zu einem ganzheitlichen Bildungsansatz.",
+          "Die Vermittlung komplexer naturwissenschaftlicher Theorien bereitet die Schüler optimal auf akademische Herausforderungen vor.",
+          "Innovative Lernmethoden regen das selbstständige Forschen und Entwickeln kreativer Lösungsansätze an.",
+          "Die kritische Reflexion historischer Ereignisse ermöglicht den Schülern, die Ursachen und Wirkungen gesellschaftlicher Umbrüche zu verstehen.",
+          "Der Einsatz moderner digitaler Technologien optimiert den Informationsfluss und macht komplexe Inhalte zugänglich.",
+          "Anspruchsvolle Projektarbeiten fördern das eigenständige Erarbeiten theoretischer Konzepte und deren praktische Umsetzung.",
+          "Die enge Zusammenarbeit zwischen Lehrkräften und Schülern schafft ein lernförderliches Umfeld, das eigenverantwortliches Denken unterstützt.",
+          "Durch interdisziplinäre Fallstudien werden komplexe Sachverhalte greifbar gemacht und innovative Lösungsstrategien entwickelt.",
+          "Die systematische Förderung von Schlüsselkompetenzen bildet die Grundlage für den Erfolg in einer zunehmend vernetzten Welt.",
+          "Moderne digitale Lernplattformen ermöglichen den flexiblen und zeitgemäßen Zugang zu umfangreichen Bildungsressourcen.",
+          "Die Kombination aus empirischer Forschung und theoretischer Fundierung legt den Grundstein für ein nachhaltiges Bildungsverständnis.",
+          "Interdisziplinäre Projekte verknüpfen naturwissenschaftliche, mathematische und geisteswissenschaftliche Inhalte zu einem umfassenden Bildungsmodell.",
+          "Der Einsatz von innovativen Medien und interaktiven Methoden fördert die Fähigkeit, komplexe Theorien in praktischen Projekten anzuwenden.",
+          "Die kontinuierliche Weiterentwicklung digitaler Lehrmethoden garantiert einen stets aktuellen und effektiven Unterricht.",
+          "Die kritische Auseinandersetzung mit ethischen Fragestellungen stärkt das moralische und intellektuelle Urteilsvermögen der Schüler.",
+          "Fächerübergreifende Projekte ermöglichen es, theoretisches Wissen in realen Szenarien anzuwenden und kritisch zu hinterfragen.",
+          "Die Kombination aus klassischer Literaturarbeit und modernen digitalen Medien erweitert das Verständnis für kulturelle Entwicklungen.",
+          "Schüler lernen, durch intensive Analyse komplexer Texte, tiefgreifende Einsichten in historische und philosophische Zusammenhänge zu gewinnen.",
+          "Die Integration moderner Technologien in den Unterricht ermöglicht eine dynamische und interaktive Vermittlung abstrakter Konzepte.",
+          "Interdisziplinäre Teams arbeiten gemeinsam an der Lösung komplexer Aufgabenstellungen und fördern so den Austausch vielfältiger Perspektiven.",
+          "Die Verbindung von traditionellen Lehrmethoden mit innovativen digitalen Ansätzen schafft ein ganzheitliches und zukunftsorientiertes Bildungsumfeld.",
+          "Durch regelmäßige Feedbackrunden wird der individuelle Lernfortschritt systematisch erfasst und kontinuierlich verbessert.",
+          "Die enge Zusammenarbeit zwischen verschiedenen Fachbereichen fördert ein umfassendes Verständnis der globalen Zusammenhänge.",
+          "Die gezielte Förderung eigenständigen Forschens und kreativer Problemlösungen bildet einen zentralen Bestandteil des gymnasialen Unterrichts.",
+          "Die kritische Reflexion eigener Lernprozesse trägt maßgeblich zur persönlichen Weiterentwicklung und akademischem Erfolg bei.",
+          "Die Integration interaktiver digitaler Tools ermöglicht es, abstrakte Inhalte anschaulich und praxisnah zu vermitteln.",
+          "Schüler werden dazu angeregt, ihre eigenen Ideen zu entwickeln und in anspruchsvollen Projekten umzusetzen.",
+          "Die interdisziplinäre Herangehensweise im Gymnasium stärkt sowohl das analytische als auch das kreative Denkvermögen der Schüler.",
+          "Durch praxisnahe Fallstudien und Projekte wird die Relevanz theoretischer Inhalte für die moderne Gesellschaft eindrucksvoll verdeutlicht.",
+          "Die kontinuierliche Auseinandersetzung mit komplexen Themen bereitet die Schüler optimal auf zukünftige akademische Herausforderungen vor.",
+          "Die Verbindung von traditionellem Unterricht mit innovativen digitalen Medien schafft eine Lernumgebung, die den Ansprüchen der heutigen Zeit gerecht wird.",
+          "Schüler entwickeln ein tiefgreifendes Verständnis für die Bedeutung von Kultur, Geschichte und Wissenschaft als Grundlage für eine erfolgreiche Zukunft.",
+          "Der interdisziplinäre Unterricht fördert die Fähigkeit, komplexe Fragestellungen aus unterschiedlichen Perspektiven zu analysieren und eigenständig zu lösen.",
+          "Innovative Lehrkonzepte und der Einsatz moderner Technologien ebnen den Weg für eine nachhaltige und zukunftsweisende Bildung."
+        ]
+      },
+      medizin: {
+        easy: [
+          "Der Arzt untersucht den Patienten.",
+          "Die Krankenschwester reicht dem Patienten das Medikament.",
+          "Das Krankenhaus ist modern ausgestattet.",
+          "Die Patienten warten geduldig im Wartezimmer.",
+          "Der OP-Saal ist steril und ruhig.",
+          "Die Medizin wird sorgfältig dosiert.",
+          "Die Spritze wird sauber vorbereitet.",
+          "Der Arzt erklärt den Behandlungsplan.",
+          "Das Labor führt einfache Tests durch.",
+          "Die Krankenschwester misst den Blutdruck.",
+          "Die Infusion wird langsam verabreicht.",
+          "Der Patient fühlt sich nach der Behandlung besser.",
+          "Das Medikament wirkt schnell und gut.",
+          "Die Untersuchung erfolgt mit viel Sorgfalt.",
+          "Der Arzt schreibt ein Rezept aus.",
+          "Die Praxis ist freundlich und einladend.",
+          "Die Patienten lesen die Beipackzettel.",
+          "Das Thermometer misst die Temperatur.",
+          "Die Spritze tut nur kurz weh.",
+          "Der Arzt kontrolliert die Vitalwerte.",
+          "Die Krankenschwester reinigt die Wunde.",
+          "Die Operation verläuft ohne Komplikationen.",
+          "Der Patient erholt sich gut im Krankenhaus.",
+          "Die Medizin wird in Tablettenform verabreicht.",
+          "Der Arzt erklärt die Nebenwirkungen.",
+          "Das Labor analysiert Blutproben.",
+          "Die Krankenschwester wechselt den Verbandskasten.",
+          "Der Patient bekommt Ruhe und Pflege.",
+          "Das Röntgenbild zeigt klare Ergebnisse.",
+          "Der Arzt verschreibt Antibiotika.",
+          "Die Behandlung beginnt pünktlich.",
+          "Die Praxis arbeitet sehr effizient.",
+          "Der Patient wird regelmäßig kontrolliert.",
+          "Die Krankenschwester hilft beim Aufstehen.",
+          "Das Medikament wird gut aufgenommen.",
+          "Der Arzt misst den Puls.",
+          "Die Patienten warten in einem sauberen Raum.",
+          "Die Praxis legt großen Wert auf Hygiene.",
+          "Der Patient berichtet über seine Symptome.",
+          "Die Krankenschwester erklärt den Behandlungsablauf.",
+          "Das Rezept wird in der Apotheke eingelöst.",
+          "Der Arzt führt eine gründliche Untersuchung durch.",
+          "Die Infusion wird sachgemäß eingestellt.",
+          "Der Patient erhält Unterstützung bei der Mobilisation.",
+          "Die Medizin wird regelmäßig überprüft.",
+          "Die Krankenschwester überwacht die Vitalparameter.",
+          "Der Patient fühlt sich erleichtert.",
+          "Das Krankenhauspersonal arbeitet Hand in Hand.",
+          "Der Arzt gibt klare Anweisungen.",
+          "Die Behandlung verläuft reibungslos."
+        ],
+        normal: [
+          "In der modernen Klinik werden fortschrittliche Diagnoseverfahren eingesetzt, um die Gesundheit der Patienten präzise zu beurteilen.",
+          "Die interdisziplinäre Zusammenarbeit von Ärzten, Pflegekräften und Technikern optimiert den Behandlungsprozess erheblich.",
+          "Innovative Technologien ermöglichen es, Krankheiten schneller zu erkennen und effektiver zu behandeln.",
+          "Die ärztliche Untersuchung erfolgt unter Einbeziehung umfangreicher medizinischer Standards und aktueller Forschungsergebnisse.",
+          "Patienten erhalten eine umfassende Betreuung, die sowohl ihre physische als auch psychische Gesundheit berücksichtigt.",
+          "Regelmäßige Überwachung der Vitalparameter erlaubt eine präzise Anpassung der medikamentösen Therapie.",
+          "Moderne Laborexperimente tragen dazu bei, individuelle Krankheitsmuster zu erkennen und gezielt zu therapieren.",
+          "Die Klinik legt großen Wert auf Hygiene und sterile Bedingungen, um das Infektionsrisiko zu minimieren.",
+          "Digitale Systeme optimieren den Informationsfluss zwischen den medizinischen Abteilungen.",
+          "Die enge Zusammenarbeit zwischen Fachabteilungen fördert eine ganzheitliche Patientenversorgung.",
+          "Ärzte erläutern den Patienten detailliert den Ablauf der Behandlung und mögliche Nebenwirkungen der Medikamente.",
+          "Fortschrittliche bildgebende Verfahren ermöglichen die Darstellung innerer Organe in höchster Auflösung.",
+          "Die multidisziplinäre Behandlung sichert eine individuelle und zielgerichtete Therapie.",
+          "Präzise Diagnostik und gezielte Therapieansätze beschleunigen den Heilungsprozess.",
+          "Die Kombination aus moderner Technik und medizinischem Fachwissen bildet die Basis für erfolgreiche Behandlungen.",
+          "Das Klinikteam arbeitet Hand in Hand, um den Patienten eine optimale Versorgung zu gewährleisten.",
+          "Patienten profitieren von fortschrittlicher Medizintechnik, die eine exakte Diagnose und Therapie ermöglicht.",
+          "Kontinuierliche Weiterbildung des Personals hält die Klinik stets auf dem neuesten Stand.",
+          "Innovative Therapieverfahren bieten auch bei komplexen Krankheitsbildern neue Heilungschancen.",
+          "Individuelle Anpassung der Medikation erfolgt auf Basis detaillierter diagnostischer Befunde.",
+          "Telemedizinische Anwendungen optimieren die Patientenbetreuung auch über große Entfernungen hinweg.",
+          "Interdisziplinäre Forschung führt zu neuen Erkenntnissen in der personalisierten Medizin.",
+          "Patienten werden in Entscheidungsprozesse einbezogen, um eine transparente Behandlung zu gewährleisten.",
+          "Die Kombination aus traditioneller Medizin und moderner Technologie bildet ein effektives Behandlungskonzept.",
+          "Sorgfältige Analyse von Blut- und Gewebeproben liefert wichtige Informationen für die Therapieplanung.",
+          "In spezialisierten Zentren werden innovative Behandlungsansätze für seltene Krankheitsbilder erprobt.",
+          "Die enge Zusammenarbeit zwischen Ärzten und Pflegekräften garantiert eine umfassende Betreuung der Patienten.",
+          "Kontinuierliche Investitionen in neue Technologien erweitern die Diagnose- und Therapiemöglichkeiten.",
+          "Regelmäßige Qualitätskontrollen stellen sicher, dass alle medizinischen Verfahren höchsten Standards entsprechen.",
+          "Patienten werden ausführlich über den Verlauf der Behandlung informiert und einbezogen.",
+          "Die Kombination aus präziser Diagnostik und innovativen Therapien verbessert die Heilungschancen signifikant.",
+          "Kooperationen mit renommierten Forschungseinrichtungen ermöglichen den Zugang zu neuesten wissenschaftlichen Erkenntnissen.",
+          "Moderne bildgebende Verfahren führen zu einer exakten Lokalisierung von Krankheitsherden.",
+          "Die Klinik setzt auf eine individuelle, patientenorientierte Behandlungsstrategie.",
+          "Digitale Technologien machen den Behandlungsprozess effizient und transparent.",
+          "Patienten erhalten individuell zugeschnittene Beratungen, die ihre finanziellen Ziele in den Mittelpunkt stellen.",
+          "Ein umfassender Online-Service ermöglicht einen einfachen und schnellen Zugang zu allen Finanzdienstleistungen.",
+          "Die transparente Darstellung von Gebühren und Konditionen schafft Vertrauen und fördert die Zufriedenheit.",
+          "Mobile Anwendungen erleichtern den Zugriff auf Konten von überall aus.",
+          "Die Bank bietet umfassende Betreuung, von der Kontoführung bis zur komplexen Anlageberatung.",
+          "Innovative Analysesysteme ermöglichen es, Marktentwicklungen frühzeitig zu erkennen und zu nutzen.",
+          "Durch die Kombination persönlicher Beratung und moderner Technologien wird eine ganzheitliche Betreuung sichergestellt.",
+          "Der Service der Klinik wird kontinuierlich durch den Einsatz neuester Technologien optimiert.",
+          "Die Integration moderner IT-Systeme unterstützt die effiziente Verwaltung von Patientendaten."
+        ],
+        hard: [
+          "In hochmodernen Forschungslabors werden neuartige therapeutische Ansätze entwickelt, die auf der präzisen Analyse genetischer und molekularer Daten basieren.",
+          "Die interdisziplinäre Zusammenarbeit von Ärzten, Biotechnologen und Informatikern ermöglicht innovative Behandlungskonzepte für komplexe Krankheitsbilder.",
+          "Modernste bildgebende Verfahren visualisieren innere Organe in bisher unerreichter Detailtiefe, was eine präzise Diagnose ermöglicht.",
+          "Die individualisierte Medikation, basierend auf umfangreichen genetischen Profilen, stellt einen Meilenstein in der personalisierten Medizin dar.",
+          "In spezialisierten Zentren werden fortschrittliche Therapien erprobt, die selbst bei bislang unheilbaren Erkrankungen neue Hoffnung schenken.",
+          "Die Integration von KI-gestützten Analysen revolutioniert die klinische Entscheidungsfindung und optimiert die Patientenversorgung.",
+          "Telemedizin und digitale Überwachungssysteme gewährleisten eine kontinuierliche Betreuung, auch über große Entfernungen hinweg.",
+          "Die Verzahnung von klinischer Praxis und wissenschaftlicher Forschung lässt neueste Erkenntnisse unmittelbar in die Therapie einfließen.",
+          "Multidisziplinäre Fallbesprechungen ermöglichen die Entwicklung maßgeschneiderter Behandlungskonzepte für komplexe Krankheitsbilder.",
+          "Innovative bildgebende und molekulare Technologien liefern hochauflösende Daten, die pathologische Veränderungen exakt lokalisieren.",
+          "Präzise molekulare Diagnostik identifiziert individuelle Krankheitsmuster, die den Weg für zielgerichtete Therapien ebnen.",
+          "Die Entwicklung zielgerichteter Medikamente, die spezifische molekulare Signalwege blockieren, stellt einen bedeutenden Fortschritt in der Krebstherapie dar.",
+          "Die enge Kooperation verschiedener Fachabteilungen fördert einen ganzheitlichen Ansatz, der die physische und psychische Gesundheit der Patienten berücksichtigt.",
+          "Der Einsatz von KI-Algorithmen in der medizinischen Bildverarbeitung ermöglicht eine automatisierte und hochpräzise Diagnose komplexer Erkrankungen.",
+          "Durch kontinuierliche Weiterentwicklung digitaler Medizintechnik werden innovative Therapiemöglichkeiten realisiert, die die Heilungschancen erheblich verbessern.",
+          "Die personalisierte Medizin, basierend auf umfangreichen genetischen Analysen, revolutioniert die traditionelle Herangehensweise an die Patientenbehandlung.",
+          "In spezialisierten Forschungseinrichtungen werden neuartige Therapieverfahren erprobt, die auf immunologischen und zellbasierten Ansätzen beruhen.",
+          "Die multidisziplinäre Herangehensweise ermöglicht es, selbst seltene und bisher unheilbare Erkrankungen gezielt zu therapieren.",
+          "Modernste Labortechnologien beschleunigen den Diagnoseprozess und erhöhen die Genauigkeit der Ergebnisse signifikant.",
+          "Die Integration von Big-Data-Analysen in die klinische Praxis ermöglicht die Entwicklung individueller Therapieansätze auf Basis umfangreicher Patientendaten.",
+          "Die Kombination aus innovativer Medizintechnik und fundiertem klinischem Fachwissen bildet die Grundlage für eine nachhaltige Verbesserung der Patientenversorgung.",
+          "Zielgerichtete Therapien in spezialisierten Onkologiezentren verlangsamen das Fortschreiten von Tumorerkrankungen signifikant.",
+          "Interdisziplinäre Forschung führt zu neuartigen Behandlungsstrategien, die auf individualisierten Patientenprofilen basieren.",
+          "Digitale Überwachungssysteme erfassen die Vitalparameter der Patienten in Echtzeit, was eine präzise Anpassung der Therapie ermöglicht.",
+          "Fortschrittliche Behandlungsmethoden beruhen auf einem tiefgreifenden Verständnis zellulärer und molekularer Prozesse.",
+          "Die enge Verbindung von klinischer Praxis und wissenschaftlicher Innovation führt zu bahnbrechenden Fortschritten in der regenerativen Medizin.",
+          "Gezielte immuntherapeutische Ansätze aktivieren die körpereigenen Abwehrmechanismen, um schwere Erkrankungen zu bekämpfen.",
+          "Neuartige Diagnostikverfahren ermöglichen es, bereits in frühen Krankheitsstadien präzise und effektiv zu intervenieren.",
+          "Experimentelle Therapien, basierend auf zellulären und genetischen Interventionen, werden in spezialisierten Zentren erprobt.",
+          "Interdisziplinäre Forschung im Bereich der personalisierten Medizin trägt zur Entwicklung maßgeschneiderter Behandlungskonzepte bei.",
+          "Modernste bildgebende und molekulare Technologien visualisieren komplexe Krankheitsprozesse in unerreichter Detailtiefe.",
+          "Die Integration von KI-gestützten Systemen verbessert die Effizienz und Genauigkeit medizinischer Untersuchungen signifikant.",
+          "Multidisziplinäre Teams entwickeln innovative Therapiestrategien, die individuell auf die Bedürfnisse der Patienten abgestimmt sind.",
+          "Digitalisierung interner Prozesse steigert die Effizienz und Kundenzufriedenheit in der Patientenversorgung nachhaltig.",
+          "Durch den Einsatz von Predictive Analytics werden zukünftige Marktbewegungen präzise prognostiziert, was die Planung finanzieller Ressourcen optimiert.",
+          "Modernste Sicherheitsprotokolle gewährleisten den umfassenden Schutz sensibler Patientendaten in allen digitalen Kanälen.",
+          "Die kontinuierliche Forschung und Entwicklung im digitalen Bereich sichert der Klinik eine Vorreiterrolle in der modernen Medizin.",
+          "Die Kombination aus empirischer Forschung und praktischer Anwendung bildet die Grundlage für erfolgreiche, individualisierte Behandlungen.",
+          "Durch den gezielten Einsatz modernster Labortechnologien werden komplexe molekulare Prozesse präzise analysiert und in Therapiepläne integriert.",
+          "Die enge Kooperation von Forschungseinrichtungen und Kliniken ermöglicht einen ständigen Wissensaustausch und modernste Behandlungsmethoden.",
+          "Digitalisierte Diagnoseverfahren verbessern die Sicherheit und Effizienz medizinischer Untersuchungen in Echtzeit.",
+          "Die Implementierung fortschrittlicher KI-Modelle in der Kreditvergabe sorgt für eine effiziente und präzise Risikobewertung.",
+          "Die personalisierte Medizin revolutioniert die Behandlung schwerer Erkrankungen, indem sie individuelle genetische Profile in den Therapieprozess integriert."
+        ]
+      },
+      bank: {
+        easy: [
+          "Der Kunde betritt die Bank.",
+          "Die Bank ist modern und einladend.",
+          "Ein Geldautomat steht vor der Bank.",
+          "Der Kunde zahlt mit der EC-Karte.",
+          "Die Mitarbeiterin begrüßt den Kunden freundlich.",
+          "Der Schalter ist gut besetzt.",
+          "Das Konto wird sicher verwaltet.",
+          "Der Kunde holt Bargeld ab.",
+          "Die Bank bietet günstige Zinsen.",
+          "Der Kunde eröffnet ein Sparkonto.",
+          "Das Bankgebäude ist groß und hell.",
+          "Die Filiale liegt zentral in der Stadt.",
+          "Der Kunde spricht mit einem Bankberater.",
+          "Die Beratung ist kompetent und freundlich.",
+          "Der Kunde nutzt das Online-Banking.",
+          "Der Geldautomat gibt pünktlich Bargeld aus.",
+          "Die Bank arbeitet effizient und zuverlässig.",
+          "Die Mitarbeiter helfen bei allen Fragen.",
+          "Der Kunde wartet geduldig im Wartebereich.",
+          "Die Bank bietet einfache Finanzdienstleistungen.",
+          "Der Kunde zahlt bequem mit der EC-Karte.",
+          "Die Filiale ist gut organisiert und sauber.",
+          "Das Konto wird täglich aktualisiert.",
+          "Die Bank schickt regelmäßige Kontoauszüge.",
+          "Der Schalterservice ist schnell und freundlich.",
+          "Der Kunde erhält einen ausführlichen Kontoauszug.",
+          "Die Bank legt großen Wert auf Sicherheit.",
+          "Das Online-Banking ist einfach zu bedienen.",
+          "Der Kunde kann seine Finanzen bequem online verwalten.",
+          "Die Bank bietet günstige Kredite an.",
+          "Die persönliche Beratung in der Filiale ist sehr hilfreich.",
+          "Der Kunde informiert sich über verschiedene Anlageprodukte.",
+          "Die Bank erklärt die Konditionen klar und verständlich.",
+          "Moderne Technologien unterstützen den gesamten Service.",
+          "Die Bank arbeitet mit innovativen digitalen Systemen.",
+          "Der Kunde kann jederzeit seinen Kontostand abrufen.",
+          "Die Filiale bietet ein angenehmes Ambiente.",
+          "Die Mitarbeiter der Bank sind stets hilfsbereit.",
+          "Der Online-Service der Bank ist benutzerfreundlich gestaltet.",
+          "Die Bank sorgt für einen sicheren Zahlungsverkehr.",
+          "Der Kunde kann einfach Geld überweisen.",
+          "Die Bank bietet transparente Informationen zu Gebühren.",
+          "Die mobile App der Bank erleichtert den Zugriff auf Konten.",
+          "Der Bankberater erklärt komplexe Finanzprodukte verständlich.",
+          "Die Bank legt großen Wert auf Datenschutz.",
+          "Der Kunde erhält regelmäßige Finanzupdates per E-Mail.",
+          "Die Filiale ist modern eingerichtet und gut erreichbar.",
+          "Der Geldautomat ist rund um die Uhr verfügbar.",
+          "Die Bank bietet auch internationale Überweisungen an.",
+          "Der Kunde kann seine Finanzen jederzeit digital verwalten.",
+          "Der Service der Bank ist zuverlässig und effizient."
+        ],
+        normal: [
+          "Die Bank bietet ein breites Spektrum moderner Finanzdienstleistungen an, die sowohl traditionelle als auch digitale Lösungen umfassen.",
+          "Kunden profitieren von einer persönlichen Beratung, die sie bei fundierten Anlageentscheidungen unterstützt.",
+          "Fortschrittliche IT-Systeme wickeln Finanztransaktionen schnell, sicher und transparent ab.",
+          "Die moderne Filiale kombiniert ansprechendes Ambiente mit effizienten, digitalen Serviceangeboten.",
+          "Transparente Konditionen und klare Gebührenstrukturen schaffen Vertrauen bei den Kunden.",
+          "Die Integration digitaler Technologien ermöglicht einen flexiblen und bequemen Zugriff auf alle Finanzinformationen.",
+          "Maßgeschneiderte Finanzprodukte werden individuell auf die Bedürfnisse der Kunden abgestimmt.",
+          "Der Online-Banking-Service der Bank ist intuitiv und benutzerfreundlich gestaltet.",
+          "Moderne Sicherheitsprotokolle gewährleisten den Schutz sensibler Kundendaten in allen digitalen Kanälen.",
+          "Die persönliche Beratung in den Filialen stärkt langfristig die Kundenbindung und das Vertrauen in die Bank.",
+          "Effiziente interne Prozesse sorgen für einen reibungslosen Ablauf aller Finanztransaktionen.",
+          "Die Bank setzt auf eine kontinuierliche Optimierung ihrer digitalen Plattformen, um stets den neuesten Standards zu entsprechen.",
+          "Kunden erhalten regelmäßig detaillierte Kontoauszüge und Finanzupdates per E-Mail.",
+          "Die Kombination aus traditioneller Beratung und modernen digitalen Services bietet einen umfassenden Kundensupport.",
+          "Innovative Technologien ermöglichen es der Bank, Markttrends frühzeitig zu erkennen und entsprechend zu reagieren.",
+          "Die persönliche Betreuung in den Filialen wird durch einen hohen Grad an technischer Innovation ergänzt.",
+          "Durch den Einsatz von Cloud-Technologien wird der Zugang zu Finanzdienstleistungen jederzeit und überall gewährleistet.",
+          "Moderne Analysetools helfen dabei, individuelle Kundenbedürfnisse präzise zu erfassen und passgenaue Anlageprodukte anzubieten.",
+          "Die Bank legt großen Wert auf die transparente Kommunikation aller finanziellen Informationen.",
+          "Digitale Anwendungen ermöglichen es den Kunden, ihre Finanztransaktionen schnell und sicher abzuwickeln.",
+          "Das breite Angebot an Finanzprodukten wird durch individuelle Beratungen optimal auf die Kundenbedürfnisse abgestimmt.",
+          "Die kontinuierliche Weiterentwicklung der digitalen Infrastruktur verbessert den Kundenservice nachhaltig.",
+          "Innovative Sicherheitsmechanismen und moderne IT-Systeme sorgen für einen hohen Schutz der Kundendaten.",
+          "Die Bank kombiniert persönliche Beratung mit technologischer Exzellenz, um maßgeschneiderte Finanzstrategien zu entwickeln.",
+          "Regelmäßige Schulungen des Personals garantieren einen stets aktuellen und kompetenten Service.",
+          "Die Integration fortschrittlicher Analysetools ermöglicht eine präzise Bewertung von Risiken und Chancen.",
+          "Kunden können ihre Finanzen über mobile Apps bequem verwalten und überwachen.",
+          "Die Bank bietet flexible Kreditoptionen, die auf die individuellen Lebenssituationen der Kunden zugeschnitten sind.",
+          "Moderne Online-Plattformen ermöglichen einen schnellen und sicheren Zugang zu allen Finanzdienstleistungen.",
+          "Transparente Preismodelle und klare Konditionen schaffen ein hohes Maß an Vertrauen und Zufriedenheit.",
+          "Die Bank nutzt innovative Technologien, um den Zahlungsverkehr effizienter und sicherer zu gestalten.",
+          "Kunden erhalten personalisierte Finanzberatungen, die auf ihre individuellen Bedürfnisse abgestimmt sind.",
+          "Die Verbindung von traditioneller Beratung und digitalen Services bietet einen umfassenden Mehrwert für die Kunden.",
+          "Durch den Einsatz moderner Softwarelösungen werden alle Transaktionen präzise und zeitnah abgewickelt.",
+          "Die Bank setzt auf eine kundenorientierte Strategie, die eine umfassende Betreuung und Transparenz gewährleistet.",
+          "Die kontinuierliche Optimierung interner Prozesse führt zu einem reibungslosen Ablauf aller finanziellen Transaktionen.",
+          "Innovative digitale Tools und Anwendungen erleichtern den Zugriff auf umfangreiche Finanzinformationen.",
+          "Die persönliche Beratung in der Filiale wird durch moderne, digitale Services optimal ergänzt.",
+          "Die Bank fördert eine enge Zusammenarbeit zwischen verschiedenen Abteilungen, um kundennahe Lösungen zu entwickeln.",
+          "Mit modernsten IT-Systemen werden alle Finanzprozesse effizient und sicher gesteuert.",
+          "Die Integration von Big-Data-Analysen ermöglicht eine detaillierte Erfassung individueller Kundenbedürfnisse.",
+          "Kunden profitieren von einem umfassenden Serviceangebot, das traditionelle und digitale Finanzdienstleistungen vereint.",
+          "Die Bank bietet auch internationale Überweisungen an, die schnell und transparent abgewickelt werden.",
+          "Die kontinuierliche Weiterentwicklung digitaler Plattformen sichert einen stets aktuellen und benutzerfreundlichen Service.",
+          "Der Einsatz innovativer Technologien trägt dazu bei, dass alle finanziellen Transaktionen sicher und effizient erfolgen.",
+          "Die Bank kombiniert analytische Präzision mit persönlicher Beratung, um individuelle und nachhaltige Finanzstrategien zu entwickeln.",
+          "Durch den gezielten Einsatz modernster IT-Systeme werden alle Prozesse im Finanzwesen optimiert und transparent gestaltet."
+        ],
+        hard: [
+          "In einem global vernetzten Finanzsystem nutzt die Bank fortschrittliche Analysemethoden, um komplexe Marktbewegungen präzise zu prognostizieren und individuell zugeschnittene Anlageprodukte anzubieten.",
+          "Die Integration von Big-Data-Technologien ermöglicht eine detaillierte Risikoanalyse, die maßgeblich zur Optimierung der Kreditvergabeprozesse beiträgt.",
+          "Durch enge Zusammenarbeit mit internationalen Finanzinstitutionen entsteht ein multidimensionales Netzwerk, das den Austausch innovativer Strategien fördert.",
+          "Modernste digitale Infrastrukturen ermöglichen eine effiziente, sichere und in Echtzeit abgewickelte Zahlungsverkehrsabwicklung.",
+          "Der gezielte Einsatz künstlicher Intelligenz führt zur Erstellung individueller Kundenprofile, die maßgeschneiderte Finanzprodukte ermöglichen.",
+          "Die strategische Ausrichtung der Bank basiert auf einem ganzheitlichen Ansatz, der wirtschaftliche Stabilität mit nachhaltigen Investitionsmöglichkeiten vereint.",
+          "Komplexe Algorithmen analysieren Marktdaten, um potenzielle Risiken frühzeitig zu erkennen und adäquat zu steuern.",
+          "Kontinuierliche Investitionen in innovative Finanztechnologien erlauben es der Bank, dynamischen globalen Marktbedingungen standzuhalten.",
+          "Die Verzahnung traditioneller Finanzberatung mit modernster IT schafft maßgeschneiderte Anlagekonzepte, die sowohl sicher als auch ertragreich sind.",
+          "Die Kombination aus datenbasierter Analyse und persönlicher Kundenbetreuung bildet die Grundlage für zukunftsweisende Finanzstrategien.",
+          "Der Einsatz von Blockchain-Technologien sorgt für sichere, transparente und nachvollziehbare Transaktionen, die das Vertrauen der Kunden stärken.",
+          "Die Geschäftsstrategie der Bank basiert auf der Fusion klassischer Dienstleistungen mit disruptiven digitalen Innovationen, die den Markt revolutionieren.",
+          "In einem dynamischen Marktumfeld werden durch modernste Technologien kontinuierlich neue Finanzprodukte entwickelt, die den sich wandelnden Kundenbedürfnissen gerecht werden.",
+          "Die hochmoderne Infrastruktur ermöglicht eine schnelle, sichere Abwicklung internationaler Geldtransfers, was den globalen Handel maßgeblich unterstützt.",
+          "Maschinelles Lernen optimiert die Kreditvergabe, indem es die Risikobewertung präzise und effizient gestaltet und so den finanziellen Erfolg steigert.",
+          "Die Bank vereint traditionelle Werte mit innovativen Technologien, um ein umfassendes, zukunftssicheres Dienstleistungsangebot zu bieten.",
+          "Interdisziplinäre Zusammenarbeit zwischen Finanzexperten, Datenanalysten und IT-Spezialisten modelliert komplexe Marktprozesse effizient und transparent.",
+          "Die strategische Nutzung von KI-gestützten Analysen generiert individuelle Anlageempfehlungen auf Basis umfangreicher Marktanalysen und Prognosen.",
+          "Nachhaltige Geschäftsstrategien verbinden wirtschaftlichen Erfolg mit ökologischen und sozialen Zielen in einer harmonischen Balance, die zukunftsweisend ist.",
+          "Die kontinuierliche Digitalisierung interner Prozesse steigert die Effizienz und Kundenzufriedenheit erheblich und sichert langfristigen Erfolg.",
+          "Modernste Sicherheitstechnologien gewährleisten den umfassenden Schutz sensibler Kundendaten in allen digitalen Kanälen und Anwendungen.",
+          "Die Fusion persönlicher Beratung mit digitalen Plattformen schafft ein hybrides Modell, das eine breite Kundenschicht optimal abdeckt.",
+          "Innovative Analysetools ermöglichen die Echtzeitanalyse komplexer Finanzmärkte zur Entwicklung dynamischer Investitionsstrategien, die flexibel auf Marktveränderungen reagieren.",
+          "Der Einsatz modernster Technologien optimiert den gesamten Zahlungsverkehr und garantiert höchste Sicherheitsstandards in allen Transaktionen.",
+          "Big-Data-Analysen erfassen individuelle Kundenbedürfnisse präzise und setzen sie in passgenaue Finanzprodukte um, die maximale Rendite bieten.",
+          "Die strategische Weiterentwicklung digitaler Plattformen ermöglicht einen stets aktuellen und sicheren Service, der den modernen Ansprüchen gerecht wird.",
+          "Moderne KI-Algorithmen integrieren sich nahtlos in Entscheidungsprozesse und optimieren die Risikoanalyse signifikant, was zu präziseren Finanzstrategien führt.",
+          "Die enge Kooperation mit internationalen Finanzmärkten ermöglicht es, globale Trends frühzeitig zu erkennen und in innovative Anlagestrategien umzusetzen.",
+          "Die kontinuierliche Digitalisierung interner Prozesse steigert die Flexibilität und Reaktionsgeschwindigkeit der Bank erheblich und sichert den Wettbewerbsvorteil.",
+          "Innovative Cloud-Technologien bieten eine skalierbare Infrastruktur, die den wachsenden Anforderungen des globalen Marktes gerecht wird und neue Möglichkeiten eröffnet.",
+          "Die Kombination aus analytischer Exzellenz und technologischer Innovation bildet das Rückgrat eines zukunftsorientierten Geschäftsmodells, das den Markt transformiert.",
+          "Predictive Analytics ermöglichen präzise Prognosen zukünftiger Marktbewegungen und optimieren so die Planung finanzieller Ressourcen auf höchstem Niveau.",
+          "Modernste IT-Infrastrukturen garantieren eine effiziente, sichere und transparente Abwicklung aller Finanztransaktionen in Echtzeit.",
+          "Interdisziplinäre Zusammenarbeit zwischen Finanz- und IT-Experten führt zu maßgeschneiderten, sicheren Finanzlösungen, die den individuellen Bedürfnissen gerecht werden.",
+          "Die strategische Fusion von klassischer Beratung und digitalen Innovationen sichert der Bank einen nachhaltigen Wettbewerbsvorteil in einem dynamischen Marktumfeld.",
+          "Durch kontinuierliche Investitionen in Forschung und Entwicklung digitaler Finanztechnologien bleibt die Bank stets am Puls der Zeit und innovativ.",
+          "Die Integration von KI-basierten Analysesystemen in den Zahlungsverkehr erhöht die Genauigkeit und Effizienz der Transaktionen signifikant und reduziert Risiken.",
+          "Die kontinuierliche Optimierung digitaler Plattformen garantiert einen stets aktuellen und benutzerfreundlichen Service, der höchste Standards erfüllt.",
+          "Die strategische Nutzung moderner Technologien führt zu einem hohen Maß an Transparenz und Effizienz im gesamten Geschäftsprozess und stärkt das Vertrauen der Kunden.",
+          "Die Bank setzt auf disruptive Innovationen, um ihren Kunden langfristig einen zuverlässigen und sicheren Finanzservice zu bieten, der den Markt revolutioniert.",
+          "Die enge Integration von Big-Data-Analysen und KI-Technologien ermöglicht es, individuelle Therapieansätze auf höchstem Niveau zu realisieren und passgenaue Finanzstrategien zu entwickeln.",
+          "Durch kontinuierlichen Ausbau digitaler Systeme wird der gesamte Finanzverkehr effizient gesteuert und vor unbefugtem Zugriff geschützt, was höchste Sicherheitsstandards gewährleistet.",
+          "Die Fusion von empirischer Forschung und praktischer Anwendung bildet die Grundlage für erfolgreiche, individualisierte Finanzdienstleistungen, die den modernen Anforderungen entsprechen.",
+          "Innovative digitale Tools und Analysetools ermöglichen einen reibungslosen, sicheren und transparenten Zahlungsverkehr, der den Kundenservice optimiert.",
+          "Die Bank kombiniert analytische Präzision mit persönlicher Beratung, um individuelle und nachhaltige Finanzstrategien zu entwickeln, die langfristig Erfolg sichern.",
+          "Durch den gezielten Einsatz modernster IT-Systeme werden alle Prozesse im Finanzwesen optimiert und transparent gestaltet, was das Kundenerlebnis verbessert."
+        ]
+      },
+      tierwelt: {
+        easy: [
+          "Der Hund bellt im Garten.",
+          "Die Katze jagt eine Maus.",
+          "Der Vogel fliegt über das Feld.",
+          "Das Pferd galoppiert auf der Weide.",
+          "Die Kuh grast friedlich auf der Wiese.",
+          "Der Hase hoppelt schnell über das Gras.",
+          "Die Ente schwimmt im Teich.",
+          "Der Frosch quakt laut am Teichrand.",
+          "Der Schmetterling fliegt von Blume zu Blume.",
+          "Die Biene sammelt fleißig Nektar.",
+          "Der Affe klettert geschickt auf den Baum.",
+          "Das Kaninchen versteckt sich im Gebüsch.",
+          "Der Vogel singt ein schönes Lied.",
+          "Die Eule ruft in der Nacht.",
+          "Der Fisch schwimmt im klaren Wasser.",
+          "Die Schildkröte kriecht langsam über den Sand.",
+          "Der Igel rollt sich zusammen.",
+          "Das Lama steht ruhig auf der Weide.",
+          "Der Adler kreist hoch am Himmel.",
+          "Die Ziege springt über einen Zaun.",
+          "Der Bär schläft in seiner Höhle.",
+          "Die Maus huscht flink durch den Raum.",
+          "Der Fuchs schleicht leise durch den Wald.",
+          "Die Gans watschelt gemächlich am Teichrand.",
+          "Der Pfau zeigt sein prächtiges Gefieder.",
+          "Die Taube fliegt friedlich über den Platz.",
+          "Der Kater schnurrt leise auf dem Sofa.",
+          "Die Henne legt ein Ei im Stall.",
+          "Der Hahn kräht am frühen Morgen.",
+          "Die Ratte huscht flink durch die Gänge.",
+          "Der Esel trägt Lasten auf dem Bauernhof.",
+          "Die Biber bauen emsig einen Damm.",
+          "Der Otter spielt fröhlich im Fluss.",
+          "Die Fledermaus hängt kopfüber in der Höhle.",
+          "Der Luchs schleicht durch den verschneiten Wald.",
+          "Die Robbe ruht sich am Strand aus.",
+          "Der Delfin springt elegant aus dem Wasser.",
+          "Die Qualle schwebt langsam im Ozean.",
+          "Der Seestern liegt ruhig auf dem Meeresboden.",
+          "Die Krabbe krabbelt über den Sand.",
+          "Der Pfau präsentiert stolz sein buntes Gefieder.",
+          "Die Libelle schwebt anmutig über das Wasser.",
+          "Der Papagei plappert fröhlich in seinem Käfig.",
+          "Die Giraffe frisst an den hohen Bäumen.",
+          "Der Elefant schreitet majestätisch durch die Savanne.",
+          "Die Nashornkuh grast in der afrikanischen Steppe.",
+          "Der Leopard schleicht durch das dichte Unterholz.",
+          "Die Krokodile liegen faul im Wasser.",
+          "Der Tiger brüllt laut im Dschungel.",
+          "Die Antilope springt elegant über das offene Feld."
+        ],
+        normal: [
+          "In der afrikanischen Savanne demonstriert die Giraffe mit ihrem langen Gang und ihren eleganten Bewegungen eine beeindruckende Anpassungsfähigkeit.",
+          "Die majestätische Elefantenherde zieht in harmonischer Formation durch die Ebenen, während die Ältesten die Gruppe anführen.",
+          "Im dichten Dschungel nutzt der Leopard seine lautlose Bewegung, um sich perfekt an seine Umgebung anzupassen und Beute zu überraschen.",
+          "Die farbenprächtigen Federn des Papageis spiegeln die Vielfalt tropischer Lebensräume wider und verleihen seinem Gesang eine einzigartige Note.",
+          "Die Robbe ruht entspannt an einem felsigen Strand, während das sanfte Rauschen des Meeres im Hintergrund erklingt.",
+          "Die flinke Antilope setzt ihre Geschwindigkeit ein, um Raubtieren in den offenen Ebenen der Steppe zu entkommen.",
+          "In einem versteckten Flussdelta schwimmt eine Gruppe bunter Fische, die in perfekter Harmonie ihre Bahnen zieht.",
+          "Die Fledermaus, ein Meister der Nacht, navigiert geschickt durch die Dunkelheit mithilfe ihrer hochentwickelten Echoortung.",
+          "Im üppigen Regenwald ernährt sich ein bunter Schmetterling von den verborgenen Nektarquellen zwischen den Blättern.",
+          "Die emsigen Bienen tragen zum Blütenzauber bei und sichern gleichzeitig das ökologische Gleichgewicht.",
+          "Der elegante Adler kreist hoch am klaren Himmel und behält sein weitläufiges Revier stets im Blick.",
+          "In der kargen Wüstenlandschaft beweist das Kamel seine außergewöhnliche Fähigkeit, selbst in extremen Bedingungen zu überleben.",
+          "Die Schildkröte, ein Symbol für Langlebigkeit, bewegt sich bedächtig über den sandigen Boden.",
+          "Die farbenprächtige Libelle schwebt mit beeindruckender Präzision über einen stillen See.",
+          "Im nordischen Wald beweist der Luchs durch seine geschärften Sinne und seine Tarnung seine Überlebenskünste.",
+          "Die elegante Gazelle zeigt in ihrer schnellen, anmutigen Bewegung die natürliche Schönheit der afrikanischen Ebenen.",
+          "Während der Tau die Blätter im frühen Morgenlicht benetzt, erwacht die Tierwelt zu einem leisen, harmonischen Erwachen.",
+          "Die kräftigen Flossen des Delfins ermöglichen es ihm, spielerisch aus dem Wasser zu springen und die Meeresoberfläche zu durchbrechen.",
+          "In den Tiefen des Ozeans leuchten biolumineszente Kreaturen und schaffen ein faszinierendes Spiel aus Licht und Schatten.",
+          "Der majestätische Wal zieht in einer langen Migration durch die Ozeane, getrieben von instinktiver Sehnsucht.",
+          "Die komplexen sozialen Strukturen in Wolfsrudeln verdeutlichen das enge Miteinander und die Kommunikation in der Tierwelt.",
+          "Im hohen Norden trotzt der Polarwolf den extremen klimatischen Bedingungen mit bemerkenswerter Anpassungsfähigkeit.",
+          "Bunte Korallenriffe bilden ein schillerndes Unterwasserparadies, in dem zahlreiche Fischarten in einem fragilen Gleichgewicht leben.",
+          "Die geschickte Art, wie ein Otter durch das Wasser gleitet, zeugt von seiner Anpassungsfähigkeit an das aquatische Leben.",
+          "Im dichten Dschungel offenbart der Tiger seine Macht und Eleganz, während er lautlos seine Beute überrascht.",
+          "Die ruhigen Bewegungen eines Seesterns am Meeresboden vermitteln eine fast meditative Gelassenheit.",
+          "Die komplexen Kommunikationsformen innerhalb einer Delfingruppe zeugen von hoher Intelligenz und sozialer Interaktion.",
+          "Der majestätische Pfau präsentiert sein farbenprächtiges Gefieder in einem imposanten Balzritual, das die Schönheit der Natur unterstreicht.",
+          "Die emsigen Bienen zeigen in ihrem geschäftigen Treiben ein erstaunliches Maß an Organisation und Kooperation.",
+          "In einem Flussdelta offenbart sich das harmonische Zusammenspiel von Wasser, Pflanzen und zahlreichen Tierarten.",
+          "Die ruhige Präsenz eines Bären in der Wildnis symbolisiert unerschütterliche Kraft und Gelassenheit.",
+          "Die kunstvoll getarnten Farben eines Chamäleons ermöglichen es ihm, sich nahezu unsichtbar an seine Umgebung anzupassen.",
+          "Im nächtlichen Dschungel navigiert ein Panther mit beeindruckender Geschmeidigkeit durch das Dickicht, stets auf der Suche nach Beute.",
+          "Die ausgeklügelten Balzrituale zahlreicher Vogelarten zeugen von einer reichen kulturellen Vielfalt in der Tierwelt.",
+          "Der kraftvolle Brüller eines Löwen hallt über die Ebenen und verkündet seine majestätische Herrschaft.",
+          "Die Anpassungsfähigkeit von Tieren an extreme Klimazonen, wie in der Arktis, ist ein eindrucksvolles Beispiel evolutionärer Widerstandsfähigkeit.",
+          "In den üppigen Regenwäldern zeigt sich die Tierwelt in ihrer ganzen Vielfalt, in einem fragilen ökologischen Gleichgewicht.",
+          "Die anmutigen Bewegungen eines Schwans über einen ruhigen See vermitteln ein Gefühl von Frieden und unberührter Schönheit.",
+          "Die synchronisierten Bewegungen eines Fischschwarms illustrieren ein beeindruckendes kollektives Verhalten, das weit über das Individuum hinausgeht.",
+          "Im dichten Unterholz eines Waldes beweist ein Reh durch schnelle, anmutige Flucht seine ausgeprägte Anpassungsfähigkeit.",
+          "Die komplexen Lautäußerungen von Walen offenbaren ein hochentwickeltes Kommunikationssystem, das selbst in den tiefsten Ozeanen funktioniert.",
+          "Die schimmernden Schuppen eines exotischen Fisches reflektieren das Sonnenlicht in einem faszinierenden Farbenspiel.",
+          "Die Geschicklichkeit eines Otters beim Bau eines Damms zeugt von hoher Intelligenz und kooperativem Verhalten.",
+          "In den weiten Ebenen der Savanne demonstriert die rasche Flucht einer Gazelle vor Raubtieren einen hochentwickelten Überlebensinstinkt, der die Essenz der Natur widerspiegelt."
+        ],
+        hard: [
+          "In den unendlichen Weiten der afrikanischen Savanne demonstriert die komplexe Sozialstruktur der Elefantenherde ein beeindruckendes Maß an Kommunikation und Zusammenhalt.",
+          "Die majestätische Elefantenherde zieht in harmonischer Formation durch die Ebenen, während die Ältesten das Wissen über Generationen weitergeben.",
+          "Im dichten Dschungel offenbart der Leopard durch seine lautlose Bewegung eine evolutionäre Raffinesse, die ihn zum Inbegriff der Tarnung erhebt.",
+          "Die farbenprächtigen Balzrituale zahlreicher Vogelarten zeugen von einer ausgeklügelten kulturellen Vielfalt, die die Tierwelt in all ihren Facetten widerspiegelt.",
+          "Das Chamäleon passt sich mit verblüffender Präzision an wechselnde Umgebungsbedingungen an, indem es seine Farbe dynamisch ändert.",
+          "Die synchronen Bewegungen eines Fischschwarms, die ein lebendiges Farbenspiel im Ozean kreieren, illustrieren ein kollektives Verhalten von höchster Raffinesse.",
+          "In den tiefsten Regionen des Ozeans erzeugen biolumineszente Kreaturen ein atemberaubendes Schauspiel, das die Grenzen zwischen Licht und Dunkelheit verwischt.",
+          "Der majestätische Adler, der hoch oben am Himmel kreist, symbolisiert Freiheit und die unendliche Weite der Natur in ihrer reinsten Form.",
+          "Die ausgeklügelte Kommunikationsfähigkeit von Walen, die in komplexen Gesängen ihre Emotionen und Botschaften über weite Entfernungen senden, zeugt von tierischer Intelligenz.",
+          "Die evolutionäre Anpassungsfähigkeit von Tieren in arktischen Regionen, die trotz extremen Wetters überleben, ist ein beeindruckendes Zeugnis natürlicher Widerstandskraft.",
+          "Im Korallenriff formen farbenprächtige Korallen ein schillerndes Unterwasserparadies, in dem zahlreiche Fischarten in einem fragilen Gleichgewicht leben.",
+          "Die lautlose Jagd eines Panthers im dichten Dschungel demonstriert eine evolutionäre Raffinesse, die ihn zum Inbegriff der Tarnung erhebt.",
+          "Die kunstvoll organisierten Nester zahlreicher Vogelarten zeugen von einer perfekten Symbiose aus Instinkt, Kreativität und architektonischem Können.",
+          "Die synchronen Aktivitäten eines Bienenschwarms, der in beeindruckender Präzision Nektar sammelt, illustrieren ein hohes Maß an kollektiver Intelligenz.",
+          "In den Tiefen tropischer Gewässer enthüllen biolumineszente Organismen ein magisches Lichtspiel, das die Grenzen zwischen Realität und Traum auflöst.",
+          "Die langwierige Migration von Walen über tausende Kilometer zeugt von einem tief verwurzelten, instinktiven Verständnis der Meeresumgebungen.",
+          "Die komplexen sozialen Strukturen in Wolfsrudeln, in denen Weisheit und Erfahrung von den Ältesten weitergegeben werden, demonstrieren kollektive Intelligenz auf höchstem Niveau.",
+          "Die kunstvoll choreografierten Balzrituale zahlreicher Vogelarten offenbaren eine kulturelle Vielfalt, die ihresgleichen sucht.",
+          "Der eindrucksvolle Blick eines Luchses, der in verschneiten Wäldern auf Beute lauert, zeugt von einer raffinierten Kombination aus Instinkt und Präzision.",
+          "Die nahezu unsichtbare Anpassungsfähigkeit eines Chamäleons an seine Umgebung illustriert evolutionäre Meisterschaft in der Tarnung.",
+          "Die synchronisierten Bewegungen eines Vogelschwarmes, die den Himmel in ein lebendiges Mosaik verwandeln, zeugen von kollektiver Intelligenz und Harmonie.",
+          "In einem mystischen Wald, wo jedes Rascheln eine Geschichte erzählt, offenbart sich die subtile Schönheit der Tierwelt in ihrer ganzen Vielfalt.",
+          "Die langwierige Migration von Zugvögeln über Kontinente hinweg ist ein beeindruckendes Phänomen, das von instinktiver Navigation und Überlebenswillen geprägt ist.",
+          "Die ausgeklügelten Überlebensstrategien von Beutetieren, die durch koordinierte Fluchtmanöver ihre Chancen maximieren, sind ein Zeugnis evolutionärer Innovation.",
+          "Die architektonisch beeindruckenden Bauten von Bibern zeugen von hoher Intelligenz und kooperativem, instinktiv gesteuertem Verhalten.",
+          "Subtile Veränderungen in den Lautäußerungen von Walen, die ihre emotionale Verfassung widerspiegeln, offenbaren ein ausgeprägtes Maß an Sensibilität.",
+          "Die schimmernden Schuppen eines exotischen Fisches, die das Sonnenlicht in einem atemberaubenden Farbenspiel reflektieren, demonstrieren natürliche Ästhetik auf höchstem Niveau.",
+          "Die komplexen Balzrituale von Insektenarten zeugen von einer überraschenden Vielfalt an Kommunikationsformen in der Natur.",
+          "Der elegante Tanz eines Schmetterlings, der von Blume zu Blume flattert, ist ein lebendiger Beweis für die Zerbrechlichkeit und Schönheit der Natur.",
+          "Die synchronisierten Sprünge einer Gazelle, die in einem anmutigen Ballett vor einem Raubtier flieht, illustrieren evolutionäre Raffinesse und Überlebensinstinkt.",
+          "In den unzugänglichen Tiefen eines tropischen Regenwaldes zeigt sich die beeindruckende Vielfalt an Arten, die in einem fragilen ökologischen Gleichgewicht existieren.",
+          "Die ausgeklügelten Tarnmechanismen zahlreicher Tierarten ermöglichen es ihnen, sich nahezu unsichtbar an ihre Umgebung anzupassen und so ihre Überlebenschancen zu maximieren.",
+          "Die koordinierte Flucht von Beutetieren in einem Schwarm demonstriert ein ausgeklügeltes System kollektiver Überlebensstrategien, das die Natur in ihrer Komplexität widerspiegelt.",
+          "Die kunstvoll orchestrierten Lautäußerungen von Walen, die als Kommunikationsmittel dienen, sind ein faszinierendes Zeugnis tierischer Intelligenz.",
+          "Der majestätische Flug eines Adlers, der hoch über weiten Landschaften kreist, symbolisiert die unendliche Freiheit und Stärke der Natur.",
+          "Die ausgefeilten Überlebensstrategien, die von komplexen Tarnmechanismen bis zu synchronisierten Fluchtbewegungen reichen, zeugen von der evolutionären Kreativität der Tierwelt.",
+          "In einem dicht besiedelten Ökosystem, in dem jede Art eine unverzichtbare Rolle spielt, wird die Bedeutung des Naturschutzes eindrucksvoll deutlich.",
+          "Die kunstvoll gemusterten Flügel eines Schmetterlings offenbaren eine natürliche Ästhetik, die Wissenschaftler und Künstler gleichermaßen fasziniert.",
+          "Die synchronisierten Bewegungen eines Vogelschwarmes, die den Himmel in ein lebendiges Mosaik verwandeln, sind ein herausragendes Beispiel kollektiver Intelligenz.",
+          "Im dichten Unterholz eines Regenwaldes zeigt ein Reh durch seine schnelle, anmutige Flucht eine beeindruckende Anpassungsfähigkeit an feindliche Umgebungen.",
+          "Die komplexen Lautäußerungen von Walen, die über immense Entfernungen kommunizieren, illustrieren ein hochentwickeltes System tierischer Interaktion.",
+          "Die elegante Bewegung eines Panthers, der lautlos durch das Dickicht schleicht, verkörpert die Raffinesse und Effizienz natürlicher Überlebensstrategien.",
+          "Die synchronisierten Sprünge eines Fischschwarms, die ein lebendiges Schauspiel am Ozean bieten, sind ein faszinierendes Beispiel kollektiver Intelligenz.",
+          "Die beeindruckende Vielfalt an Anpassungsmechanismen im Tierreich, von komplexen Tarnstrategien bis zu hochorganisierten Sozialstrukturen, zeugt von evolutionärer Kreativität.",
+          "In den weiten Ebenen der Savanne demonstriert die rasche Flucht einer Gazelle vor einem Raubtier einen hochentwickelten Überlebensinstinkt, der das Wesen der Natur prägt.",
+          "Die außergewöhnliche Anpassungsfähigkeit der Tiere an extreme Umweltbedingungen spiegelt die unermüdliche Kraft der Evolution wider.",
+          "Durch die komplexen sozialen Strukturen in Tierherden wird ein ausgeprägtes System von Kooperation und Kommunikation sichtbar.",
+          "Die natürliche Eleganz der Tierwelt, sichtbar in den harmonischen Bewegungen eines Schwans, verkörpert die unberührte Schönheit der Natur.",
+          "Die kunstvollen Balzrituale vieler Vogelarten zeugen von einem tiefen, instinktiven Verständnis für die Bedeutung von Partnerschaft und Fortpflanzung.",
+          "Die synchronisierten Flugmuster eines Vogelschwarmes, die den Himmel in ein atemberaubendes Farbspektakel tauchen, demonstrieren die kollektive Intelligenz und den Zusammenhalt der Tierwelt."
+          ]
+      }
+    };
+    // Adventure Mode: Boss
     let boss = null, bossDefeated = false;
+    
+    // Variablen für den neuen Boss-Schaden
+    let lastProcessedIndex = 0;       // Für inkrementelle Schadensberechnung
+    let lastHotStreakWordCount = 0;     // Für Hot-Streak Bonus
     
     // Belohnungen & Erfolge
     let unlockedRewards = [];
@@ -568,11 +1527,141 @@ const copySentences = {
     const prompts = [
       "Es war einmal ein geheimnisvoller Wald, in dem die Zeit stillzustehen schien...",
       "Als die Sonne hinter den Bergen verschwand, begann ein Abenteuer, das alles verändern sollte...",
-      "Plötzlich ertönte ein seltsames Geräusch, und niemand wusste, was als Nächstes passieren würde..."
+      "Plötzlich ertönte ein seltsames Geräusch, und niemand wusste, was als Nächstes passieren würde...",
+      "In einem verborgenen Tal, wo Drachen über uralte Ruinen kreisen, erwachte eine längst vergessene Magie, die das Schicksal eines jungen Abenteurers für immer verändern sollte.",
+      "Während im Schatten der großen Pyramiden Ägyptens ein geheimnisvoller Pharao sein verlorenes Erbe suchte, brach ein Abenteuer auf, das die Grenzen von Zeit und Raum sprengte.",
+      "Als in einem abgelegenen Krankenhaus plötzlich Patienten mit rätselhaften Symptomen eingeliefert wurden, begann eine Ärztin, ein medizinisches Geheimnis zu lüften, das die Welt erschüttern könnte.",
+      "In den düsteren Gassen einer regnerischen Großstadt entdeckte ein abgeklärter Ermittler einen mysteriösen Hinweis, der ihn mitten ins Netz eines perfiden Verbrechens führte.",
+      "Es war einmal in einem kleinen Dorf, in dem ein geheimnisvoller Fremder erschien – jemand, der mit einem verzauberten Artefakt die Zukunft der Bewohner in seinen Händen hielt.",
+      "In einer Welt, in der die Sterne magische Portale zu anderen Dimensionen öffnen, trat ein junger Held an, um das Gleichgewicht zwischen Licht und Dunkelheit wiederherzustellen.",
+      "Im stürmischen Mittelalter, als Burgen, Ritter und Intrigen das Land beherrschten, entdeckte ein einfacher Schmied ein Geheimnis, das die Kriege beenden könnte.",
+      "Als ein renommierter Forscher in einem alten Kloster auf uralte medizinische Schriften stieß, entfaltete sich ein Wettlauf gegen die Zeit, um ein tödliches Rätsel zu lösen.",
+      "In einer Stadt voller Lügen und dunkler Geheimnisse fand ein Privatdetektiv einen Beweis, der ihn auf die Spur eines kaltblütigen Serienverbrechers brachte.",
+      "In einem verzauberten Wald, in dem sprechende Tiere und magische Wesen lebten, kündigte sich das Unheil an – und nur ein mutiges Mädchen konnte den Fluch brechen.",
+      "Ein verfluchter König, der in einem alten Zauberspiegel gefangen war, wartete auf den Tag, an dem ein tapferer Krieger seine Macht brechen und das Reich befreien würde.",
+      "Während in einem mittelalterlichen Kloster geheime Manuskripte über verlorenes Wissen verbreitet wurden, zeichnete sich ein mysteriöser Schatten ab, der die Wahrheit bedrohte.",
+      "Als in einem futuristischen Labor Experimente an menschlichen Genen schiefgingen, stellte sich eine Wissenschaftlerin der ethischen Frage, die ihr Leben und das aller Menschen verändern könnte.",
+      "Ein unerwarteter Anruf in einer stürmischen Nacht führte einen abgebrühten Detective in ein verlassenes Haus – und dort entdeckte er ein Rätsel, das selbst die Polizei in Staunen versetzte.",
+      "In einem Königreich, in dem die Natur selbst verzaubert schien, begab sich ein junger Prinz auf die Suche nach einer sagenumwobenen Blume, die ewige Jugend versprach.",
+      "Tief in den Schatten eines magischen Waldes, wo die Bäume flüsterten und der Wind Geheimnisse trug, erwachte ein uraltes Wesen, das den Lauf der Zeit beeinflussen konnte.",
+      "In den Ruinen einer längst vergangenen Stadt, deren Mauern Geschichten von Triumph und Tragödie erzählten, stieß ein Archäologe auf einen Fund, der die Geschichtsbücher neu schreiben könnte.",
+      "Ein mysteriöser Virus, der in einer alten, verlassenen Klinik seinen Ursprung zu haben schien, forderte einen jungen Arzt heraus, die Grenze zwischen Wissenschaft und Aberglauben zu überwinden.",
+      "Als in einer mondlosen Nacht ein wertvolles Kunstwerk aus einem Museum verschwand, nahm ein unkonventioneller Ermittler die Spur auf – und stieß dabei auf ein Netz aus Verrat und Gier.",
+      "In einem Land, wo jede Blume und jeder Bach eine Geschichte erzählte, erschien plötzlich ein verzauberter Wanderer, der mit einem geheimnisvollen Lächeln die Herzen der Menschen eroberte.",
+      "Ein uralter Drache, der über den Wolken kreiste, bewachte ein Portal zu einer Welt jenseits der Vorstellungskraft – und nur ein unerschrockener Held konnte das Tor öffnen.",
+      "In den Schatten der Renaissance, als Kunst und Wissenschaft in einem explosiven Tanz miteinander verflochten waren, zeichnete sich ein Geheimnis ab, das die Macht der Mächtigen ins Wanken bringen sollte.",
+      "Ein geheimnisvoller Fall in einer renommierten Forschungseinrichtung führte eine junge Medizinerin auf eine Reise in die Tiefen menschlicher Emotionen und uralter Heilkunst.",
+      "In einer Stadt, in der jeder Bewohner ein Geheimnis hatte, wurde ein unscheinbarer Brief gefunden – ein Dokument, das eine Kette von Ereignissen in Gang setzte, die niemand vorhersehen konnte.",
+      "Es hieß, tief im verwunschenen Wald verbarg sich ein verzaubertes Schloss, in dem ein alter Fluch lag – und nur der Glaube eines reinen Herzens konnte ihn brechen.",
+      "Eine Prophezeiung, in uralten Schriften verborgen, kündigte das Kommen eines Auserwählten an, der das Schicksal der Welten entscheiden würde – und der in den Träumen eines Kindes erwachte.",
+      "In den verwitterten Mauern eines alten Klosters entdeckte ein Historiker ein Tagebuch, das von dunklen Geheimnissen und verborgenen Schätzen erzählte – ein Erbe, das das Land für immer verändern sollte.",
+      "Als in einem abgelegenen Forschungszentrum unerklärliche Phänomene auftraten, stellte sich ein Team von Spezialisten der Frage, ob die Natur selbst ein Heilmittel bereithielt – oder ein tödliches Rätsel war.",
+      "In einer trüben Nacht, als der Nebel über der Stadt lag, enthüllte ein anonym zugestellter Hinweis einen perfiden Plan, der das Leben unschuldiger Menschen für immer verändern sollte.",
+      "In einem Land, wo jeder Sonnenaufgang ein neues Wunder versprach, tauchte plötzlich ein geheimnisvoller Wanderer auf, dessen Worte die Herzen der Menschen mit Hoffnung und Magie erfüllten."
     ];
-    
+
     // Sound (optional)
     const warningSound = new Audio('warning.mp3');
+    
+    /* --- Neue Funktionen für den angepassten Boss-Modus --- */
+    // Überprüft, ob ein Wort (nur Buchstaben, inkl. deutscher Umlaute und ß) korrekt geschrieben ist.
+    function isCorrectSpelling(word) {
+      return /^[A-Za-zÄÖÜäöüß]+$/.test(word);
+    }
+    
+    // Simuliert einen W20-Wurf (Zufallszahl zwischen 1 und 20).
+    function rollD20() {
+      return Math.floor(Math.random() * 20) + 1;
+    }
+    
+    // Verarbeitet den neu eingegebenen Text (seit dem letzten Aufruf) und berechnet Schaden.
+    // Pro korrekt geschriebenem Wort wird Schaden in Höhe der Wortlänge zugefügt.
+    // Endet ein Satz (erkennbar an Satzzeichen) fehlerfrei, wird ein Bonus von 50 % des Satz-Schadens hinzugefügt.
+    function processNewTextForBossDamage() {
+      let fullText = writeArea.innerText;
+      let newText = fullText.substring(lastProcessedIndex);
+      if(newText.trim().length === 0) return 0;
+      let damage = 0;
+      let words = newText.split(/\s+/);
+      let sentenceDamage = 0;
+      let sentenceCorrect = true;
+      for(let i = 0; i < words.length; i++) {
+        let word = words[i];
+        let punctuation = "";
+        if (/[.!?,;:]$/.test(word)) {
+          punctuation = word.slice(-1);
+          word = word.slice(0, -1);
+        }
+        if(word.length === 0) continue;
+        if(isCorrectSpelling(word)) {
+          let wordDamage = word.length;
+          damage += wordDamage;
+          sentenceDamage += wordDamage;
+        } else {
+          sentenceCorrect = false;
+        }
+        if(punctuation !== "") {
+          if(sentenceCorrect) {
+            let bonus = Math.round(sentenceDamage * 0.5);
+            damage += bonus;
+          }
+          sentenceDamage = 0;
+          sentenceCorrect = true;
+        }
+      }
+      lastProcessedIndex = fullText.length;
+      return damage;
+    }
+    
+    // Aktualisiert den Boss-Status anhand des neu eingegebenen, korrekt geschriebenen Textes.
+    // Wird der Boss besiegt, endet das Spiel sofort (Gewinn) und Bonuspunkte werden vergeben.
+    function updateBossStatus() {
+      let newDamage = processNewTextForBossDamage();
+      if(newDamage > 0) {
+        boss.currentHealth = Math.max(boss.currentHealth - newDamage, 0);
+      }
+      updateBossUI();
+      if (boss.currentHealth <= 0 && !bossDefeated) {
+        bossDefeated = true;
+        winGame();
+      }
+    }
+    
+    // Zeigt ein cooles Pop-up mit dem W20-Ergebnis an.
+    function showDicePopup(bonus) {
+      const dicePopup = document.createElement("div");
+      dicePopup.textContent = "W20: " + bonus;
+      dicePopup.style.position = "fixed";
+      dicePopup.style.top = "50%";
+      dicePopup.style.left = "50%";
+      dicePopup.style.transform = "translate(-50%, -50%)";
+      dicePopup.style.background = "rgba(0,0,0,0.8)";
+      dicePopup.style.color = "#fff";
+      dicePopup.style.padding = "20px";
+      dicePopup.style.borderRadius = "10px";
+      dicePopup.style.fontSize = "2em";
+      dicePopup.style.zIndex = "500";
+      dicePopup.classList.add("animate__animated", "animate__zoomIn");
+      document.body.appendChild(dicePopup);
+      setTimeout(() => {
+        dicePopup.classList.remove("animate__zoomIn");
+        dicePopup.classList.add("animate__zoomOut");
+        setTimeout(() => {
+          document.body.removeChild(dicePopup);
+        }, 1000);
+      }, 2000);
+    }
+    
+    // Bei Boss-Sieg: Spiel gewinnen, Bonuspunkte vergeben und Session sofort beenden.
+    function winGame() {
+      showAchievement("Boss besiegt! Du hast das Spiel gewonnen! Bonus XP erhalten!");
+      userStats.xp += 50; // Bonus XP
+      unlockReward("🏆 Boss-Besieger Emoji");
+      clearInterval(timerInterval);
+      clearTimeout(idleTimeout);
+      endSessionMessage.textContent = "Gewonnen! Boss besiegt!";
+      endSessionPopup.style.display = "block";
+    }
     
     /* --- Event Listener --- */
     infoBtn.addEventListener("click", () => { infoModal.style.display = "flex"; });
@@ -668,9 +1757,11 @@ const copySentences = {
       }
     }
     
+    // Neue Funktion: Generiert den Ziel-Satz für den Copy Challenge-Modus anhand der ausgewählten Kategorie und Schwierigkeit.
     function generateCopySentence() {
+      let lib = document.getElementById("librarySelect").value;
       let diff = difficultySelect.value;
-      let sentences = copySentences[diff];
+      let sentences = sentenceLibraries[lib][diff];
       currentTargetSentence = sentences[Math.floor(Math.random() * sentences.length)];
       targetSentenceElem.textContent = currentTargetSentence.trim();
       writeArea.innerText = "";
@@ -752,11 +1843,16 @@ const copySentences = {
         generateAchievements();
       }
       
+      // Bei Adventure-Modus: Boss initialisieren und neue Variablen zurücksetzen
+      if (modeSelect.value === "adventure") {
+        initBoss();
+        lastProcessedIndex = 0;
+        lastHotStreakWordCount = countWords(writeArea.innerText);
+      }
+      
       updateTimerDisplay();
       updateWordCount();
       sessionStartTime = Date.now();
-      
-      if (modeSelect.value === "adventure") { initBoss(); }
       
       timerInterval = setInterval(() => {
         remainingTime--;
@@ -830,12 +1926,24 @@ const copySentences = {
       timerDisplay.textContent = `Time: ${min}:${sec.toString().padStart(2, "0")}`;
     }
     
+    // Aktualisiert die Wortanzahl und führt im Adventure-Modus die Boss-Status-Updates durch.
+    // Zusätzlich wird hier der Hot-Streak-Bonus ausgelöst, falls seit dem letzten Bonus 8 oder mehr Wörter neu getippt wurden.
     function updateWordCount() {
       const text = writeArea.innerText;
       const count = countWords(text);
       wordCountDisplay.textContent = `Words: ${count}`;
       goalProgressDisplay.textContent = `Goal: ${count}/${window.baseTarget || "-"}`;
       if (modeSelect.value === "adventure" && boss) { updateBossStatus(); }
+      // Hot-Streak Bonus: Bei 8 oder mehr neuen Wörtern
+      if (modeSelect.value === "adventure" && boss) {
+         if (count - lastHotStreakWordCount >= 8) {
+             let bonus = rollD20();
+             boss.currentHealth = Math.max(boss.currentHealth - bonus, 0);
+             updateBossUI();
+             showDicePopup(bonus);
+             lastHotStreakWordCount = count;
+         }
+      }
       for (let threshold in sessionAchievements) {
         if (count >= threshold && !sessionAchievements[threshold]) {
           sessionAchievements[threshold] = true;
@@ -920,19 +2028,6 @@ const copySentences = {
       bossContainer.style.display = "block";
       bossNameElem.textContent = boss.name;
       updateBossUI();
-    }
-    
-    function updateBossStatus() {
-      const typedWords = countWords(writeArea.innerText);
-      let damage = (typedWords / boss.targetWords) * boss.maxHealth;
-      boss.currentHealth = Math.max(boss.maxHealth - damage, 0);
-      updateBossUI();
-      if (boss.currentHealth <= 0 && !bossDefeated) {
-        bossDefeated = true;
-        showAchievement("Boss besiegt! Bonus XP erhalten!");
-        userStats.xp += 50;
-        unlockReward("🏆 Boss-Besieger Emoji");
-      }
     }
     
     function updateBossUI() {

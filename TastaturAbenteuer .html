@@ -1564,9 +1564,9 @@
     const warningSound = new Audio('warning.mp3');
     
     /* --- Neue Funktionen für den angepassten Boss-Modus --- */
-    // Überprüft, ob ein Wort (nur Buchstaben, inkl. deutscher Umlaute und ß) korrekt geschrieben ist.
+    // Überprüft, ob ein Wort (nur Buchstaben, inklusive deutscher Umlaute, ß, Bindestriche und Apostrophe) korrekt geschrieben ist.
     function isCorrectSpelling(word) {
-      return /^[A-Za-zÄÖÜäöüß]+$/.test(word);
+      return /^[A-Za-zÄÖÜäöüß'-]+$/.test(word);
     }
     
     // Simuliert einen W20-Wurf (Zufallszahl zwischen 1 und 20).
@@ -1574,45 +1574,74 @@
       return Math.floor(Math.random() * 20) + 1;
     }
     
-    // Verarbeitet den neu eingegebenen Text (seit dem letzten Aufruf) und berechnet Schaden.
-    // Pro korrekt geschriebenem Wort wird Schaden in Höhe der Wortlänge zugefügt.
-    // Endet ein Satz (erkennbar an Satzzeichen) fehlerfrei, wird ein Bonus von 50 % des Satz-Schadens hinzugefügt.
-    function processNewTextForBossDamage() {
-      let fullText = writeArea.innerText;
-      let newText = fullText.substring(lastProcessedIndex);
-      if(newText.trim().length === 0) return 0;
-      let damage = 0;
-      let words = newText.split(/\s+/);
-      let sentenceDamage = 0;
-      let sentenceCorrect = true;
-      for(let i = 0; i < words.length; i++) {
-        let word = words[i];
-        let punctuation = "";
-        if (/[.!?,;:]$/.test(word)) {
-          punctuation = word.slice(-1);
-          word = word.slice(0, -1);
-        }
-        if(word.length === 0) continue;
-        if(isCorrectSpelling(word)) {
-          let wordDamage = word.length;
-          damage += wordDamage;
-          sentenceDamage += wordDamage;
-        } else {
-          sentenceCorrect = false;
-        }
-        if(punctuation !== "") {
-          if(sentenceCorrect) {
-            let bonus = Math.round(sentenceDamage * 0.5);
-            damage += bonus;
-          }
-          sentenceDamage = 0;
-          sentenceCorrect = true;
-        }
+    // Prüft, ob eine Hot Streak erreicht wurde und gibt den entsprechenden Bonus-Schaden zurück.
+    function checkHotStreakBonus() {
+      const HOT_STREAK_THRESHOLD = 8; // Mindestanzahl korrekt getippter Wörter in Folge
+      if (hotStreakCounter >= HOT_STREAK_THRESHOLD) {
+        let bonus = rollD20();
+        showDicePopup(bonus);
+        hotStreakCounter = 0; // Hot-Streak zurücksetzen
+        return bonus;
       }
-      lastProcessedIndex = fullText.length;
-      return damage;
+      return 0;
     }
     
+    // Verarbeitet den neu eingegebenen Text (seit dem letzten Aufruf) und berechnet Schaden.
+    // Pro korrekt geschriebenem Wort wird Schaden in Höhe der Wortlänge zugefügt.
+// Aktualisierte Funktion: Zuerst in Sätze aufteilen und dann pro Satz Schaden berechnen
+function processNewTextForBossDamage() {
+  let fullText = writeArea.innerText;
+  let newText = fullText.substring(lastProcessedIndex);
+  if(newText.trim().length === 0) return 0;
+  
+  let damage = 0;
+  
+  // Teile den neuen Text in Sätze auf. Dabei werden Sätze als Textblöcke definiert,
+  // die mit . ! oder ? enden (inkl. möglicher Leerzeichen danach).
+  let sentenceRegex = /[^\.!\?]+[\.!\?]+/g;
+  let sentences = newText.match(sentenceRegex);
+  // Falls keine vollständigen Sätze gefunden werden, den gesamten Text als einen Satz behandeln
+  if (!sentences) {
+    sentences = [newText];
+  }
+  
+  // Verarbeite jeden Satz einzeln
+  sentences.forEach(sentence => {
+    let sentenceDamage = 0;
+    let sentenceCorrect = true;
+    
+    // Entferne führende und abschließende Leerzeichen
+    sentence = sentence.trim();
+    // Zerlege den Satz in Wörter (auf Basis von Leerzeichen)
+    let words = sentence.split(/\s+/);
+    
+    words.forEach(word => {
+      // Entferne führende und abschließende Satzzeichen (z. B. . , ! ? ;)
+      let cleanedWord = word.replace(/^[^A-Za-zÄÖÜäöüß'-]+|[^A-Za-zÄÖÜäöüß'-]+$/g, '');
+      if (cleanedWord.length === 0) return;
+      if (isCorrectSpelling(cleanedWord)) {
+        let wordDamage = cleanedWord.length;
+        sentenceDamage += wordDamage;
+        // Hier könntest du auch die Hot-Streak-Logik erweitern (z. B. hotStreakCounter++)
+      } else {
+        sentenceCorrect = false;
+      }
+    });
+    
+    damage += sentenceDamage;
+    if (sentenceCorrect) {
+      // Füge 50 % Bonus zum Satz-Schaden hinzu, wenn der gesamte Satz korrekt ist
+      let bonus = Math.round(sentenceDamage * 0.2);
+      damage += bonus;
+    }
+  });
+  
+  // Füge zusätzlich den Hot-Streak-Bonus hinzu (falls erreicht)
+  damage += checkHotStreakBonus();
+  
+  lastProcessedIndex = fullText.length;
+  return damage;
+}  
     // Aktualisiert den Boss-Status anhand des neu eingegebenen, korrekt geschriebenen Textes.
     // Wird der Boss besiegt, endet das Spiel sofort (Gewinn) und Bonuspunkte werden vergeben.
     function updateBossStatus() {
@@ -2023,7 +2052,7 @@
     
     // Adventure Mode: Boss initialisieren
     function initBoss() {
-      boss = { name: "Wort Boss", maxHealth: 100, currentHealth: 100, targetWords: window.baseTarget * 1.5 };
+      boss = { name: "Wort Boss", maxHealth: 500, currentHealth: 500, targetWords: window.baseTarget * 1.5 };
       bossDefeated = false;
       bossContainer.style.display = "block";
       bossNameElem.textContent = boss.name;

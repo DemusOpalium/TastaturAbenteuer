@@ -99,6 +99,6 @@ Wenn du Anregungen, Bugfixes oder neue Features einbringen möchtest, folge dies
 Jeder Beitrag hilft dabei, das Projekt weiter zu verbessern und die Schreibkunst auf ein neues Level zu heben.
 Lizenz
 
-Dieses Projekt steht unter der MIT-Lizenz. Jeder ist eingeladen, den Code zu verwenden, zu modifizieren und weiterzuverbreiten – solange die Lizenzbedingungen eingehalten werden.
+Jeder ist eingeladen, den Code zu verwenden, zu modifizieren und weiterzuverbreiten, solange wie es OPENSORCE bleibt.
 
 Mit viel Herzblut, persönlicher Note und dem Ziel, ein effektives Lernwerkzeug zu schaffen, laden wir dich ein, TastaturAbenteuer auszuprobieren – sowohl als Spieler als auch als Entwickler. Viel Spaß und Erfolg beim Tippen!

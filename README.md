@@ -1,8 +1,11 @@
-# TastaturAbenteuer
-Ein interaktives Schreibspiel, das deine Tippfähigkeiten verbessert. Trainiere und optimiere deine Schreibkunst mit spannenden Herausforderungen wie Copy-Challenge, Bosskämpfen und kreativen Schreibimpulsen.
-Schreibabenteuer DemusOpalium
+TastaturAbenteuer
 
-Schreibabenteuer DemusOpalium ist ein interaktives Schreibspiel, das darauf abzielt, deine Tippfähigkeiten zu verbessern und deine Schreibkunst zu schulen. Mit einem ansprechenden und dynamischen Interface sowie mehreren Spielmodi bietet das Spiel dir die perfekte Umgebung, um deine Geschwindigkeit und Genauigkeit an der Tastatur zu trainieren.
+TastaturAbenteuer (auch bekannt als Schreibabenteuer DemusOpalium) ist ein interaktives Schreibspiel, das deine Tippfähigkeiten verbessert und dir hilft, deine Schreibkunst zu optimieren. Dieses Projekt ist unser erstes Open Source Vorhaben – entstanden aus Freude an der Technik und dem Wunsch, ein nützliches Tool zu schaffen, das jeder nutzen kann.
+Hintergrund
+
+Nach 17 Jahren habe ich mir eine neue HotSwap 60%-Tastatur zugelegt, den Boden mit Kork gedämmt und mich gefragt, wie schnell ich mit der neuen Tastatur schreiben kann. Auf der Suche nach einem passenden Tool stieß ich auf "Write or Die", das jedoch nicht mehr aktiv weiterentwickelt wurde. Andere Angebote erforderten Anmeldung und Registrierung, was mir nicht zusagte.
+
+Da ich selbst Legastheniker bin und mit MS lebe, unterstütze ich mich zudem mit Hilfe einer KI bei der Textgestaltung und Grammatik. So entstand TastaturAbenteuer – ein kostenloses, offenes Projekt, das jedem helfen soll, seine Tippfähigkeiten zu trainieren, ohne sich anmelden zu müssen.
 Hauptfunktionen
 
     Verschiedene Spielmodi:
@@ -16,27 +19,31 @@ Hauptfunktionen
         Hardcore: Teste deine Fähigkeiten unter extremen Bedingungen, bei denen jede Pause Konsequenzen hat.
 
     Anpassbare Themes und Schriftarten:
-    Wechsle zwischen verschiedenen Farbschemata (Dark, Light, Vintage) und wähle die für dich angenehmste Schriftart, um die Lesbarkeit und den Komfort zu erhöhen.
+    Wechsle zwischen verschiedenen Farbschemata (Dark, Light, Vintage) und wähle die für dich angenehmste Schriftart – für optimale Lesbarkeit und Komfort.
 
     Detaillierte Statusleiste:
-    Behalte wichtige Informationen wie die verbleibende Spielzeit, die Wortanzahl, XP, Level, WPM (Wörter pro Minute) und APM (Tastenanschläge pro Minute) immer im Blick.
+    Behalte wichtige Informationen wie das Zeitlimit, die Wortanzahl, XP, Niveau, WPM (Wörter pro Minute) und APM (Tastenanschläge pro Minute) stets im Blick.
 
     Belohnungen und Erfolge:
     Sammle Erfolge, schalte coole Rewards frei und vergleiche deine Leistungen in der Highscore-Liste mit anderen Spielern.
 
     Modernes, ansprechendes Design:
-    Mit stilvollen Animationen, einem klar strukturierten Layout und intuitiven Bedienelementen sorgt Schreibabenteuer DemusOpalium für ein motivierendes und spaßiges Trainingserlebnis.
+    Stilvolle Animationen, ein klares Layout und intuitive Bedienelemente sorgen für ein motivierendes und spaßiges Trainingserlebnis.
 
 Zielgruppe
 
-Das Spiel richtet sich an alle, die ihre Schreibfähigkeiten verbessern wollen – egal, ob du ein Anfänger bist, der noch die Grundlagen üben möchtest, oder ein erfahrener Schreiber, der an Geschwindigkeit und Genauigkeit arbeiten möchte. Durch die Vielfalt der Modi und die anpassbaren Einstellungen ist für jeden etwas dabei.
+Dieses Spiel richtet sich an alle, die ihre Schreibfähigkeiten verbessern möchten – egal, ob du Anfänger bist oder bereits fortgeschrittene Kenntnisse besitzt. Dank der Vielzahl an Modi und Anpassungsmöglichkeiten findet jeder die für sich passende Herausforderung.
 Projektziele
 
     Verbesserung der Tippgeschwindigkeit:
     Trainiere deine Fingerfertigkeit und steigere deine Geschwindigkeit im Alltag und Beruf.
 
     Steigerung der Schreibgenauigkeit:
-    Lerne, Fehler zu minimieren und die exakte Wiedergabe von Sätzen zu üben.
+    Lerne, Fehler zu minimieren und Sätze exakt wiederzugeben.
 
     Spaß am Lernen:
     Durch spannende Herausforderungen und kreative Modi wird das Üben zur unterhaltsamen Erfahrung.
+
+Open Source – Gemeinsame Weiterentwicklung
+
+Dieses Projekt ist als Open Source veröffentlicht, damit jeder mitmachen und das Tool weiter verbessern kann. Ich freue mich über Feedback, Kritik und Verbesserungsvorschläge. Gemeinsam wollen wir TastaturAbenteuer weiterentwickeln und zu einem noch besseren Schreibtrainer machen – aus Spaß an der Sache und für alle, die gerne tippen.

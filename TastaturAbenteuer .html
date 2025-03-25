@@ -425,7 +425,7 @@
       <h3 id="playerName">Spielername</h3>
       <!-- Der Rang wird ab hier als Badge angezeigt -->
       <p id="playerRank">Rang: <span class="rank-badge">Bronze</span></p>
-      <p id="playerCredits">Credits: 0</p>
+      <p id="playerWissenspunkte">Wissenspunkte: 0</p>
     </div>
   </div>
 
@@ -433,10 +433,10 @@
   <div id="shopContainer">
     <h2>Shop</h2>
     <div id="shopProfileSection"></div>
-    <div id="shopCursorSection"></div>
-    <!-- Refresh-Buttons für Profil & Cursor -->
+    <div id="shopGluecksbringerSection"></div>
+    <!-- Refresh-Buttons für Profil & Glücksbringer -->
     <button class="refresh-btn" onclick="refreshProfile()">Profil Refresh</button>
-    <button class="refresh-btn" onclick="refreshCursor()">Cursor Refresh</button>
+    <button class="refresh-btn" onclick="refreshGluecksbringer()">Glücksbringer Refresh</button>
   </div>
   
   <!-- Inventarbereich -->
@@ -506,6 +506,7 @@
       <option value="medizin">Medizin</option>
       <option value="bank">Bank</option>
       <option value="tierwelt">Tierwelt</option>
+      <option value="code_python">Code/Python</option>
     </select>
     <button id="shareBtn">Ergebnisse Teilen</button>
     <button id="saveProfileBtn">Profil Speichern</button>
@@ -626,7 +627,7 @@
     </table>
   </div>
   
-  <!-- End Session Popup (erweitert um detaillierte Session-Ergebnisse) -->
+  <!-- End Session Popup -->
   <div id="endSessionPopup">
     <!-- Der Popup-Inhalt wird nun dynamisch über showSessionResults() befüllt -->
   </div>
@@ -650,18 +651,18 @@
     let copyScore = 0;
     let currentTargetSentence = "";
     
-    // Benutzer-Statistiken inkl. Inventar (Testweise 500 Credits)
+    // Benutzer-Statistiken inkl. Inventar (Testweise 500 Wissenspunkte)
     let userStats = { 
       xp: 0,
       totalWords: 0,
       longestSession: 0,
       level: 1,
       playerName: "Spielername",
-      credits: 500,
+      wissenspunkte: 500,
       profileImage: "",
       inventory: {
         profileImages: [],
-        cursors: []
+        gluecksbringer: []
       }
     };
     
@@ -675,7 +676,7 @@
       "https://i.imgur.com/dyOkN0p.png",
       "https://i.imgur.com/At7GxhG.png"
     ];
-    const availableCursors = [
+    const availableGluecksbringer = [
       "https://i.imgur.com/Qg6no9G.png",
       "https://i.imgur.com/N74fFUp.png",
       "https://i.imgur.com/zrOdwI6.png",
@@ -689,8 +690,8 @@
     const shopProfileItems = availableProfileImages.map((url, index) => {
       return { id: "Profilbild " + (index+1), imgUrl: url, price: 150 + (index * 25) };
     });
-    const shopCursorItems = availableCursors.map((url, index) => {
-      return { id: "Cursor " + (index+1), imgUrl: url, price: 150 + (index * 25) };
+    const shopGluecksbringerItems = availableGluecksbringer.map((url, index) => {
+      return { id: "Glücksbringer " + (index+1), imgUrl: url, price: 150 + (index * 25) };
     });
     
     // Geheimer Schlüssel für Checksumme
@@ -895,15 +896,6 @@ const standardSentences = {
     "Die dichten Nebelschwaden, die über das Land ziehen, verbergen die Spuren einer längst vergessenen Zivilisation, die nur darauf wartet, entdeckt zu werden.",
     "Während der Regen in silbernen Tropfen vom Himmel fällt, erinnert ein weiser Geschichtenerzähler an die Macht der Erinnerungen.",
     "Die glühenden Farben eines Sonnenuntergangs verschmelzen mit den Schatten der Nacht, während ein einsamer Wanderer seinen Weg ins Unbekannte findet.",
-    "In einem alten Theater, in dem einst große Dramen aufgeführt wurden, hallen noch immer die Echos vergangener Emotionen wider.",
-    "Obwohl die Welt von Chaos und Dunkelheit überschattet wird, erhebt sich der Geist der Hoffnung in den stillen Augen eines Kindes.",
-    "Mit jeder verstreichenden Stunde enthüllt sich ein neues Mosaik aus Licht und Schatten, das die Seele tief berührt.",
-    "Die melancholischen Klänge eines einsamen Saxophons erfüllen die verlassene Gasse und erzählen von verlorener Liebe und Sehnsucht.",
-    "In den verwitterten Archiven einer alten Bibliothek werden die Geheimnisse der Menschheit bewahrt, bereit, von neugierigen Geistern entschlüsselt zu werden.",
-    "Während der kalte Mond am Himmel thront, tanzen die Schatten der Vergangenheit auf den Pflastersteinen einer stillen Stadt.",
-    "Die verhängnisvolle Stille einer verlassenen Straße wird nur durch das entfernte Rauschen eines Flusses durchbrochen, der von alten Legenden erzählt.",
-    "Obwohl der Frost die Landschaft in ein glitzerndes Wunderland verwandelt, sucht ein einsamer Reisender nach der Wärme vergangener Zeiten.",
-    "Mit der Präzision eines Uhrwerks enthüllt ein alter Chronist in seinen Aufzeichnungen die geheimen Rhythmen der Zeit.",
     "Die schattenhaften Konturen eines verfallenen Gebäudes erzählen von einer Ära, in der Heldentum und Tragik untrennbar miteinander verbunden waren.",
     "Während der Wind durch die zerfallenen Mauern eines alten Forts pfeift, wird das Echo vergangener Schlachten lebendig.",
     "In den dunklen Tiefen eines alten Waldes, wo jedes Geräusch eine Geschichte birgt, findet ein Suchender den Schlüssel zur Wahrheit.",
@@ -997,7 +989,7 @@ const sentenceLibraries = {
       "Die Vermittlung von Wirtschaftskompetenzen und technischem Know-how bereitet die Schüler auf eine zukunftsorientierte Berufswelt vor.",
       "Durch praxisnahe Fallstudien werden die Schüler in die Lage versetzt, ihr theoretisches Wissen in realen Situationen anzuwenden.",
       "Die Realschule legt besonderen Wert auf die Förderung sozialer Kompetenzen und kooperativen Lernens.",
-      "Die enge Zusammenarbeit zwischen Lehrern und Schülern schafft eine lernförderliche Atmosphäre, die zum selbstständigen Denken anregt.",
+      "Die enge Zusammenarbeit zwischen Lehrkräften und Schülern schafft eine lernförderliche Atmosphäre, die zum selbstständigen Denken anregt.",
       "Innovative Lehrmethoden und moderne Unterrichtsmaterialien machen den Lernprozess abwechslungsreich und effektiv.",
       "Schüler werden dazu angeregt, ihre eigenen Ideen einzubringen und kritisch zu hinterfragen, was zu einer tiefgreifenden Auseinandersetzung mit dem Lernstoff führt.",
       "Der interdisziplinäre Unterricht ermöglicht es den Schülern, komplexe Probleme aus verschiedenen Blickwinkeln zu betrachten.",
@@ -1054,7 +1046,8 @@ const sentenceLibraries = {
       "Die kontinuierliche Integration neuer Technologien in den Unterricht ermöglicht eine zeitgemäße und zukunftssichere Wissensvermittlung.",
       "Durch kooperative Lernformen und interdisziplinäre Projekte werden die Schüler dazu angeregt, ihre kreativen und analytischen Fähigkeiten zu schärfen.",
       "Die Verbindung von klassischen Lehrmethoden mit modernen digitalen Tools schafft ein dynamisches und vielseitiges Lernumfeld.",
-      "Die Realschule vermittelt nicht nur fachliches Wissen, sondern fördert auch die Entwicklung sozialer Kompetenzen und kritischer Reflexionsfähigkeit."
+      "Durch regelmäßige Feedbackrunden wird der individuelle Lernfortschritt systematisch erfasst und kontinuierlich verbessert.",
+      "Die enge Zusammenarbeit zwischen verschiedenen Fachbereichen fördert ein umfassendes Verständnis der globalen Zusammenhänge."
     ]
   },
   gymnasium: {
@@ -1153,9 +1146,7 @@ const sentenceLibraries = {
       "Die Analyse komplexer mathematischer Probleme stärkt das logische Denkvermögen der Schüler nachhaltig.",
       "Der interdisziplinäre Ansatz fördert eine ganzheitliche Bildung, die umfassende Kompetenzen vermittelt.",
       "Die engagierte Betreuung motiviert die Schüler, ihr volles Potenzial auszuschöpfen.",
-      "Durch kritische Reflexion eigener Lernprozesse wird die persönliche Weiterentwicklung kontinuierlich gefördert.",
-      "Interdisziplinäre Fragestellungen eröffnen den Schülern neue Einsichten in die Zusammenhänge von Kunst, Wissenschaft und Gesellschaft.",
-      "Die intensive Auseinandersetzung mit komplexen Themen erweitert den Horizont der Schüler und bereitet sie auf akademische Herausforderungen vor."
+      "Durch kritische Reflexion eigener Lernprozesse wird die persönliche Weiterentwicklung kontinuierlich gefördert."
     ],
     hard: [
       "Im Gymnasium wird ein rigoroser Lehrplan verfolgt, der die Schüler dazu anregt, tiefgreifende Analysen literarischer, historischer und naturwissenschaftlicher Phänomene durchzuführen.",
@@ -1173,29 +1164,11 @@ const sentenceLibraries = {
       "Die kritische Reflexion historischer Ereignisse ermöglicht den Schülern, die Ursachen und Wirkungen gesellschaftlicher Umbrüche zu verstehen.",
       "Der Einsatz moderner digitaler Technologien optimiert den Informationsfluss und macht komplexe Inhalte zugänglich.",
       "Anspruchsvolle Projektarbeiten fördern das eigenständige Erarbeiten theoretischer Konzepte und deren praktische Umsetzung.",
-      "Die enge Zusammenarbeit zwischen Lehrkräften und Schülern schafft ein lernförderliches Umfeld, das eigenverantwortliches und kritisches Denken unterstützt.",
+      "Die enge Zusammenarbeit zwischen Finanzexperten, Datenanalysten und IT-Spezialisten modelliert komplexe Marktprozesse effizient und transparent.",
       "Durch interdisziplinäre Fallstudien werden komplexe Sachverhalte greifbar gemacht und innovative Lösungsstrategien entwickelt.",
       "Die systematische Förderung von Schlüsselkompetenzen bildet die Grundlage für den Erfolg in einer zunehmend vernetzten Welt.",
-      "Moderne digitale Lernplattformen ermöglichen den flexiblen und zeitgemäßen Zugang zu umfangreichen Bildungsressourcen.",
-      "Die Kombination aus empirischer Forschung und theoretischer Fundierung legt den Grundstein für ein nachhaltiges Bildungsverständnis.",
-      "Interdisziplinäre Projekte verknüpfen naturwissenschaftliche, mathematische und geisteswissenschaftliche Inhalte zu einem umfassenden Bildungsmodell.",
-      "Der Einsatz von innovativen Medien und interaktiven Methoden fördert die Fähigkeit, komplexe Theorien in praktischen Projekten anzuwenden.",
-      "Die kontinuierliche Weiterentwicklung digitaler Lehrmethoden garantiert einen stets aktuellen und effektiven Unterricht.",
-      "Die kritische Auseinandersetzung mit ethischen Fragestellungen stärkt das moralische und intellektuelle Urteilsvermögen der Schüler.",
-      "Fächerübergreifende Projekte ermöglichen es, theoretisches Wissen in realen Szenarien anzuwenden und kritisch zu hinterfragen.",
-      "Die Kombination aus klassischer Literaturarbeit und modernen digitalen Medien erweitert das Verständnis für kulturelle Entwicklungen.",
-      "Schüler lernen, durch intensive Analyse komplexer Texte, tiefgreifende Einsichten in historische und philosophische Zusammenhänge zu gewinnen.",
-      "Die Integration moderner Technologien in den Unterricht ermöglicht eine dynamische und interaktive Vermittlung abstrakter Konzepte.",
-      "Interdisziplinäre Teams arbeiten gemeinsam an der Lösung komplexer Aufgabenstellungen und fördern so den Austausch vielfältiger Perspektiven.",
-      "Die Verbindung von traditionellen Lehrmethoden mit innovativen digitalen Ansätzen schafft ein ganzheitliches und zukunftsorientiertes Bildungsumfeld.",
-      "Durch regelmäßige Feedbackrunden wird der individuelle Lernfortschritt systematisch erfasst und kontinuierlich verbessert.",
-      "Die enge Zusammenarbeit zwischen verschiedenen Fachbereichen fördert ein umfassendes Verständnis der globalen Zusammenhänge.",
-      "Die gezielte Förderung eigenständigen Forschens und kreativer Problemlösungen bildet einen zentralen Bestandteil des gymnasialen Unterrichts.",
-      "Die kritische Reflexion eigener Lernprozesse trägt maßgeblich zur persönlichen Weiterentwicklung und akademischem Erfolg bei.",
-      "Die Integration interaktiver digitaler Tools ermöglicht es, abstrakte Inhalte anschaulich und praxisnah zu vermitteln.",
-      "Schüler werden dazu angeregt, ihre eigenen Ideen zu entwickeln und in anspruchsvollen Projekten umzusetzen.",
-      "Die interdisziplinäre Herangehensweise im Gymnasium stärkt sowohl das analytische als auch das kreative Denkvermögen der Schüler.",
-      "Durch praxisnahe Fallstudien und Projekte wird die Relevanz theoretischer Inhalte für die moderne Gesellschaft eindrucksvoll verdeutlicht."
+      "Moderne digitale Lernplattformen ermöglichen es den Schülern, interaktiv mit umfangreichen Lerninhalten zu arbeiten und individuelle Lernstrategien zu entwickeln.",
+      "Die Kombination aus empirischer Forschung und theoretischer Fundierung legt den Grundstein für ein nachhaltiges Bildungsverständnis."
     ]
   },
   medizin: {
@@ -1379,7 +1352,6 @@ const sentenceLibraries = {
       "Der Kunde informiert sich über verschiedene Anlageprodukte.",
       "Die Bank erklärt die Konditionen klar und verständlich.",
       "Moderne Technologien unterstützen den gesamten Service.",
-      "Die Bank arbeitet mit innovativen digitalen Systemen.",
       "Der Kunde kann jederzeit seinen Kontostand abrufen.",
       "Die Filiale bietet ein angenehmes Ambiente.",
       "Die Mitarbeiter der Bank sind stets hilfsbereit.",
@@ -1463,7 +1435,7 @@ const sentenceLibraries = {
       "Die hochmoderne Infrastruktur ermöglicht eine schnelle, sichere Abwicklung internationaler Geldtransfers, was den globalen Handel maßgeblich unterstützt.",
       "Maschinelles Lernen optimiert die Kreditvergabe, indem es die Risikobewertung präzise und effizient gestaltet und so den finanziellen Erfolg steigert.",
       "Die Bank vereint traditionelle Werte mit innovativen Technologien, um ein umfassendes, zukunftssicheres Dienstleistungsangebot zu bieten.",
-      "Interdisziplinäre Zusammenarbeit zwischen Finanzexperten, Datenanalysten und IT-Spezialisten modelliert komplexe Marktprozesse effizient und transparent.",
+      "Interdisziplinäre Zusammenarbeit zwischen Finanzexperten, Datenanalysten und IT-Spezialisten führt zu maßgeschneiderten, sicheren Finanzlösungen, die den individuellen Bedürfnissen gerecht werden.",
       "Die strategische Nutzung von KI-gestützten Analysen generiert individuelle Anlageempfehlungen auf Basis umfangreicher Marktanalysen und Prognosen.",
       "Nachhaltige Geschäftsstrategien verbinden wirtschaftlichen Erfolg mit ökologischen und sozialen Zielen in einer harmonischen Balance, die zukunftsweisend ist.",
       "Die kontinuierliche Digitalisierung interner Prozesse steigert die Effizienz und Kundenzufriedenheit erheblich und sichert langfristigen Erfolg.",
@@ -1483,7 +1455,7 @@ const sentenceLibraries = {
       "Interdisziplinäre Zusammenarbeit zwischen Finanz- und IT-Experten führt zu maßgeschneiderten, sicheren Finanzlösungen, die den individuellen Bedürfnissen gerecht werden.",
       "Die strategische Fusion von klassischer Beratung und digitalen Innovationen sichert der Bank einen nachhaltigen Wettbewerbsvorteil in einem dynamischen Marktumfeld.",
       "Durch kontinuierliche Investitionen in Forschung und Entwicklung digitaler Finanztechnologien bleibt die Bank stets am Puls der Zeit und innovativ.",
-      "Die Integration von KI-basierten Analysesystemen in den Zahlungsverkehr erhöht die Genauigkeit und Effizienz der Transaktionen signifikant und reduziert Risiken.",
+      "Die Integration von KI-basierten Analysesystemen in der Zahlungsverkehr erhöht die Genauigkeit und Effizienz der Transaktionen signifikant und reduziert Risiken.",
       "Die kontinuierliche Optimierung digitaler Plattformen garantiert einen stets aktuellen und benutzerfreundlichen Service, der höchste Standards erfüllt.",
       "Die strategische Nutzung moderner Technologien führt zu einem hohen Maß an Transparenz und Effizienz im gesamten Geschäftsprozess und stärkt das Vertrauen der Kunden.",
       "Die Bank setzt auf disruptive Innovationen, um ihren Kunden langfristig einen zuverlässigen und sicheren Finanzservice zu bieten, der den Markt revolutioniert.",
@@ -1633,6 +1605,23 @@ const sentenceLibraries = {
       "Die kunstvollen Balzrituale vieler Vogelarten zeugen von einem tiefen, instinktiven Verständnis für die Bedeutung von Partnerschaft und Fortpflanzung.",
       "Die synchronisierten Flugmuster eines Vogelschwarmes, die den Himmel in ein atemberaubendes Farbspektakel tauchen, demonstrieren die kollektive Intelligenz und den Zusammenhalt der Tierwelt."
     ]
+  },
+  code_python: {
+    easy: [
+      "print('Hello, World!')",
+      "a = 5  # Eine einfache Zuweisung in Python.",
+      "for i in range(3): print(i)"
+    ],
+    normal: [
+      "def addiere(x, y): return x + y",
+      "liste = [i for i in range(10)]  # List Comprehension in Python.",
+      "if x > 10: print('Größer als 10') else: print('Kleiner oder gleich 10')"
+    ],
+    hard: [
+      "import numpy as np\nmatrix = np.array([[1,2],[3,4]])\nprint(np.linalg.inv(matrix))",
+      "def fibonacci(n):\n    if n <= 1:\n        return n\n    else:\n        return fibonacci(n-1) + fibonacci(n-2)",
+      "with open('datei.txt', 'r') as file:\n    daten = file.read()\nprint(daten)"
+    ]
   }
 };
 
@@ -1720,16 +1709,16 @@ let lastHotStreakWordCount = 0;     // Für Hot-Streak Bonus
     function updateProfileUI() {
       const profileImgElem = document.getElementById("profileImage");
       const playerNameElem = document.getElementById("playerName");
-      const playerCreditsElem = document.getElementById("playerCredits");
+      const playerWissenspunkteElem = document.getElementById("playerWissenspunkte");
       profileImgElem.src = userStats.profileImage || "https://via.placeholder.com/80";
       playerNameElem.innerHTML = `${userStats.playerName} <span class="rank-badge">${getPlayerRank()}</span>`;
-      playerCreditsElem.textContent = "Credits: " + userStats.credits;
+      playerWissenspunkteElem.textContent = "Wissenspunkte: " + userStats.wissenspunkte;
     }
     
     // Ergebnis-Popup anzeigen mit detaillierten Session-Ergebnissen
     function showSessionResults(words, wpm, apm, errorCount, sessionScore) {
       let rank = getPlayerRank();
-      let bonusCredits = Math.round(sessionScore / 10);
+      let bonusWissenspunkte = Math.round(sessionScore / 10);
       let resultHTML = `
         <h2>Session beendet!</h2>
         <p>Spieler: ${userStats.playerName} – Rang: ${rank} (EPISCH)</p>
@@ -1738,7 +1727,7 @@ let lastHotStreakWordCount = 0;     // Für Hot-Streak Bonus
         <p>APM: ${apm}</p>
         <p>Fehler: ${errorCount}</p>
         <p>Session Score: ${sessionScore}</p>
-        <p>Bonus Credits: ${bonusCredits}</p>
+        <p>Bonus Wissenspunkte: ${bonusWissenspunkte}</p>
         <button onclick="closeResultsPopup()">Schließen</button>
       `;
       endSessionPopup.innerHTML = resultHTML;
@@ -1799,30 +1788,30 @@ let lastHotStreakWordCount = 0;     // Für Hot-Streak Bonus
           btn.disabled = true;
           btn.innerHTML = `<img src="${item.imgUrl}" style="width:32px; vertical-align:middle;"> Gekauft`;
         } else {
-          btn.innerHTML = `<img src="${item.imgUrl}" style="width:32px; vertical-align:middle;"> ${item.price} Credits`;
+          btn.innerHTML = `<img src="${item.imgUrl}" style="width:32px; vertical-align:middle;"> ${item.price} Wissenspunkte`;
           btn.onclick = () => purchaseItem(item, "profile");
         }
         shopProfileSection.appendChild(btn);
       });
-      const shopCursorSection = document.getElementById("shopCursorSection");
-      shopCursorSection.innerHTML = "<h3>Cursoren</h3>";
-      shopCursorItems.forEach(item => {
+      const shopGluecksbringerSection = document.getElementById("shopGluecksbringerSection");
+      shopGluecksbringerSection.innerHTML = "<h3>Glücksbringer</h3>";
+      shopGluecksbringerItems.forEach(item => {
         const btn = document.createElement("button");
         btn.id = "shop_" + item.id;
-        if (userStats.inventory.cursors && userStats.inventory.cursors.includes(item.imgUrl)) {
+        if (userStats.inventory.gluecksbringer && userStats.inventory.gluecksbringer.includes(item.imgUrl)) {
           btn.disabled = true;
           btn.innerHTML = `<img src="${item.imgUrl}" style="width:32px; vertical-align:middle;"> Gekauft`;
         } else {
-          btn.innerHTML = `<img src="${item.imgUrl}" style="width:32px; vertical-align:middle;"> ${item.price} Credits`;
-          btn.onclick = () => purchaseItem(item, "cursor");
+          btn.innerHTML = `<img src="${item.imgUrl}" style="width:32px; vertical-align:middle;"> ${item.price} Wissenspunkte`;
+          btn.onclick = () => purchaseItem(item, "gluecksbringer");
         }
-        shopCursorSection.appendChild(btn);
+        shopGluecksbringerSection.appendChild(btn);
       });
     }
     
     function purchaseItem(item, type) {
-      if (userStats.credits >= item.price) {
-        userStats.credits -= item.price;
+      if (userStats.wissenspunkte >= item.price) {
+        userStats.wissenspunkte -= item.price;
         if (type === "profile") {
           userStats.profileImage = item.imgUrl;
           userStats.inventory.profileImages = userStats.inventory.profileImages || [];
@@ -1830,20 +1819,20 @@ let lastHotStreakWordCount = 0;     // Für Hot-Streak Bonus
             userStats.inventory.profileImages.push(item.imgUrl);
           }
           unlockReward(`Profilbild ${item.id} freigeschaltet!`);
-        } else if (type === "cursor") {
+        } else if (type === "gluecksbringer") {
           document.getElementById("writeArea").style.cursor = "url('" + item.imgUrl + "'), auto";
-          userStats.inventory.cursors = userStats.inventory.cursors || [];
-          if (!userStats.inventory.cursors.includes(item.imgUrl)) {
-            userStats.inventory.cursors.push(item.imgUrl);
+          userStats.inventory.gluecksbringer = userStats.inventory.gluecksbringer || [];
+          if (!userStats.inventory.gluecksbringer.includes(item.imgUrl)) {
+            userStats.inventory.gluecksbringer.push(item.imgUrl);
           }
-          unlockReward(`Cursor ${item.id} freigeschaltet!`);
+          unlockReward(`Glücksbringer ${item.id} freigeschaltet!`);
         }
         updateProfileUI();
         renderInventory();
         renderShop();
         alert(`${item.id} wurde erfolgreich gekauft!`);
       } else {
-        alert("Nicht genügend Credits! Verdiene mehr XP und Credits, indem du weiterschreibst.");
+        alert("Nicht genügend Wissenspunkte! Verdiene mehr XP und Wissenspunkte, indem du weiterschreibst.");
       }
     }
     
@@ -1868,62 +1857,72 @@ let lastHotStreakWordCount = 0;     // Für Hot-Streak Bonus
         profileDiv.appendChild(img);
       });
       container.appendChild(profileDiv);
-      let cursorDiv = document.createElement("div");
-      cursorDiv.innerHTML = "<h3>Cursoren</h3>";
-      userStats.inventory.cursors = userStats.inventory.cursors || [];
-      userStats.inventory.cursors.forEach(curUrl => {
+      let gluecksbringerDiv = document.createElement("div");
+      gluecksbringerDiv.innerHTML = "<h3>Glücksbringer</h3>";
+      userStats.inventory.gluecksbringer = userStats.inventory.gluecksbringer || [];
+      userStats.inventory.gluecksbringer.forEach(curUrl => {
         let img = document.createElement("img");
         img.src = curUrl;
         img.style.width = "50px";
         img.style.marginRight = "5px";
         img.style.cursor = "pointer";
-        img.title = "Klicke, um diesen Cursor auszuwählen";
+        img.title = "Klicke, um diesen Glücksbringer auszuwählen";
         img.onclick = () => {
           document.getElementById("writeArea").style.cursor = "url('" + curUrl + "'), auto";
         };
-        cursorDiv.appendChild(img);
+        gluecksbringerDiv.appendChild(img);
       });
-      container.appendChild(cursorDiv);
+      container.appendChild(gluecksbringerDiv);
     }
     
-    function saveProfile() {
-      const profileChecksum = generateHash(userStats.credits.toString() + secretKey);
-      userStats.profileChecksum = profileChecksum;
-      
-      const data = JSON.stringify(userStats, null, 2);
-      const blob = new Blob([data], { type: "application/json" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "profile.json";
-      a.click();
-      URL.revokeObjectURL(url);
+    function generateProfileChecksum(stats) {
+  // Kombiniere z. B. wissenspunkte und das Inventar der gluecksbringer zu einem String
+  return generateHash(stats.wissenspunkte.toString() + JSON.stringify(stats.inventory.gluecksbringer) + secretKey);
+}
+
+function saveProfile() {
+  // Berechnung der Checksumme, basierend auf wissenspunkte (du könntest auch weitere Felder einbeziehen)
+  const profileChecksum = generateHash(userStats.wissenspunkte.toString() + secretKey);
+  userStats.profileChecksum = generateProfileChecksum(userStats);
+
+  const data = JSON.stringify(userStats, null, 2);
+  const blob = new Blob([data], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "profile.json";
+  document.body.appendChild(a); // Element in den DOM einfügen
+  a.click();
+  setTimeout(() => {
+    URL.revokeObjectURL(url);
+    a.remove(); // Element wieder entfernen
+  }, 100);
+}
+
+function loadProfile(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const loadedProfile = JSON.parse(e.target.result);
+      const expectedChecksum = generateProfileChecksum(loadedProfile);
+      if (loadedProfile.profileChecksum !== expectedChecksum) {
+        alert("Profilprüfung fehlgeschlagen! Möglicher Betrugsversuch!");
+        return;
+      }
+      userStats = loadedProfile;
+      updateXPAndLevelDisplay();
+      updateProfileUI();
+      renderInventory();
+      renderShop();
+      alert("Profil erfolgreich geladen.");
+    } catch (error) {
+      alert("Fehler beim Laden des Profils: " + error);
     }
-    
-    function loadProfile(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        try {
-          const loadedProfile = JSON.parse(e.target.result);
-          const expectedChecksum = generateHash(loadedProfile.credits.toString() + secretKey);
-          if (loadedProfile.profileChecksum !== expectedChecksum) {
-            alert("Profilprüfung fehlgeschlagen! Möglicher Betrugsversuch!");
-            return;
-          }
-          userStats = loadedProfile;
-          updateXPAndLevelDisplay();
-          updateProfileUI();
-          renderInventory();
-          renderShop();
-          alert("Profil erfolgreich geladen.");
-        } catch (error) {
-          alert("Fehler beim Laden des Profils: " + error);
-        }
-      };
-      reader.readAsText(file);
-    }
+  };
+  reader.readAsText(file);
+}
     
     function updateXPAndLevelDisplay() {
       xpDisplay.textContent = `XP: ${userStats.xp}`;
@@ -1935,7 +1934,7 @@ let lastHotStreakWordCount = 0;     // Für Hot-Streak Bonus
       if (newLevel > userStats.level) {
         userStats.level = newLevel;
         alert(`Level Up! Du bist jetzt Level ${newLevel}.`);
-        userStats.credits += 50;
+        userStats.wissenspunkte += 50;
         if (newLevel === 2) { unlockReward("😀 Emoji Profil"); }
         if (newLevel === 3) { unlockReward("😎 Cool Emoji"); }
         if (newLevel === 4) { unlockReward("🔥 Hot Emoji"); }
@@ -2022,6 +2021,10 @@ let lastHotStreakWordCount = 0;     // Für Hot-Streak Bonus
       lastKeyTime = currentTime;
       if (hotStreakCounter >= hotStreakRequired) { showHotStreakIndicator(); }
     });
+    
+    // Hier den fehlenden Listener einfügen:
+    document.getElementById("saveProfileBtn").addEventListener("click", saveProfile);
+
     
     writeArea.addEventListener("paste", (e) => {
       e.preventDefault();
@@ -2152,7 +2155,7 @@ let lastHotStreakWordCount = 0;     // Für Hot-Streak Bonus
             let errorCount = 0; // Logik zur Fehlerzählung hier ergänzen
             let sessionDuration = Math.floor((Date.now() - sessionStartTime) / 1000);
             let sessionScore = calculateSessionScore(words, errorCount, wpm, sessionDuration);
-            userStats.credits += Math.round(sessionScore / 10);
+            userStats.wissenspunkte += Math.round(sessionScore / 10);
             updateXPAndLevelDisplay();
             saveSessionToLeaderboard();
             updateLeaderboard();

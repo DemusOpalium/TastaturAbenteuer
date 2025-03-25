@@ -1,6 +1,17 @@
 Schreibabenteuer DemusOpalium
 
 Schreibabenteuer DemusOpalium ist ein Open‑Source Schreibspiel, in dem du in variablen Zeitmodi (1–5 Minuten) spannende Schreib‑Challenges meisterst – sei es kreativ, präzise oder unter hohem Druck! Das Spiel richtet sich in erster Linie an PC-Nutzer mit Tastatur, bietet aber auch eine voll responsiv optimierte Version für mobile Geräte, sodass du es auch unterwegs spielen kannst (Hauptaugenmerk liegt jedoch auf PC & Tastatur).
+
+```
+# ..... _  
+# . _ ( . ) _  
+# .(_ (%)_ )   
+# .. . (_ )\    
+# ......... | __  
+# ......... |/_ /  
+# ......... |  
+```
+
 Hauptfunktionen und Spielmodi
 
     Mehrere Spielmodi:
@@ -49,6 +60,32 @@ Plattformen und Nutzung
 
     Mobile Version:
     Parallel zur PC-Version wurde eine vollständig responsive Version entwickelt. Mit angepassten Schriftgrößen, größeren Touch-Zielen und optimierter Benutzeroberfläche kannst du das Spiel auch auf Smartphones problemlos spielen – ideal für unterwegs!
+
+Credits werden in Schreibabenteuer DemusOpalium vor allem am Ende einer Session verdient. Konkret passiert Folgendes:
+
+    Session-Ende:
+    Beim Beenden einer normalen Session wird ein Session-Score basierend auf der Anzahl geschriebener Wörter, Tippgeschwindigkeit (WPM), Fehlern und weiteren Boni berechnet. Anschließend werden Credits in Höhe von Math.round(sessionScore / 10) deinem Profil hinzugefügt.
+
+    Level-Up:
+    Wenn du genügend XP sammelst und ein neues Level erreichst, erhältst du zusätzlich 50 Credits.
+
+    Copy Challenge:
+    Im Copy Challenge-Modus sammelst du Punkte, die in XP umgewandelt werden – und diese XP tragen wiederum zum Level-Up bei, wodurch du auch Credits erhältst.
+
+Diese Mechanismen sorgen dafür, dass du durch schnelles und präzises Tippen sowie durch konsequentes Schreiben belohnt wirst.
+
+```
+# ____####___####
+# __##____#_#____##
+# _#_______#______ _#
+# _#_______________#
+# __#_____________#
+# ___#__________#
+# ____ _#______#
+# _______#__#
+# ________#
+```
+
 
 Open Source & Community
 

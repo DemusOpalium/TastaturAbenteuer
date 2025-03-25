@@ -429,6 +429,12 @@
     </div>
   </div>
 
+  <!-- Namensänderung -->
+  <div id="nameChangeContainer">
+    <input type="text" id="playerNameInput" placeholder="Neuen Namen eingeben">
+    <button id="changeNameBtn">Namen ändern</button>
+  </div>
+  
   <!-- Shopbereich -->
   <div id="shopContainer">
     <h2>Shop</h2>
@@ -1608,20 +1614,61 @@ const sentenceLibraries = {
   },
   code_python: {
     easy: [
-      "print('Hello, World!')",
-      "a = 5  # Eine einfache Zuweisung in Python.",
-      "for i in range(3): print(i)"
-    ],
-    normal: [
-      "def addiere(x, y): return x + y",
-      "liste = [i for i in range(10)]  # List Comprehension in Python.",
-      "if x > 10: print('Größer als 10') else: print('Kleiner oder gleich 10')"
-    ],
-    hard: [
-      "import numpy as np\nmatrix = np.array([[1,2],[3,4]])\nprint(np.linalg.inv(matrix))",
-      "def fibonacci(n):\n    if n <= 1:\n        return n\n    else:\n        return fibonacci(n-1) + fibonacci(n-2)",
-      "with open('datei.txt', 'r') as file:\n    daten = file.read()\nprint(daten)"
-    ]
+    "print('Hello, World!')",
+    "a = 5",
+    "b = 10",
+    "c = a + b  # einfache Addition",
+    "name = 'Alice'",
+    "print(name)",
+    "for i in range(5): print(i)",
+    "if a < b: print('a ist kleiner')",
+    "x = 42  # die Antwort auf alles",
+    "y = x * 2",
+    "print('Doppelter Spaß:', y)",
+    "is_active = True",
+    "print('Status:', is_active)",
+    "numbers = [1, 2, 3, 4, 5]",
+    "print(numbers)",
+    "color = 'blau'",
+    "print('Die Farbe ist', color)",
+    "result = 3.14 * 2",
+    "print(result)",
+    "lst = []",
+    "lst.append(100)",
+    "print(lst)",
+    "flag = False",
+    "print('Flag:', flag)",
+    "message = 'Python rocks!'"
+  ],
+  normal: [
+    "def add(x, y): return x + y",
+    "my_list = [i ** 2 for i in range(10)]  # List Comprehension",
+    "if x % 2 == 0:\n    print('Even')\nelse:\n    print('Odd')",
+    "def greet(name):\n    return `Hallo, ${name}!`",
+    "try:\n    result = 10 / 0\nexcept ZeroDivisionError:\n    print('Division durch Null!')",
+    "with open('datei.txt', 'r') as f:\n    content = f.read()",
+    "class Person:\n    def __init__(self, name):\n        self.name = name",
+    "import math\nprint(math.sqrt(16))",
+    "def factorial(n):\n    return 1 if n <= 1 else n * factorial(n - 1)",
+    "numbers = list(range(20))\nprint(numbers)",
+    "s = 'Hallo'\nprint(s.lower())",
+    "def reverse_string(s):\n    return s[::-1]",
+    "colors = ['rot', 'grün', 'blau']\nprint(', '.join(colors))",
+    "from datetime import datetime\nprint(datetime.now())",
+    "def fibonacci(n):\n    a, b = 0, 1\n    for _ in range(n):\n        a, b = b, a + b\n    return a"
+  ],
+  hard: [
+    "import numpy as np\nmatrix = np.array([[1, 2], [3, 4]])\nprint(np.linalg.inv(matrix))",
+    "def merge_sort(arr):\n    if len(arr) > 1:\n        mid = len(arr) // 2\n        L = arr[:mid]\n        R = arr[mid:]\n        merge_sort(L)\n        merge_sort(R)\n        i = j = k = 0\n        while i < len(L) && j < len(R):\n            if L[i] < R[j]:\n                arr[k] = L[i]\n                i += 1\n            else:\n                arr[k] = R[j]\n                j += 1\n            k += 1\n        while i < len(L):\n            arr[k] = L[i]\n            i += 1\n            k += 1\n        while j < len(R):\n            arr[k] = R[j]\n            j += 1\n            k += 1\n    return arr",
+    "import pandas as pd\ndf = pd.DataFrame({'A': range(5), 'B': [x**2 for x in range(5)]})\nprint(df)",
+    "def decorator(func):\n    def wrapper(*args, **kwargs):\n        print('Funktion wird ausgeführt')\n        result = func(*args, **kwargs)\n        print('Funktion wurde ausgeführt')\n        return result\n    return wrapper",
+    "class Singleton:\n    _instance = None\n    def __new__(cls, *args, **kwargs):\n        if not cls._instance:\n            cls._instance = super().__new__(cls)\n        return cls._instance",
+    "import asyncio\nasync def main():\n    print('Start')\n    await asyncio.sleep(1)\n    print('Ende')\nasyncio.run(main())",
+    "def generator_example(n):\n    for i in range(n):\n        yield i ** 2\nfor num in generator_example(5):\n    print(num)",
+    "import sys\nprint(sys.version)",
+    "def complex_function(x):\n    return [i for i in range(x) if i % 2 == 0]\nprint(complex_function(10))",
+    "try:\n    import non_existent_module\nexcept ImportError:\n    print('Modul nicht gefunden!')"
+  ]
   }
 };
 
@@ -1645,38 +1692,50 @@ let lastHotStreakWordCount = 0;     // Für Hot-Streak Bonus
     let copyAchieved = {};
     
     // Elemente
-    const modeSelect = document.getElementById("modeSelect");
-    const timeSelect = document.getElementById("timeSelect");
-    const difficultySelect = document.getElementById("difficultySelect");
-    const writeArea = document.getElementById("writeArea");
-    const timerDisplay = document.getElementById("timer");
-    const wordCountDisplay = document.getElementById("wordCount");
-    const goalProgressDisplay = document.getElementById("goalProgress");
-    const xpDisplay = document.getElementById("xpDisplay");
-    const levelDisplay = document.getElementById("levelDisplay");
-    const wpmDisplay = document.getElementById("wpmDisplay");
-    const apmDisplay = document.getElementById("apmDisplay");
-    const hotStreakIndicator = document.getElementById("hotStreakIndicator");
-    const achievementPopup = document.getElementById("achievementPopup");
-    const startBtn = document.getElementById("startBtn");
-    const resetBtn = document.getElementById("resetBtn");
-    const promptBtn = document.getElementById("promptBtn");
-    const shareBtn = document.getElementById("shareBtn");
-    const infoBtn = document.getElementById("infoBtn");
-    const infoModal = document.getElementById("infoModal");
-    const closeInfo = document.getElementById("closeInfo");
-    const bossContainer = document.getElementById("bossContainer");
-    const bossNameElem = document.getElementById("bossName");
-    const bossHealthElem = document.getElementById("bossHealth");
-    const copyTargetElem = document.getElementById("copyTarget");
-    const targetSentenceElem = document.getElementById("targetSentence");
-    const checkBtn = document.getElementById("checkBtn");
-    const copyScoreDisplay = document.getElementById("copyScoreDisplay");
-    const endSessionPopup = document.getElementById("endSessionPopup");
-    const loadProfileInput = document.getElementById("loadProfileInput");
-    
-    let leaderboard = JSON.parse(localStorage.getItem("leaderboard")) || [];
-    
+const modeSelect = document.getElementById("modeSelect");
+const timeSelect = document.getElementById("timeSelect");
+const difficultySelect = document.getElementById("difficultySelect");
+const writeArea = document.getElementById("writeArea");
+const timerDisplay = document.getElementById("timer");
+const wordCountDisplay = document.getElementById("wordCount");
+const goalProgressDisplay = document.getElementById("goalProgress");
+const xpDisplay = document.getElementById("xpDisplay");
+const levelDisplay = document.getElementById("levelDisplay");
+const wpmDisplay = document.getElementById("wpmDisplay");
+const apmDisplay = document.getElementById("apmDisplay");
+const hotStreakIndicator = document.getElementById("hotStreakIndicator");
+const achievementPopup = document.getElementById("achievementPopup");
+const startBtn = document.getElementById("startBtn");
+const resetBtn = document.getElementById("resetBtn");
+const promptBtn = document.getElementById("promptBtn");
+const shareBtn = document.getElementById("shareBtn");
+const infoBtn = document.getElementById("infoBtn");
+const infoModal = document.getElementById("infoModal");
+const closeInfo = document.getElementById("closeInfo");
+const bossContainer = document.getElementById("bossContainer");
+const bossNameElem = document.getElementById("bossName");
+const bossHealthElem = document.getElementById("bossHealth");
+const copyTargetElem = document.getElementById("copyTarget");
+const targetSentenceElem = document.getElementById("targetSentence");
+const checkBtn = document.getElementById("checkBtn");
+const copyScoreDisplay = document.getElementById("copyScoreDisplay");
+const endSessionPopup = document.getElementById("endSessionPopup");
+const loadProfileInput = document.getElementById("loadProfileInput");
+
+let leaderboard = JSON.parse(localStorage.getItem("leaderboard")) || [];
+
+// Hier den Event Listener für den Namenswechsel einfügen:
+document.getElementById("changeNameBtn").addEventListener("click", function() {
+  const newName = document.getElementById("playerNameInput").value.trim();
+  if (newName) {
+    userStats.playerName = newName;
+    updateProfileUI();
+    alert("Name wurde geändert!");
+  } else {
+    alert("Bitte gib einen gültigen Namen ein.");
+  }
+});
+
     // Schreibstarter-Prompts
     const prompts = [
       "Es war einmal ein geheimnisvoller Wald, in dem die Zeit stillzustehen schien...",

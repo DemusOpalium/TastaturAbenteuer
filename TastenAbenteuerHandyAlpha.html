@@ -1,0 +1,2179 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>Schreibabenteuer DemusOpalium</title>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@700&family=Roboto:wght@400;700&family=Merriweather:wght@400;700&family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
+  <!-- Animate.css für Animationen -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+  <style>
+    /* Basis-Reset */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    /* Grundlayout und Themes */
+    body {
+      font-family: 'Roboto', sans-serif;
+      transition: background 0.5s ease, color 0.5s ease;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 10px;
+    }
+    /* Vorhandene Themes */
+    .theme-dark { background: linear-gradient(135deg, #2c3e50, #4ca1af); color: #f0f0f0; }
+    .theme-light { background: #f7f7f7; color: #333; }
+    .theme-vintage { background: #f4e8c1; color: #5a4b3b; }
+    /* Neue Themes */
+    .theme-neon { background: #0f0f0f; color: #39ff14; }
+    .theme-pastel { background: #ffe6f0; color: #ff8fa3; }
+    .theme-ocean { background: #1e3d59; color: #a2d5f2; }
+    .theme-forest { background: #2d4739; color: #cdeac0; }
+    .theme-sunset { background: #ff9a8d; color: #4b134f; }
+    
+    /* Rahmen für Buttons, Selects und Labels */
+    button, select, label {
+      border-radius: 5px;
+      touch-action: manipulation; /* für Touch Optimierung */
+    }
+    .theme-dark button, .theme-dark select, .theme-dark label { border: 1px solid #444; }
+    .theme-light button, .theme-light select, .theme-light label { border: 1px solid #ccc; }
+    .theme-vintage button, .theme-vintage select, .theme-vintage label { border: 1px solid #a67c52; }
+    .theme-neon button, .theme-neon select, .theme-neon label { border: 1px solid #39ff14; }
+    .theme-pastel button, .theme-pastel select, .theme-pastel label { border: 1px solid #ff8fa3; }
+    .theme-ocean button, .theme-ocean select, .theme-ocean label { border: 1px solid #a2d5f2; }
+    .theme-forest button, .theme-forest select, .theme-forest label { border: 1px solid #cdeac0; }
+    .theme-sunset button, .theme-sunset select, .theme-sunset label { border: 1px solid #4b134f; }
+    
+    /* Überschrift */
+    .title {
+      font-family: 'Lora', serif;
+      font-size: 2em;
+      margin-bottom: 15px;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.7);
+      text-transform: uppercase;
+      text-align: center;
+    }
+    
+    /* Profilbereich */
+    #profileContainer {
+      width: 100%;
+      max-width: 800px;
+      background: rgba(0,0,0,0.2);
+      padding: 10px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    #profileImage {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: #ccc;
+      object-fit: cover;
+      border: 2px solid #fff;
+    }
+    #profileDetails { flex: 1; color: inherit; }
+    #profileDetails h3, #profileDetails p { margin: 2px 0; font-size: 0.9em; }
+    /* Rang-Badge im Profilbereich */
+    .rank-badge {
+      background: gold;
+      color: #000;
+      padding: 2px 4px;
+      border-radius: 4px;
+      font-weight: bold;
+      margin-left: 6px;
+      font-size: 0.75em;
+    }
+    
+    /* Shopbereich */
+    #shopContainer {
+      width: 100%;
+      max-width: 800px;
+      background: rgba(0,0,0,0.2);
+      padding: 10px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+    #shopContainer h2 { margin-bottom: 8px; font-size: 1.2em; }
+    #shopContainer button {
+      margin: 3px;
+      padding: 8px 10px;
+      font-size: 0.8em;
+      border-radius: 5px;
+      background: rgba(255,255,255,0.2);
+      color: inherit;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      min-width: 80px;
+    }
+    #shopContainer button:hover { background: rgba(255,255,255,0.4); }
+    /* Refresh-Buttons im Shop */
+    #shopContainer .refresh-btn {
+      margin-top: 5px;
+      background: #0077cc;
+      color: #fff;
+      border: none;
+      padding: 8px 12px;
+    }
+    #shopContainer .refresh-btn:hover { background: #005fa3; }
+    
+    /* Inventarbereich */
+    #inventoryContainer {
+      width: 100%;
+      max-width: 800px;
+      background: rgba(0,0,0,0.2);
+      padding: 10px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+    #inventoryContainer h2 { text-align: center; margin-bottom: 8px; font-size: 1.2em; }
+    #inventoryContainer div { margin-bottom: 8px; }
+    #inventoryContainer img {
+      margin: 3px;
+      border: 2px solid #fff;
+      border-radius: 4px;
+      cursor: pointer;
+      width: 50px;
+      height: 50px;
+    }
+    
+    /* Info Button & Modal */
+    #infoBtn {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 50%;
+      padding: 8px;
+      font-size: 1.5em;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      z-index: 100;
+    }
+    #infoBtn:hover { background: rgba(255,255,255,0.4); }
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 200;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.7);
+      align-items: center;
+      justify-content: center;
+      padding: 10px;
+    }
+    .modal-content {
+      background: #fff;
+      color: #333;
+      padding: 15px;
+      border-radius: 8px;
+      max-width: 600px;
+      width: 100%;
+      font-family: 'Roboto', sans-serif;
+      font-size: 0.9em;
+    }
+    .close-btn {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .close-btn:hover { color: #000; }
+    
+    /* Dropdowns & Buttons */
+    .design-controls, .extra-controls {
+      margin-bottom: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+    }
+    .design-controls select, .extra-controls select, .extra-controls button {
+      padding: 8px;
+      font-size: 0.8em;
+      border-radius: 5px;
+      background: rgba(255,255,255,0.2);
+      color: inherit;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      min-width: 100px;
+    }
+    .design-controls select:hover, .extra-controls select:hover, .extra-controls button:hover {
+      background: rgba(255,255,255,0.4);
+    }
+    
+    /* Statusleiste */
+    .status-bar {
+      margin-bottom: 8px;
+      font-size: 0.8em;
+      background: rgba(0,0,0,0.3);
+      padding: 8px 10px;
+      border-radius: 5px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+    }
+    .status-item { min-width: 80px; text-align: center; }
+    #copyScoreDisplay { display: none; }
+    
+    /* Schreibbereich */
+    #writeArea {
+      width: 100%;
+      max-width: 800px;
+      height: 250px;
+      background: rgba(255,255,255,0.1);
+      color: inherit;
+      padding: 10px;
+      border: 2px solid;
+      border-radius: 8px;
+      outline: none;
+      overflow-y: auto;
+      font-size: 0.9em;
+      line-height: 1.4em;
+      transition: background 0.3s ease;
+    }
+    .theme-dark #writeArea { border-color: #444; }
+    .theme-light #writeArea { border-color: #ccc; }
+    .theme-vintage #writeArea { border-color: #a67c52; }
+    .theme-neon #writeArea { border-color: #39ff14; }
+    .theme-pastel #writeArea { border-color: #ff8fa3; }
+    .theme-ocean #writeArea { border-color: #a2d5f2; }
+    .theme-forest #writeArea { border-color: #cdeac0; }
+    .theme-sunset #writeArea { border-color: #4b134f; }
+    #writeArea.warning { background: rgba(200,50,50,0.5); animation: shake 0.5s infinite alternate; }
+    @keyframes shake { from { transform: translateX(0); } to { transform: translateX(3px); } }
+    
+    /* Copy Challenge */
+    #copyTarget {
+      display: none;
+      border: 2px solid #000;
+      background: #fff;
+      color: #000;
+      padding: 8px;
+      font-size: 1em;
+      font-weight: bold;
+      margin-bottom: 8px;
+      border-radius: 5px;
+    }
+    #targetSentence { font-weight: bold; }
+    
+    /* Steuerungselemente */
+    .controls {
+      margin-top: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+    }
+    .controls label, .controls select, .controls button {
+      padding: 8px 10px;
+      font-size: 0.8em;
+      border-radius: 5px;
+      background: rgba(255,255,255,0.2);
+      color: inherit;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      min-width: 90px;
+    }
+    .controls button:hover, .controls select:hover, .controls label:hover {
+      background: rgba(255,255,255,0.4);
+    }
+    
+    /* Boss-Anzeige */
+    #bossContainer { display: none; margin-top: 10px; text-align: center; }
+    #bossName { font-size: 1em; font-weight: bold; margin-bottom: 5px; }
+    #bossHealthBar {
+      background: red;
+      width: 80%;
+      max-width: 300px;
+      height: 15px;
+      border-radius: 10px;
+      overflow: hidden;
+      margin: 0 auto;
+    }
+    #bossHealth {
+      background: green;
+      width: 100%;
+      height: 100%;
+      transition: width 0.5s ease;
+    }
+    
+    /* Achievement-Popup */
+    .achievement {
+      margin-top: 10px;
+      padding: 10px;
+      background: rgba(255,215,0,0.8);
+      border-radius: 8px;
+      font-size: 1em;
+      font-weight: bold;
+      color: #333;
+      display: none;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    }
+    
+    /* Erfolge & Belohnungen */
+    .achievements-rewards-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      max-width: 800px;
+      width: 100%;
+      margin-top: 10px;
+    }
+    .achievements-section, .rewards-section {
+      flex: 1 1 300px;
+      background: rgba(0,0,0,0.3);
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 0.8em;
+    }
+    .achievements-section h2, .rewards-section h2 { text-align: center; margin-bottom: 8px; }
+    .achievement-filters {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+    }
+    .achievement-filters label { font-size: 0.75em; }
+    .achievement-filters select { padding: 5px; font-size: 0.75em; }
+    #achievementTable {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    #achievementTable th, #achievementTable td {
+      padding: 6px;
+      text-align: center;
+      border-bottom: 1px solid rgba(255,255,255,0.2);
+    }
+    #achievementTable th { background: rgba(255,255,255,0.2); font-size: 0.75em; }
+    
+    /* Leaderboard */
+    .leaderboard {
+      margin-top: 10px;
+      max-width: 800px;
+      width: 100%;
+      background: rgba(0,0,0,0.3);
+      padding: 10px;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-size: 0.75em;
+    }
+    .leaderboard table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .leaderboard th, .leaderboard td {
+      padding: 8px;
+      text-align: center;
+      border-bottom: 1px solid rgba(255,255,255,0.2);
+    }
+    .leaderboard th { background: rgba(255,255,255,0.2); }
+    
+    /* End Session Popup */
+    #endSessionPopup {
+      display: none;
+      position: fixed;
+      z-index: 300;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      background: #fff;
+      color: #333;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+      text-align: center;
+      max-width: 90%;
+      font-size: 0.9em;
+    }
+    #endSessionPopup button {
+      margin-top: 15px;
+      padding: 8px 16px;
+      font-size: 0.8em;
+      cursor: pointer;
+      border-radius: 5px;
+      border: none;
+      background: #0077cc;
+      color: #fff;
+      transition: background 0.3s ease;
+      min-width: 100px;
+    }
+    #endSessionPopup button:hover { background: #005fa3; }
+    
+    /* CSS Animation für Würfel-Popup */
+    .dice-animation {
+      animation: rollDice 0.5s ease-in-out;
+    }
+    @keyframes rollDice {
+      0% { transform: rotate(0deg); }
+      50% { transform: rotate(180deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .fade-out {
+      animation: fadeOut 1s forwards;
+    }
+    @keyframes fadeOut {
+      to { opacity: 0; }
+    }
+    
+    /* Zusätzliche Anpassungen für sehr kleine Bildschirme */
+    @media (max-width: 400px) {
+      .title { font-size: 1.8em; }
+      #profileImage { width: 50px; height: 50px; }
+      .rank-badge { font-size: 0.65em; padding: 2px 3px; }
+      #writeArea { height: 200px; }
+      .controls label, .controls select, .controls button { min-width: 80px; }
+    }
+  </style>
+</head>
+<body class="theme-dark">
+  <!-- Profilbereich -->
+  <div id="profileContainer">
+    <img id="profileImage" src="https://via.placeholder.com/80" alt="Profilbild">
+    <div id="profileDetails">
+      <h3 id="playerName">Spielername</h3>
+      <p id="playerRank">Rang: <span class="rank-badge">Bronze</span></p>
+      <p id="playerCredits">Credits: 0</p>
+    </div>
+  </div>
+
+  <!-- Shopbereich -->
+  <div id="shopContainer">
+    <h2>Shop</h2>
+    <div id="shopProfileSection"></div>
+    <div id="shopCursorSection"></div>
+    <!-- Refresh-Buttons für Profil & Cursor -->
+    <button class="refresh-btn" onclick="refreshProfile()">Profil Refresh</button>
+    <button class="refresh-btn" onclick="refreshCursor()">Cursor Refresh</button>
+  </div>
+  
+  <!-- Inventarbereich -->
+  <div id="inventoryContainer">
+    <h2>Inventar</h2>
+    <!-- Inventar wird dynamisch gerendert -->
+  </div>
+  
+  <!-- Info Button & Modal -->
+  <button id="infoBtn">ℹ️</button>
+  <div id="infoModal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn" id="closeInfo">&times;</span>
+      <h2 style="color: #0077cc;">Willkommen bei Schreibabenteuer DemusOpalium! ✨</h2>
+      <p><strong>📜 Überblick:</strong><br>
+         Schreibe in variablen Zeitmodi (1–5 Minuten) spannende Challenges – egal ob Freewrite, Adventure, Copy Challenge oder Hardcore. Nur Tippen, kein Kopieren!
+      </p>
+      <p><strong>🚀 Modi:</strong><br>
+         Freewrite, Adventure (gegen den Wort-Boss), Copy Challenge und Hardcore.
+      </p>
+      <p><strong>⚠️ Hinweis:</strong><br>
+         Copy-Paste ist verboten! Schummeln gibt‘s nicht!
+      </p>
+      <p><strong>🎉 Belohnungen & Erfolge:</strong><br>
+         Schalte Erfolge frei und erhalte coole Rewards – dein Fortschritt wird gespeichert!
+      </p>
+    </div>
+  </div>
+  
+  <!-- Überschrift -->
+  <div class="title">Schreibabenteuer DemusOpalium</div>
+  
+  <!-- Design & Extra Controls -->
+  <div class="design-controls">
+    <label for="themeSelect">Theme wählen:</label>
+    <select id="themeSelect">
+      <option value="theme-dark" selected>Dark</option>
+      <option value="theme-light">Light</option>
+      <option value="theme-vintage">Vintage</option>
+      <option value="theme-neon">Neon</option>
+      <option value="theme-pastel">Pastel</option>
+      <option value="theme-ocean">Ocean</option>
+      <option value="theme-forest">Forest</option>
+      <option value="theme-sunset">Sunset</option>
+    </select>
+    <label for="fontSelect">Schriftart wählen:</label>
+    <select id="fontSelect">
+      <option value="'Roboto', sans-serif" selected>Roboto</option>
+      <option value="'Lora', serif">Lora</option>
+      <option value="'Merriweather', serif">Merriweather</option>
+      <option value="'Open Sans', sans-serif">Open Sans</option>
+      <option value="'Courier New', monospace">Courier New</option>
+    </select>
+  </div>
+  <div class="extra-controls">
+    <label for="difficultySelect">Schwierigkeitsgrad:</label>
+    <select id="difficultySelect">
+      <option value="easy" selected>Einfach</option>
+      <option value="normal">Normal</option>
+      <option value="hard">Schwer</option>
+    </select>
+    <label for="librarySelect">Kategorie:</label>
+    <select id="librarySelect">
+      <option value="standard" selected>Standard</option>
+      <option value="realschule">Realschule</option>
+      <option value="gymnasium">Gymnasium</option>
+      <option value="medizin">Medizin</option>
+      <option value="bank">Bank</option>
+      <option value="tierwelt">Tierwelt</option>
+    </select>
+    <button id="shareBtn">Ergebnisse Teilen</button>
+    <button id="saveProfileBtn">Profil Speichern</button>
+    <button id="loadProfileBtn">Profil Laden</button>
+    <input type="file" id="loadProfileInput" style="display:none;" accept=".txt, .json">
+  </div>
+  
+  <!-- Statusleiste -->
+  <div class="status-bar">
+    <div class="status-item" id="timer">Time: 01:00</div>
+    <div class="status-item" id="wordCount">Words: 0</div>
+    <div class="status-item" id="goalProgress">Goal: 0/100</div>
+    <div class="status-item" id="xpDisplay">XP: 0</div>
+    <div class="status-item" id="levelDisplay">Level: 1</div>
+    <div class="status-item" id="wpmDisplay">WPM: 0</div>
+    <div class="status-item" id="apmDisplay">APM: 0</div>
+    <div class="status-item" id="hotStreakIndicator">HOT STREAK!</div>
+    <div class="status-item" id="copyScoreDisplay" style="display:none;">Copy Score: 0</div>
+  </div>
+  
+  <!-- Steuerungselemente -->
+  <div class="controls">
+    <label for="modeSelect">Modus:</label>
+    <select id="modeSelect">
+      <option value="free">Freewrite (keine Strafe)</option>
+      <option value="hardcore">Hardcore (Text löschen)</option>
+      <option value="creative">Kreativ (mit Schreibimpuls)</option>
+      <option value="adventure">Adventure (Boss & EPIC)</option>
+      <option value="copy">Copy Challenge</option>
+    </select>
+    <label for="timeSelect">Zeitmodus:</label>
+    <select id="timeSelect">
+      <option value="1">1 Minute</option>
+      <option value="2">2 Minuten</option>
+      <option value="3">3 Minuten</option>
+      <option value="4">4 Minuten</option>
+      <option value="5" selected>5 Minuten</option>
+    </select>
+    <button id="startBtn">Spiel vorbereiten</button>
+    <button id="resetBtn">Reset</button>
+    <button id="promptBtn" style="display:none;">Schreibimpuls anzeigen</button>
+  </div>
+  
+  <!-- Copy Challenge -->
+  <div id="copyTarget">> <span id="targetSentence"></span></div>
+  <button id="checkBtn" style="display:none;">Satz prüfen</button>
+  
+  <!-- Boss-Anzeige -->
+  <div id="bossContainer">
+    <div id="bossName"></div>
+    <div id="bossHealthBar"><div id="bossHealth"></div></div>
+  </div>
+  
+  <!-- Schreibbereich -->
+  <div id="writeArea" contenteditable="true" placeholder="Hier beginnen zu schreiben..."></div>
+  
+  <!-- Achievement-Popup -->
+  <div class="achievement animate__animated" id="achievementPopup">Achievement unlocked! 🎉</div>
+  
+  <!-- Erfolge & Belohnungen -->
+  <div class="achievements-rewards-container">
+    <div class="achievements-section">
+      <h2>Erfolge</h2>
+      <div class="achievement-filters">
+        <label for="achievementCategoryFilter">Kategorie:</label>
+        <select id="achievementCategoryFilter">
+          <option value="all">Alle</option>
+          <option value="Freewrite">Freewrite</option>
+          <option value="Adventure">Adventure</option>
+          <option value="Copy">Copy Challenge</option>
+          <option value="Hardcore">Hardcore</option>
+          <option value="Allgemein">Allgemeine & Langzeit</option>
+          <option value="Kreativ">Kreativ</option>
+        </select>
+        <label for="achievementDifficultyFilter">Schwierigkeitsgrad:</label>
+        <select id="achievementDifficultyFilter">
+          <option value="all">Alle</option>
+          <option value="easy">Leicht</option>
+          <option value="normal">Normal</option>
+          <option value="hard">Schwer/Episch</option>
+        </select>
+      </div>
+      <table id="achievementTable">
+        <thead>
+          <tr>
+            <th>Icon</th>
+            <th>Erfolg</th>
+            <th>Bedingung</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="achievementBody">
+          <!-- Dynamisch generierte Erfolge -->
+        </tbody>
+      </table>
+    </div>
+    <div class="rewards-section">
+      <h2>Belohnungen</h2>
+      <ul id="rewardList"></ul>
+    </div>
+  </div>
+  
+  <!-- Leaderboard -->
+  <div class="leaderboard">
+    <h2>Highscore-Liste ⭐</h2>
+    <table id="leaderboardTable">
+      <thead>
+        <tr>
+          <th>Platz</th>
+          <th>Wörter</th>
+          <th>XP</th>
+        </tr>
+      </thead>
+      <tbody id="leaderboardBody">
+        <!-- Dynamisch befüllte Zeilen -->
+      </tbody>
+    </table>
+  </div>
+  
+  <!-- End Session Popup -->
+  <div id="endSessionPopup">
+    <!-- Popup-Inhalt wird dynamisch befüllt -->
+  </div>
+  
+  <script>
+    /* --- Globale Variablen und Daten --- */
+    let timerInterval = null, idleTimeout = null;
+    let sessionActive = false;
+    let sessionStartTime = null;
+    let remainingTime = 60;
+    let keyPressCount = 0;
+    let hotStreakCounter = 0;
+    let lastKeyTime = 0;
+    let hotStreakRequired = 20;
+    let hotStreakTimeThreshold = 250;
+    
+    // Flag, das anzeigt, dass das Spiel noch nicht gestartet wurde
+    let waitingForStart = false;
+    
+    // Globale Variablen für Copy Challenge
+    let copyScore = 0;
+    let currentTargetSentence = "";
+    
+    // Benutzer-Statistiken inkl. Inventar (Testweise 500 Credits)
+    let userStats = { 
+      xp: 0,
+      totalWords: 0,
+      longestSession: 0,
+      level: 1,
+      playerName: "Spielername",
+      credits: 500,
+      profileImage: "",
+      inventory: {
+        profileImages: [],
+        cursors: []
+      }
+    };
+    
+    // Arrays mit Bild-URLs
+    const availableProfileImages = [
+      "https://i.imgur.com/2cqISZ8.png",
+      "https://i.imgur.com/WCghhSg.png",
+      "https://i.imgur.com/AG8MXbR.png",
+      "https://i.imgur.com/67lln3j.png",
+      "https://i.imgur.com/NUfCLza.png",
+      "https://i.imgur.com/dyOkN0p.png",
+      "https://i.imgur.com/At7GxhG.png"
+    ];
+    const availableCursors = [
+      "https://i.imgur.com/Qg6no9G.png",
+      "https://i.imgur.com/N74fFUp.png",
+      "https://i.imgur.com/zrOdwI6.png",
+      "https://i.imgur.com/3atajUk.png",
+      "https://i.imgur.com/3PAQktM.png",
+      "https://i.imgur.com/E3B6FT4.png",
+      "https://i.imgur.com/PsEpoi4.png"
+    ];
+    
+    // Dynamische Shop-Items
+    const shopProfileItems = availableProfileImages.map((url, index) => {
+      return { id: "Profilbild " + (index+1), imgUrl: url, price: 150 + (index * 25) };
+    });
+    const shopCursorItems = availableCursors.map((url, index) => {
+      return { id: "Cursor " + (index+1), imgUrl: url, price: 150 + (index * 25) };
+    });
+    
+    // Geheimer Schlüssel für Checksumme
+    const secretKey = "geheimerSchluessel123";
+    
+    // Einfache Hash-Funktion zur Erzeugung der Checksumme
+    function generateHash(input) {
+      let hash = 0;
+      for (let i = 0; i < input.length; i++) {
+        const chr = input.charCodeAt(i);
+        hash = ((hash << 5) - hash) + chr;
+        hash |= 0;
+      }
+      return hash;
+    }
+    
+    // Satzbibliotheken
+    const standardSentences = {
+      easy: [
+        "Der Hund läuft schnell.",
+        "Die Sonne scheint hell.",
+        "Ich mag Eis.",
+        "Der Vogel fliegt hoch.",
+        "Der Baum steht im Garten.",
+        "Die Katze schläft leise.",
+        "Das Auto fährt langsam.",
+        "Das Kind lacht fröhlich.",
+        "Die Blume duftet angenehm.",
+        "Der Regen fällt sanft.",
+        "Die Wolken ziehen langsam.",
+        "Der Wind weht mild.",
+        "Das Wasser glitzert im Licht.",
+        "Der Schnee bedeckt den Boden.",
+        "Die Vögel zwitschern im Frühling.",
+        "Der Mond leuchtet in der Nacht.",
+        "Die Sterne funkeln am Himmel.",
+        "Der Fisch schwimmt im Teich.",
+        "Der Hund bellt laut.",
+        "Das Haus steht am Wegesrand.",
+        "Die Bienen summen im Garten.",
+        "Die Kinder spielen im Park.",
+        "Der Apfel ist reif.",
+        "Das Brot ist frisch gebacken.",
+        "Der Zug fährt pünktlich.",
+        "Das Buch liegt auf dem Tisch.",
+        "Die Uhr zeigt die richtige Zeit.",
+        "Der Wind kühlt an heißen Tagen.",
+        "Die Blumen blühen im Frühling.",
+        "Der Morgen ist ruhig und friedlich.",
+        "Der Hund bellt im Garten.",
+        "Die Katze jagt die Maus.",
+        "Der Vogel singt am Morgen.",
+        "Das Kind malt ein Bild.",
+        "Die Blume duftet süß.",
+        "Der Regen tropft leise.",
+        "Die Sonne wärmt den Tag.",
+        "Der Wind weht sanft.",
+        "Das Auto parkt am Haus.",
+        "Die Vögel fliegen hoch.",
+        "Der Baum spendet Schatten.",
+        "Die Wolken ziehen am Himmel.",
+        "Der Fluss fließt ruhig.",
+        "Das Wasser glitzert im See.",
+        "Die Sterne leuchten in der Nacht.",
+        "Der Mond scheint hell.",
+        "Das Brot riecht frisch.",
+        "Die Kinder rennen im Park.",
+        "Der Hund rennt im Feld.",
+        "Die Blätter fallen leise.",
+        "Der Fuchs schleicht durch den Wald.",
+        "Die Bienen sammeln Nektar.",
+        "Das Pferd galoppiert schnell.",
+        "Die Kuh grast auf der Wiese.",
+        "Der Vogel baut ein Nest.",
+        "Die Blumen leuchten bunt.",
+        "Das Licht strahlt durch das Fenster.",
+        "Die Musik klingt harmonisch.",
+        "Der Regenbogen zeigt sich am Himmel.",
+        "Die Schneeflocken tanzen im Wind.",
+        "Das Eis schmilzt in der Sonne.",
+        "Der Frosch quakt im Teich.",
+        "Die Ameisen laufen emsig.",
+        "Das Haus ist bunt gestrichen.",
+        "Die Gans schwimmt im Teich.",
+        "Der Adler fliegt majestätisch.",
+        "Die Eule ruft in der Nacht.",
+        "Das Feuer brennt warm.",
+        "Die Wolken bedecken den Himmel.",
+        "Der Berg ragt in den Himmel.",
+        "Die Blume wächst im Frühling.",
+        "Der See ist still und klar.",
+        "Die Bäume rauschen im Wind.",
+        "Das Kind spielt fröhlich im Garten.",
+        "Der Hund schläft friedlich im Körbchen.",
+        "Die Katze schnurrt leise.",
+        "Das Wasser sprudelt im Bach.",
+        "Die Vögel zwitschern fröhlich.",
+        "Der Wind bringt frische Luft.",
+        "Die Sonne geht langsam unter."
+      ],
+      normal: [
+        "Ein majestätischer Adler kreist hoch am azurblauen Himmel und inspiriert alle, die ihn beobachten.",
+        "Der schimmernde Fluss schlängelt sich elegant durch die grüne Landschaft, während die Sonne funkelnde Reflexionen wirft.",
+        "In einem belebten Markt flanieren Menschen, während exotische Düfte die Luft erfüllen.",
+        "Die alten Gemäuer einer Burg erzählen Geschichten von Mut und Verrat in jeder Steinplatte.",
+        "Ein schlauer Fuchs schleicht durch den nebelverhangenen Wald, immer auf der Suche nach seiner Beute.",
+        "Die zarten Rosen im Garten verströmen einen betörenden Duft, der Erinnerungen an vergangene Zeiten weckt.",
+        "Ein einsamer Wanderer erklimmt beharrlich den steilen Berg, getrieben von der Sehnsucht nach Freiheit.",
+        "Die goldenen Felder im Sommer wiegen sanft im Wind, als ob sie ein geheimes Lied singen würden.",
+        "Ein mystischer Nebel legt sich über das Tal und verwandelt die Landschaft in ein Märchenland.",
+        "Die alten Eichen, Zeugen vieler Jahre, flüstern leise von vergangenen Abenteuern.",
+        "Ein kleiner Bach murmelt fröhlich vor sich hin, während er durch üppiges Grün plätschert.",
+        "Die sanfte Brise trägt den Geruch von frisch gemähtem Gras und blühenden Blumen heran.",
+        "Ein eleganter Schwan gleitet majestätisch über den stillen See, als wäre er die Königin der Gewässer.",
+        "Die tiefblauen Tiefen des Meeres verbergen Geheimnisse, die nur die Mutigsten zu lüften wagen.",
+        "Ein geheimnisvoller Regenbogen spannt sich über den Horizont und verheißt magische Zeiten.",
+        "Bunte Schmetterlinge tanzen fröhlich zwischen den duftenden Frühlingsblumen.",
+        "Ein alter Seemann erzählt in verrauchten Tavernen Geschichten von fernen Ländern und verlorenen Schätzen.",
+        "Die flackernden Lichter einer nächtlichen Stadt spiegeln sich in den ruhigen Wasserwegen wider.",
+        "Ein junger Künstler malt mit leuchtenden Farben ein Bild, das die Seele berührt.",
+        "Die kühle Nachtluft füllt sich mit dem sanften Klang einer einsamen Geige.",
+        "Ein tapferer Ritter reitet durch den nebligen Morgen, bereit, für seine Ehre zu kämpfen.",
+        "Die funkelnden Sterne am klaren Himmel erzählen von unendlichen Möglichkeiten und Träumen.",
+        "Ein geheimnisvoller Wald, in dem jeder Schritt ein neues Abenteuer verspricht, zieht den Suchenden in seinen Bann.",
+        "Die alten Straßen einer Stadt sind Zeugen vergangener Zeiten, in denen Legenden geboren wurden.",
+        "Ein sanfter Regen hüllt die Welt in einen Schleier aus Frische und Neubeginn.",
+        "Die zarten Klänge eines Klaviers verweben sich mit dem Rauschen der Bäume zu einer Natur-Symphonie.",
+        "Ein fröhlicher Vogel singt ein Lied, das Hoffnung und Freude in jedes Herz trägt.",
+        "Funkenartige Tautropfen auf den Blättern malen ein Bild der Reinheit in der Morgensonne.",
+        "Ein alter Leuchtturm wacht still über die stürmische Küste und weist verlorenen Seefahrern den Weg.",
+        "Die ersten Sonnenstrahlen brechen durch den Morgennebel und erwecken die Welt zu neuem Leben.",
+        "Ein weiser alter Mann sitzt im Schatten eines Baumes und teilt seine Lebenserfahrungen mit den Jungen.",
+        "Die majestätischen Berge erheben sich stolz gegen den klaren Himmel und erzählen Geschichten von unerschütterlicher Kraft.",
+        "Ein sanfter Wind spielt mit den Blättern und trägt leise Melodien durch die Luft.",
+        "Die glitzernde Oberfläche eines Sees spiegelt die unendliche Weite des Himmels wider.",
+        "Ein eleganter Pfau präsentiert sein farbenfrohes Gefieder in einem Fest der Natur.",
+        "Die glühende Abenddämmerung taucht die Welt in ein warmes, goldenes Licht.",
+        "Ein neugieriger Fuchs erkundet die geheimen Pfade des Waldes mit unermüdlicher Neugier.",
+        "Tautropfen auf einem Spinnennetz glänzen wie kleine Diamanten im Morgengrauen.",
+        "Ein sanfter Bach windet sich durch ein Tal, als erzähle er die Geschichten der Erde.",
+        "Die alten Ruinen einer Stadt flüstern von vergangenen Reichen und vergessenen Heldentaten.",
+        "Ein leiser Windhauch trägt den Klang alter Legenden in die Herzen derer, die zuhören.",
+        "Die sternenklare Nacht enthüllt das verborgene Glitzern der Milchstraße, das den Himmel verzaubert.",
+        "Ein lebhafter Markt erfüllt die Straßen mit fröhlichen Stimmen und dem Duft von frisch gebackenem Brot.",
+        "Die sanfte Wärme eines Sommers lässt die Zeit stillzustehen und erfüllt die Seele mit Glück.",
+        "Ein tapferer Krieger steht am Rande eines gewaltigen Schlachtfelds und blickt entschlossen in die Zukunft.",
+        "Die leuchtenden Farben eines Herbstwaldes malen ein Bild, das die Vergänglichkeit der Zeit feiert.",
+        "Ein junger Dichter sitzt am Ufer eines Flusses und lässt sich von den sanften Wellen inspirieren.",
+        "Die klare Luft eines Berggipfels erfüllt den Geist mit frischer Energie und unendlicher Weite.",
+        "Ein geheimnisvoller Nebel senkt sich über die Felder und hüllt die Welt in einen Schleier des Unbekannten.",
+        "Die ersten Frühlingsblumen brechen tapfer durch den Schnee und verkünden das Ende des Winters.",
+        "Ein leuchtender Regenbogen spannt sich über den Himmel und verbindet die Erde mit dem Firmament.",
+        "Die sanften Klänge einer Geige erklingen in einem alten Theater und erwecken Erinnerungen an vergangene Zeiten.",
+        "Ein junger Abenteurer tritt mutig in die weite Welt hinaus, getrieben von der Sehnsucht nach Freiheit.",
+        "Die goldene Stunde verzaubert die Landschaft mit warmen, sanften Tönen, die die Seele berühren.",
+        "Ein mystischer Nebel umgibt die alten Wälder und lässt die Grenzen zwischen Realität und Traum verschwimmen.",
+        "Die ruhige See reflektiert den klaren Himmel und schenkt jedem, der sie betrachtet, einen Moment der Stille.",
+        "Ein funkelnder Wasserfall stürzt in einem verborgenen Tal herab und erzeugt ein Rauschen, das an Magie erinnert.",
+        "Die sanfte Berührung eines kühlen Windes bringt den Duft des Frühlings direkt in dein Herz."
+      ],
+      hard: [
+        "Inmitten eines tobenden Sturms bahnt sich ein einsamer Held seinen Weg durch die übersäteten Trümmer der verlassenen Stadt, während der Wind unerbittlich heult.",
+        "Die unaufhörlichen Regentropfen verschmelzen mit den Tränen des Verzweifelten, der in den dunklen Gassen nach einem Funken Hoffnung sucht.",
+        "Während die finsteren Wolken den Himmel verdunkeln, enthüllt ein mutiger Dichter in seinen Versen die tiefen Abgründe menschlicher Emotionen.",
+        "In den verfallenen Ruinen einer alten Festung, wo einst heldenhafte Taten vollbracht wurden, erkundet ein entschlossener Abenteurer das Geheimnis der Vergangenheit.",
+        "Obwohl die Zeit gnadenlos voranschreitet, bewahrt ein alter Gelehrter in seinen Schriften die unvergänglichen Wahrheiten vergangener Zeiten.",
+        "Mit jeder Zeile, die er schreibt, enthüllt der Dichter eine verborgene Welt, in der die Grenzen zwischen Realität und Traum verschwimmen.",
+        "Der kalte Hauch des Winters mischt sich mit dem warmen Glanz eines verblassenden Sonnenaufgangs, während ein Reisender in die endlosen Weiten der Ungewissheit zieht.",
+        "In den Schatten einer längst vergessenen Zivilisation findet ein Archäologe Hinweise auf ein Mysterium, das das Schicksal ganzer Reiche beeinflussen könnte.",
+        "Die düsteren Geheimnisse eines verlassenen Schlosses werden nach und nach von einem entschlossenen Detektiv enthüllt, der sich den Abgründen der menschlichen Seele stellt.",
+        "Während die Sterne unermüdlich am nächtlichen Firmament leuchten, erzählt eine alte Legende von einem Helden, der einst das Unmögliche möglich machte.",
+        "In einem Labyrinth aus Erinnerungen und vergessenen Träumen kämpft ein einsamer Geist darum, die verlorene Schönheit vergangener Zeiten wiederzufinden.",
+        "Mit unerschütterlicher Entschlossenheit durchquert ein Wanderer das trostlose Ödland, dessen karge Schönheit von unerklärlichen Geheimnissen durchdrungen ist.",
+        "Die leisen Melodien eines vergessenen Liedes hallen durch die verfallenen Gänge einer alten Bibliothek, in der das Wissen vergangener Generationen bewahrt wird.",
+        "Tief in den dunklen Tiefen einer verlassenen Mine entdeckt ein mutiger Abenteurer funkelnde Edelsteine, die von uralten Geheimnissen zeugen.",
+        "Obwohl der Himmel von dunklen Wolken verhüllt ist, kämpft ein tapferer Krieger mit unbeirrbarem Mut gegen die Schatten seiner eigenen Vergangenheit.",
+        "Während der Wind durch die verwitterten Bäume rauscht, offenbart sich ein verborgener Pfad, der zu einer Welt führt, die in Vergessenheit geraten ist.",
+        "Inmitten eines tosenden Sturms steht ein alter Leuchtturm als stiller Wächter, der den Schiffen den Weg durch die tückischen Gewässer weist.",
+        "Die melancholischen Klänge eines einsamen Klaviers erfüllen einen verlassenen Ballsaal und lassen die Geister vergangener Feste wieder lebendig werden.",
+        "Mit jeder verstreichenden Sekunde enthüllt sich ein neues Kapitel des Lebens, während ein alter Chronist die unvergänglichen Geschichten der Menschheit niederschreibt.",
+        "Obwohl der kalte Nebel die Landschaft umhüllt, durchdringt ein strahlender Lichtstrahl die Dunkelheit und schenkt dem Verlorenen einen Hauch von Hoffnung.",
+        "In den bröckelnden Mauern einer uralten Kathedrale finden sich verborgene Inschriften, die von einem göttlichen Mysterium berichten.",
+        "Die unendlichen Weiten einer stillen Wüste werden von den Spuren eines reisenden Nomaden durchzogen, der in den Sanden nach dem Sinn des Lebens sucht.",
+        "Mit jedem Schritt, den der müde Wanderer setzt, hallt das Echo vergangener Zeiten wider und erinnert an verlorene Träume.",
+        "Während der Regen unablässig auf die staubigen Straßen prasselt, enthüllt ein alter Geschichtenerzähler die Legenden einer längst vergangenen Epoche.",
+        "Die funkelnden Lichter einer Metropole spiegeln sich in den nassen Pflastersteinen, während ein einsamer Beobachter den Puls der Stadt spürt.",
+        "In den verworrenen Gassen einer alten Stadt, in der jeder Winkel von Geheimnissen durchdrungen ist, sucht ein unermüdlicher Detektiv nach der Wahrheit.",
+        "Obwohl die Schatten der Vergangenheit unheilvoll über den Ruinen liegen, leuchtet der Funke des Neuanfangs in den Augen eines Träumers.",
+        "Mit der Präzision eines erfahrenen Meisters enthüllt ein Künstler in seinen Gemälden die tiefen, unergründlichen Facetten der menschlichen Seele.",
+        "Die unerbittliche Kälte eines frostigen Abends wird nur von der flammenden Leidenschaft eines jungen Poeten durchbrochen, der seine Worte wie Feuer in die Nacht schickt.",
+        "In den verlassenen Gassen einer historischen Stadt, in der die Zeit stillzustehen scheint, werden die Geheimnisse einer verlorenen Ära behutsam offenbart.",
+        "Während der stürmische Wind die Dächer der alten Häuser zum Beben bringt, kämpft ein entschlossener Held gegen die Dunkelheit, die seine Welt bedroht.",
+        "Die unendlichen Weiten des nächtlichen Himmels inspirieren einen Schriftsteller, dessen Worte die Grenzen zwischen Traum und Wirklichkeit auflösen.",
+        "Obwohl die Straßen von den Schatten vergangener Zeiten heimgesucht werden, erstrahlt das Licht der Hoffnung in den Herzen derer, die daran glauben.",
+        "Mit jeder Zeile, die ein alter Dichter schreibt, erwacht ein Hauch der Vergangenheit zum Leben und erzählt von vergessenen Heldentaten.",
+        "In einem verfallenen Schloss, das von Legenden umwoben ist, findet ein junger Abenteurer den Schlüssel zu einem unerwarteten Geheimnis.",
+        "Die funkelnden Sterne am dunklen Firmament scheinen die verlorenen Träume der Menschheit zu bewahren und sie in einem silbernen Licht zu umhüllen.",
+        "Während ein kalter Wind die blühenden Wiesen überzieht, enthüllt ein alter Wanderer in seinen Geschichten die unvergängliche Schönheit der Natur.",
+        "In den Tiefen einer verlassenen Mine, wo das Echo vergangener Tage widerhallt, entdeckt ein mutiger Forscher die Schätze der Erde.",
+        "Obwohl der Tag sich dem Ende zuneigt, bringt die sanfte Melodie eines fernen Liedes Trost und Zuversicht in die Herzen der Menschen.",
+        "Mit unerbittlicher Entschlossenheit bahnt sich ein Held seinen Weg durch ein Labyrinth aus Intrigen und dunklen Geheimnissen.",
+        "Die dichten Nebelschwaden, die über das Land ziehen, verbergen die Spuren einer längst vergessenen Zivilisation, die nur darauf wartet, entdeckt zu werden.",
+        "Während der Regen in silbernen Tropfen vom Himmel fällt, erinnert ein weiser Geschichtenerzähler an die Macht der Erinnerungen.",
+        "Die glühenden Farben eines Sonnenuntergangs verschmelzen mit den Schatten der Nacht, während ein einsamer Wanderer seinen Weg ins Unbekannte findet.",
+        "In einem alten Theater, in dem einst große Dramen aufgeführt wurden, hallen noch immer die Echos vergangener Emotionen wider.",
+        "Obwohl die Welt von Chaos und Dunkelheit überschattet wird, erhebt sich der Geist der Hoffnung in den stillen Augen eines Kindes.",
+        "Mit jeder verstreichenden Stunde enthüllt sich ein neues Mosaik aus Licht und Schatten, das die Seele tief berührt.",
+        "Die melancholischen Klänge eines einsamen Saxophons erfüllen die verlassene Gasse und erzählen von verlorener Liebe und Sehnsucht.",
+        "In den verwitterten Archiven einer alten Bibliothek werden die Geheimnisse der Menschheit bewahrt, bereit, von neugierigen Geistern entschlüsselt zu werden.",
+        "Während der kalte Mond am Himmel thront, tanzen die Schatten der Vergangenheit auf den Pflastersteinen einer stillen Stadt.",
+        "Die verhängnisvolle Stille einer verlassenen Straße wird nur durch das entfernte Rauschen eines Flusses durchbrochen, der von alten Legenden erzählt.",
+        "Obwohl der Frost die Landschaft in ein glitzerndes Wunderland verwandelt, sucht ein einsamer Reisender nach der Wärme vergangener Zeiten.",
+        "Mit der Präzision eines Uhrwerks enthüllt ein alter Chronist in seinen Aufzeichnungen die geheimen Rhythmen der Zeit.",
+        "Die schattenhaften Konturen eines verfallenen Gebäudes erzählen von einer Ära, in der Heldentum und Tragik untrennbar miteinander verbunden waren.",
+        "Während der Wind durch die zerfallenen Mauern eines alten Forts pfeift, wird das Echo vergangener Schlachten lebendig.",
+        "In den dunklen Tiefen eines alten Waldes, wo jedes Geräusch eine Geschichte birgt, findet ein Suchender den Schlüssel zur Wahrheit.",
+        "Obwohl die Sterne über einer stillen Landschaft wachen, entfaltet sich ein Drama, das nur die Nacht zu erzählen vermag.",
+        "Die elegante Bewegung eines Panthers, der lautlos durch das Dickicht schleicht, verkörpert die Raffinesse und Effizienz natürlicher Überlebensstrategien.",
+        "Die synchronisierten Sprünge eines Fischschwarms, die ein lebendiges Schauspiel am Ozean bieten, sind ein faszinierendes Beispiel kollektiver Intelligenz.",
+        "Die beeindruckende Vielfalt an Anpassungsmechanismen im Tierreich, von komplexen Tarnstrategien bis zu hochorganisierten Sozialstrukturen, zeugt von evolutionärer Kreativität.",
+        "In den weiten Ebenen der Savanne demonstriert die rasche Flucht einer Gazelle vor einem Raubtier einen hochentwickelten Überlebensinstinkt, der das Wesen der Natur prägt.",
+        "Die außergewöhnliche Anpassungsfähigkeit der Tiere an extreme Umweltbedingungen spiegelt die unermüdliche Kraft der Evolution wider.",
+        "Durch die komplexen sozialen Strukturen in Tierherden wird ein ausgeprägtes System von Kooperation und Kommunikation sichtbar.",
+        "Die natürliche Eleganz der Tierwelt, sichtbar in den harmonischen Bewegungen eines Schwans, verkörpert die unberührte Schönheit der Natur.",
+        "Die kunstvollen Balzrituale vieler Vogelarten zeugen von einem tiefen, instinktiven Verständnis für die Bedeutung von Partnerschaft und Fortpflanzung.",
+        "Die synchronisierten Flugmuster eines Vogelschwarmes, die den Himmel in ein atemberaubendes Farbspektakel tauchen, demonstrieren die kollektive Intelligenz und den Zusammenhalt der Tierwelt."
+      ]
+    };
+    
+    // Neue Satzbibliotheken, die als Erweiterung genutzt werden können
+    const sentenceLibraries = {
+      standard: standardSentences,
+      realschule: {
+        easy: [ /* ... (Sätze wie oben für Realschule) ... */ ],
+        normal: [ /* ... (Sätze wie oben für Realschule) ... */ ],
+        hard: [ /* ... (Sätze wie oben für Realschule) ... */ ]
+      },
+      gymnasium: {
+        easy: [ /* ... (Sätze wie oben für Gymnasium) ... */ ],
+        normal: [ /* ... (Sätze wie oben für Gymnasium) ... */ ],
+        hard: [ /* ... (Sätze wie oben für Gymnasium) ... */ ]
+      },
+      medizin: {
+        easy: [
+          "Der Arzt untersucht den Patienten.",
+          "Die Krankenschwester reicht dem Patienten das Medikament.",
+          "Das Krankenhaus ist modern ausgestattet.",
+          "Die Patienten warten geduldig im Wartezimmer.",
+          "Der OP-Saal ist steril und ruhig.",
+          "Die Medizin wird sorgfältig dosiert.",
+          "Die Spritze wird sauber vorbereitet.",
+          "Der Arzt erklärt den Behandlungsplan.",
+          "Das Labor führt einfache Tests durch.",
+          "Die Krankenschwester misst den Blutdruck.",
+          "Die Infusion wird langsam verabreicht.",
+          "Der Patient fühlt sich nach der Behandlung besser.",
+          "Das Medikament wirkt schnell und gut.",
+          "Die Untersuchung erfolgt mit viel Sorgfalt.",
+          "Der Arzt schreibt ein Rezept aus.",
+          "Die Praxis ist freundlich und einladend.",
+          "Die Patienten lesen die Beipackzettel.",
+          "Das Thermometer misst die Temperatur.",
+          "Die Spritze tut nur kurz weh.",
+          "Der Arzt kontrolliert die Vitalwerte.",
+          "Die Krankenschwester reinigt die Wunde.",
+          "Die Operation verläuft ohne Komplikationen.",
+          "Der Patient erholt sich gut im Krankenhaus.",
+          "Die Medizin wird in Tablettenform verabreicht.",
+          "Der Arzt erklärt die Nebenwirkungen.",
+          "Das Labor analysiert Blutproben.",
+          "Die Krankenschwester wechselt den Verbandskasten.",
+          "Der Patient bekommt Ruhe und Pflege.",
+          "Das Röntgenbild zeigt klare Ergebnisse.",
+          "Der Arzt verschreibt Antibiotika.",
+          "Die Behandlung beginnt pünktlich.",
+          "Die Praxis arbeitet sehr effizient.",
+          "Der Patient wird regelmäßig kontrolliert.",
+          "Die Krankenschwester hilft beim Aufstehen.",
+          "Das Medikament wird gut aufgenommen.",
+          "Der Arzt misst den Puls.",
+          "Die Patienten warten in einem sauberen Raum.",
+          "Die Praxis legt großen Wert auf Hygiene.",
+          "Der Patient berichtet über seine Symptome.",
+          "Die Krankenschwester erklärt den Behandlungsablauf.",
+          "Das Rezept wird in der Apotheke eingelöst.",
+          "Der Arzt führt eine gründliche Untersuchung durch.",
+          "Die Infusion wird sachgemäß eingestellt.",
+          "Der Patient erhält Unterstützung bei der Mobilisation.",
+          "Die Medizin wird regelmäßig überprüft.",
+          "Die Krankenschwester überwacht die Vitalparameter.",
+          "Der Patient fühlt sich erleichtert.",
+          "Das Krankenhauspersonal arbeitet Hand in Hand.",
+          "Der Arzt gibt klare Anweisungen.",
+          "Die Behandlung verläuft reibungslos."
+        ],
+        normal: [
+          "In der modernen Klinik werden fortschrittliche Diagnoseverfahren eingesetzt, um die Gesundheit der Patienten präzise zu beurteilen.",
+          "Die interdisziplinäre Zusammenarbeit von Ärzten, Pflegekräften und Technikern optimiert den Behandlungsprozess erheblich.",
+          "Innovative Technologien ermöglichen es, Krankheiten schneller zu erkennen und effektiver zu behandeln.",
+          "Die ärztliche Untersuchung erfolgt unter Einbeziehung umfangreicher medizinischer Standards und aktueller Forschungsergebnisse.",
+          "Patienten erhalten eine umfassende Betreuung, die sowohl ihre physische als auch psychische Gesundheit berücksichtigt.",
+          "Regelmäßige Überwachung der Vitalparameter erlaubt eine präzise Anpassung der medikamentösen Therapie.",
+          "Moderne Laborexperimente tragen dazu bei, individuelle Krankheitsmuster zu erkennen und gezielt zu therapieren.",
+          "Die Klinik legt großen Wert auf Hygiene und sterile Bedingungen, um das Infektionsrisiko zu minimieren.",
+          "Digitale Systeme optimieren den Informationsfluss zwischen den medizinischen Abteilungen.",
+          "Die enge Zusammenarbeit zwischen Fachabteilungen fördert eine ganzheitliche Patientenversorgung.",
+          "Ärzte erläutern den Patienten detailliert den Ablauf der Behandlung und mögliche Nebenwirkungen der Medikamente.",
+          "Fortschrittliche bildgebende Verfahren ermöglichen die Darstellung innerer Organe in höchster Auflösung.",
+          "Die multidisziplinäre Behandlung sichert eine individuelle und zielgerichtete Therapie.",
+          "Präzise Diagnostik und gezielte Therapieansätze beschleunigen den Heilungsprozess.",
+          "Die Kombination aus moderner Technik und medizinischem Fachwissen bildet die Basis für erfolgreiche Behandlungen.",
+          "Das Klinikteam arbeitet Hand in Hand, um den Patienten eine optimale Versorgung zu gewährleisten.",
+          "Patienten profitieren von fortschrittlicher Medizintechnik, die eine exakte Diagnose und Therapie ermöglicht.",
+          "Kontinuierliche Weiterbildung des Personals hält die Klinik stets auf dem neuesten Stand.",
+          "Innovative Therapieverfahren bieten auch bei komplexen Krankheitsbildern neue Heilungschancen.",
+          "Individuelle Anpassung der Medikation erfolgt auf Basis detaillierter diagnostischer Befunde.",
+          "Telemedizinische Anwendungen optimieren die Patientenbetreuung auch über große Entfernungen hinweg.",
+          "Interdisziplinäre Forschung führt zu neuen Erkenntnissen in der personalisierten Medizin.",
+          "Patienten werden in Entscheidungsprozesse einbezogen, um eine transparente Behandlung zu gewährleisten.",
+          "Die Kombination aus traditioneller Medizin und moderner Technologie bildet ein effektives Behandlungskonzept.",
+          "Sorgfältige Analyse von Blut- und Gewebeproben liefert wichtige Informationen für die Therapieplanung.",
+          "In spezialisierten Zentren werden innovative Behandlungsansätze für seltene Krankheitsbilder erprobt.",
+          "Die enge Zusammenarbeit zwischen Ärzten und Pflegekräften garantiert eine umfassende Betreuung der Patienten.",
+          "Kontinuierliche Investitionen in neue Technologien erweitern die Diagnose- und Therapiemöglichkeiten.",
+          "Regelmäßige Qualitätskontrollen stellen sicher, dass alle medizinischen Verfahren höchsten Standards entsprechen.",
+          "Patienten werden ausführlich über den Verlauf der Behandlung informiert und einbezogen.",
+          "Die Kombination aus präziser Diagnostik und innovativen Therapien verbessert die Heilungschancen signifikant.",
+          "Kooperationen mit renommierten Forschungseinrichtungen ermöglichen den Zugang zu neuesten wissenschaftlichen Erkenntnissen.",
+          "Moderne bildgebende Verfahren führen zu einer exakten Lokalisierung von Krankheitsherden.",
+          "Die Klinik setzt auf eine individuelle, patientenorientierte Behandlungsstrategie.",
+          "Digitale Technologien machen den Behandlungsprozess effizient und transparent.",
+          "Patienten erhalten individuell zugeschnittene Beratungen, die ihre finanziellen Ziele in den Mittelpunkt stellen.",
+          "Ein umfassender Online-Service ermöglicht einen einfachen und schnellen Zugang zu allen Finanzdienstleistungen.",
+          "Die transparente Darstellung von Gebühren und Konditionen schafft Vertrauen und fördert die Zufriedenheit.",
+          "Mobile Anwendungen erleichtern den Zugriff auf Konten von überall aus.",
+          "Die Bank bietet umfassende Betreuung, von der Kontoführung bis zur komplexen Anlageberatung.",
+          "Innovative Analysesysteme ermöglichen es, Marktentwicklungen frühzeitig zu erkennen und zu nutzen.",
+          "Durch die Kombination persönlicher Beratung und moderner Technologien wird eine ganzheitliche Betreuung sichergestellt.",
+          "Der Service der Klinik wird kontinuierlich durch den Einsatz neuester Technologien optimiert.",
+          "Die Integration moderner IT-Systeme unterstützt die effiziente Verwaltung von Patientendaten."
+        ],
+        hard: [
+          "In hochmodernen Forschungslabors werden neuartige therapeutische Ansätze entwickelt, die auf der präzisen Analyse genetischer und molekularer Daten basieren.",
+          "Die interdisziplinäre Zusammenarbeit von Ärzten, Biotechnologen und Informatikern ermöglicht innovative Behandlungskonzepte für komplexe Krankheitsbilder.",
+          "Modernste bildgebende Verfahren visualisieren innere Organe in bisher unerreichter Detailtiefe, was eine präzise Diagnose ermöglicht.",
+          "Die individualisierte Medikation, basierend auf umfangreichen genetischen Profilen, stellt einen Meilenstein in der personalisierten Medizin dar.",
+          "In spezialisierten Zentren werden fortschrittliche Therapien erprobt, die selbst bei bislang unheilbaren Erkrankungen neue Hoffnung schenken.",
+          "Die Integration von KI-gestützten Analysen revolutioniert die klinische Entscheidungsfindung und optimiert die Patientenversorgung.",
+          "Telemedizin und digitale Überwachungssysteme gewährleisten eine kontinuierliche Betreuung, auch über große Entfernungen hinweg.",
+          "Die Verzahnung von klinischer Praxis und wissenschaftlicher Forschung lässt neueste Erkenntnisse unmittelbar in die Therapie einfließen.",
+          "Multidisziplinäre Fallbesprechungen ermöglichen die Entwicklung maßgeschneiderter Behandlungskonzepte für komplexe Krankheitsbilder.",
+          "Innovative bildgebende und molekulare Technologien liefern hochauflösende Daten, die pathologische Veränderungen exakt lokalisieren.",
+          "Präzise molekulare Diagnostik identifiziert individuelle Krankheitsmuster, die den Weg für zielgerichtete Therapien ebnen.",
+          "Die Entwicklung zielgerichteter Medikamente, die spezifische molekulare Signalwege blockieren, stellt einen bedeutenden Fortschritt in der Krebstherapie dar.",
+          "Die enge Kooperation verschiedener Fachabteilungen fördert einen ganzheitlichen Ansatz, der die physische und psychische Gesundheit der Patienten berücksichtigt.",
+          "Der Einsatz von KI-Algorithmen in der medizinischen Bildverarbeitung ermöglicht eine automatisierte und hochpräzise Diagnose komplexer Erkrankungen.",
+          "Durch kontinuierliche Weiterentwicklung digitaler Medizintechnik werden innovative Therapiemöglichkeiten realisiert, die die Heilungschancen erheblich verbessern.",
+          "Die personalisierte Medizin, basierend auf umfangreichen genetischen Analysen, revolutioniert die traditionelle Herangehensweise an die Patientenbehandlung.",
+          "In spezialisierten Forschungseinrichtungen werden neuartige Therapieverfahren erprobt, die auf immunologischen und zellbasierten Ansätzen beruhen.",
+          "Die multidisziplinäre Herangehensweise ermöglicht es, selbst seltene und bisher unheilbare Erkrankungen gezielt zu therapieren.",
+          "Modernste Labortechnologien beschleunigen den Diagnoseprozess und erhöhen die Genauigkeit der Ergebnisse signifikant.",
+          "Die Integration von Big-Data-Analysen in die klinische Praxis ermöglicht die Entwicklung individueller Therapieansätze auf Basis umfangreicher Patientendaten.",
+          "Die Kombination aus innovativer Medizintechnik und fundiertem klinischem Fachwissen bildet die Grundlage für eine nachhaltige Verbesserung der Patientenversorgung.",
+          "Zielgerichtete Therapien in spezialisierten Onkologiezentren verlangsamen das Fortschreiten von Tumorerkrankungen signifikant.",
+          "Interdisziplinäre Forschung führt zu neuartigen Behandlungsstrategien, die auf individualisierten Patientenprofilen basieren.",
+          "Digitale Überwachungssysteme erfassen die Vitalparameter der Patienten in Echtzeit, was eine präzise Anpassung der Therapie ermöglicht.",
+          "Fortschrittliche Behandlungsmethoden beruhen auf einem tiefgreifenden Verständnis zellulärer und molekularer Prozesse.",
+          "Die enge Verbindung von klinischer Praxis und wissenschaftlicher Innovation führt zu bahnbrechenden Fortschritten in der regenerativen Medizin.",
+          "Gezielte immuntherapeutische Ansätze aktivieren die körpereigenen Abwehrmechanismen, um schwere Erkrankungen zu bekämpfen.",
+          "Neuartige Diagnostikverfahren ermöglichen es, bereits in frühen Krankheitsstadien präzise und effektiv zu intervenieren.",
+          "Experimentelle Therapien, basierend auf zellulären und genetischen Interventionen, werden in spezialisierten Zentren erprobt.",
+          "Interdisziplinäre Forschung im Bereich der personalisierten Medizin trägt zur Entwicklung maßgeschneiderter Behandlungskonzepte bei.",
+          "Modernste bildgebende und molekulare Technologien visualisieren komplexe Krankheitsprozesse in unerreichter Detailtiefe.",
+          "Die Integration von KI-gestützten Systemen verbessert die Effizienz und Genauigkeit medizinischer Untersuchungen signifikant.",
+          "Multidisziplinäre Teams entwickeln innovative Therapiestrategien, die individuell auf die Bedürfnisse der Patienten abgestimmt sind.",
+          "Digitalisierung interner Prozesse steigert die Effizienz und Kundenzufriedenheit in der Patientenversorgung nachhaltig.",
+          "Durch den Einsatz von Predictive Analytics werden zukünftige Marktbewegungen präzise prognostiziert, was die Planung finanzieller Ressourcen optimiert.",
+          "Modernste Sicherheitsprotokolle gewährleisten den umfassenden Schutz sensibler Patientendaten in allen digitalen Kanälen.",
+          "Die kontinuierliche Forschung und Entwicklung im digitalen Bereich sichert der Klinik eine Vorreiterrolle in der modernen Medizin.",
+          "Die Kombination aus empirischer Forschung und praktischer Anwendung bildet die Grundlage für erfolgreiche, individualisierte Behandlungen.",
+          "Durch den gezielten Einsatz modernster Labortechnologien werden komplexe molekulare Prozesse präzise analysiert und in Therapiepläne integriert.",
+          "Die enge Kooperation von Forschungseinrichtungen und Kliniken ermöglicht einen ständigen Wissensaustausch und modernste Behandlungsmethoden.",
+          "Digitalisierte Diagnoseverfahren verbessern die Sicherheit und Effizienz medizinischer Untersuchungen in Echtzeit.",
+          "Die Implementierung fortschrittlicher KI-Modelle in der Kreditvergabe sorgt für eine effiziente und präzise Risikobewertung.",
+          "Die personalisierte Medizin revolutioniert die Behandlung schwerer Erkrankungen, indem sie individuelle genetische Profile in den Therapieprozess integriert."
+        ]
+      },
+      bank: {
+        easy: [
+          "Der Kunde betritt die Bank.",
+          "Die Bank ist modern und einladend.",
+          "Ein Geldautomat steht vor der Bank.",
+          "Der Kunde zahlt mit der EC-Karte.",
+          "Die Mitarbeiterin begrüßt den Kunden freundlich.",
+          "Der Schalter ist gut besetzt.",
+          "Das Konto wird sicher verwaltet.",
+          "Der Kunde holt Bargeld ab.",
+          "Die Bank bietet günstige Zinsen.",
+          "Der Kunde eröffnet ein Sparkonto.",
+          "Das Bankgebäude ist groß und hell.",
+          "Die Filiale liegt zentral in der Stadt.",
+          "Der Kunde spricht mit einem Bankberater.",
+          "Die Beratung ist kompetent und freundlich.",
+          "Der Kunde nutzt das Online-Banking.",
+          "Der Geldautomat gibt pünktlich Bargeld aus.",
+          "Die Bank arbeitet effizient und zuverlässig.",
+          "Die Mitarbeiter helfen bei allen Fragen.",
+          "Der Kunde wartet geduldig im Wartebereich.",
+          "Die Bank bietet einfache Finanzdienstleistungen.",
+          "Der Kunde zahlt bequem mit der EC-Karte.",
+          "Die Filiale ist gut organisiert und sauber.",
+          "Das Konto wird täglich aktualisiert.",
+          "Die Bank schickt regelmäßige Kontoauszüge.",
+          "Der Schalterservice ist schnell und freundlich.",
+          "Der Kunde erhält einen ausführlichen Kontoauszug.",
+          "Die Bank legt großen Wert auf Sicherheit.",
+          "Das Online-Banking ist einfach zu bedienen.",
+          "Der Kunde kann seine Finanzen bequem online verwalten.",
+          "Die Bank bietet günstige Kredite an.",
+          "Die persönliche Beratung in der Filiale ist sehr hilfreich.",
+          "Der Kunde informiert sich über verschiedene Anlageprodukte.",
+          "Die Bank erklärt die Konditionen klar und verständlich.",
+          "Moderne Technologien unterstützen den gesamten Service.",
+          "Die Bank arbeitet mit innovativen digitalen Systemen.",
+          "Der Kunde kann jederzeit seinen Kontostand abrufen.",
+          "Die Filiale bietet ein angenehmes Ambiente.",
+          "Die Mitarbeiter der Bank sind stets hilfsbereit.",
+          "Der Online-Service der Bank ist benutzerfreundlich gestaltet.",
+          "Die Bank sorgt für einen sicheren Zahlungsverkehr.",
+          "Der Kunde kann einfach Geld überweisen.",
+          "Die Bank bietet transparente Informationen zu Gebühren.",
+          "Die mobile App der Bank erleichtert den Zugriff auf Konten.",
+          "Der Bankberater erklärt komplexe Finanzprodukte verständlich.",
+          "Die Bank legt großen Wert auf Datenschutz.",
+          "Der Kunde erhält regelmäßige Finanzupdates per E-Mail.",
+          "Die Filiale ist modern eingerichtet und gut erreichbar.",
+          "Der Geldautomat ist rund um die Uhr verfügbar.",
+          "Die Bank bietet auch internationale Überweisungen an.",
+          "Der Kunde kann seine Finanzen jederzeit digital verwalten.",
+          "Der Service der Bank ist zuverlässig und effizient."
+        ],
+        normal: [
+          "Die Bank bietet ein breites Spektrum moderner Finanzdienstleistungen an, die sowohl traditionelle als auch digitale Lösungen umfassen.",
+          "Kunden profitieren von einer persönlichen Beratung, die sie bei fundierten Anlageentscheidungen unterstützt.",
+          "Fortschrittliche IT-Systeme wickeln Finanztransaktionen schnell, sicher und transparent ab.",
+          "Die moderne Filiale kombiniert ansprechendes Ambiente mit effizienten, digitalen Serviceangeboten.",
+          "Transparente Konditionen und klare Gebührenstrukturen schaffen Vertrauen bei den Kunden.",
+          "Die Integration digitaler Technologien ermöglicht einen flexiblen und bequemen Zugriff auf alle Finanzinformationen.",
+          "Maßgeschneiderte Finanzprodukte werden individuell auf die Bedürfnisse der Kunden abgestimmt.",
+          "Der Online-Banking-Service der Bank ist intuitiv und benutzerfreundlich gestaltet.",
+          "Moderne Sicherheitsprotokolle gewährleisten den Schutz sensibler Kundendaten in allen digitalen Kanälen.",
+          "Die persönliche Beratung in den Filialen stärkt langfristig die Kundenbindung und das Vertrauen in die Bank.",
+          "Effiziente interne Prozesse sorgen für einen reibungslosen Ablauf aller Finanztransaktionen.",
+          "Die Bank setzt auf eine kontinuierliche Optimierung ihrer digitalen Plattformen, um stets den neuesten Standards zu entsprechen.",
+          "Kunden erhalten regelmäßig detaillierte Kontoauszüge und Finanzupdates per E-Mail.",
+          "Die Kombination aus traditioneller Beratung und modernen digitalen Services bietet einen umfassenden Kundensupport.",
+          "Innovative Technologien ermöglichen es der Bank, Markttrends frühzeitig zu erkennen und entsprechend zu reagieren.",
+          "Die persönliche Betreuung in den Filialen wird durch einen hohen Grad an technischer Innovation ergänzt.",
+          "Durch den Einsatz von Cloud-Technologien wird der Zugang zu Finanzdienstleistungen jederzeit und überall gewährleistet.",
+          "Moderne Analysetools helfen dabei, individuelle Kundenbedürfnisse präzise zu erfassen und passgenaue Anlageprodukte anzubieten.",
+          "Die Bank legt großen Wert auf die transparente Kommunikation aller finanziellen Informationen.",
+          "Digitale Anwendungen ermöglichen es den Kunden, ihre Finanztransaktionen schnell und sicher abzuwickeln.",
+          "Das breite Angebot an Finanzprodukten wird durch individuelle Beratungen optimal auf die Kundenbedürfnisse abgestimmt.",
+          "Die kontinuierliche Weiterentwicklung der digitalen Infrastruktur verbessert den Kundenservice nachhaltig.",
+          "Innovative Sicherheitsmechanismen und moderne IT-Systeme sorgen für einen hohen Schutz der Kundendaten.",
+          "Die Bank kombiniert persönliche Beratung mit technologischer Exzellenz, um maßgeschneiderte Finanzstrategien zu entwickeln.",
+          "Regelmäßige Schulungen des Personals garantieren einen stets aktuellen und kompetenten Service.",
+          "Die Integration fortschrittlicher Analysetools ermöglicht eine präzise Bewertung von Risiken und Chancen.",
+          "Kunden können ihre Finanzen über mobile Apps bequem verwalten und überwachen.",
+          "Die Bank bietet flexible Kreditoptionen, die auf die individuellen Lebenssituationen der Kunden zugeschnitten sind.",
+          "Moderne Online-Plattformen ermöglichen einen schnellen und sicheren Zugang zu allen Finanzdienstleistungen.",
+          "Transparente Preismodelle und klare Konditionen schaffen ein hohes Maß an Vertrauen und Zufriedenheit.",
+          "Die Bank nutzt innovative Technologien, um den Zahlungsverkehr effizienter und sicherer zu gestalten.",
+          "Kunden erhalten personalisierte Finanzberatungen, die auf ihre individuellen Bedürfnisse abgestimmt sind.",
+          "Die Verbindung von traditioneller Beratung und digitalen Services bietet einen umfassenden Mehrwert für die Kunden.",
+          "Durch den Einsatz moderner Softwarelösungen werden alle Transaktionen präzise und zeitnah abgewickelt.",
+          "Die Bank setzt auf eine kundenorientierte Strategie, die eine umfassende Betreuung und Transparenz gewährleistet.",
+          "Die kontinuierliche Optimierung interner Prozesse führt zu einem reibungslosen Ablauf aller finanziellen Transaktionen.",
+          "Innovative digitale Tools und Anwendungen erleichtern den Zugriff auf umfangreiche Finanzinformationen.",
+          "Die persönliche Beratung in der Filiale wird durch moderne, digitale Services optimal ergänzt.",
+          "Die Bank fördert eine enge Zusammenarbeit zwischen verschiedenen Abteilungen, um kundennahe Lösungen zu entwickeln.",
+          "Mit modernsten IT-Systemen werden alle Finanzprozesse effizient und sicher gesteuert.",
+          "Die Integration von Big-Data-Analysen ermöglicht eine detaillierte Erfassung individueller Kundenbedürfnisse.",
+          "Kunden profitieren von einem umfassenden Serviceangebot, das traditionelle und digitale Finanzdienstleistungen vereint.",
+          "Die Bank bietet auch internationale Überweisungen an, die schnell und transparent abgewickelt werden.",
+          "Die kontinuierliche Weiterentwicklung digitaler Plattformen sichert einen stets aktuellen und benutzerfreundlichen Service.",
+          "Der Einsatz innovativer Technologien trägt dazu bei, dass alle finanziellen Transaktionen sicher und effizient erfolgen.",
+          "Die Bank kombiniert analytische Präzision mit persönlicher Beratung, um individuelle und nachhaltige Finanzstrategien zu entwickeln.",
+          "Durch den gezielten Einsatz modernster IT-Systeme werden alle Prozesse im Finanzwesen optimiert und transparent gestaltet."
+        ],
+        hard: [
+          "In einem global vernetzten Finanzsystem nutzt die Bank fortschrittliche Analysemethoden, um komplexe Marktbewegungen präzise zu prognostizieren und individuell zugeschnittene Anlageprodukte anzubieten.",
+          "Die Integration von Big-Data-Technologien ermöglicht eine detaillierte Risikoanalyse, die maßgeblich zur Optimierung der Kreditvergabeprozesse beiträgt.",
+          "Durch enge Zusammenarbeit mit internationalen Finanzinstitutionen entsteht ein multidimensionales Netzwerk, das den Austausch innovativer Strategien fördert.",
+          "Modernste digitale Infrastrukturen ermöglichen eine effiziente, sichere und in Echtzeit abgewickelte Zahlungsverkehrsabwicklung.",
+          "Der gezielte Einsatz künstlicher Intelligenz führt zur Erstellung individueller Kundenprofile, die maßgeschneiderte Finanzprodukte ermöglichen.",
+          "Die strategische Ausrichtung der Bank basiert auf einem ganzheitlichen Ansatz, der wirtschaftliche Stabilität mit nachhaltigen Investitionsmöglichkeiten vereint.",
+          "Komplexe Algorithmen analysieren Marktdaten, um potenzielle Risiken frühzeitig zu erkennen und adäquat zu steuern.",
+          "Kontinuierliche Investitionen in innovative Finanztechnologien erlauben es der Bank, dynamischen globalen Marktbedingungen standzuhalten.",
+          "Die Verzahnung traditioneller Finanzberatung mit modernster IT schafft maßgeschneiderte Anlagekonzepte, die sowohl sicher als auch ertragreich sind.",
+          "Die Kombination aus datenbasierter Analyse und persönlicher Kundenbetreuung bildet die Grundlage für zukunftsweisende Finanzstrategien.",
+          "Der Einsatz von Blockchain-Technologien sorgt für sichere, transparente und nachvollziehbare Transaktionen, die das Vertrauen der Kunden stärken.",
+          "Die Geschäftsstrategie der Bank basiert auf der Fusion klassischer Dienstleistungen mit disruptiven digitalen Innovationen, die den Markt revolutionieren.",
+          "In einem dynamischen Marktumfeld werden durch modernste Technologien kontinuierlich neue Finanzprodukte entwickelt, die den sich wandelnden Kundenbedürfnissen gerecht werden.",
+          "Die hochmoderne Infrastruktur ermöglicht eine schnelle, sichere Abwicklung internationaler Geldtransfers, was den globalen Handel maßgeblich unterstützt.",
+          "Maschinelles Lernen optimiert die Kreditvergabe, indem es die Risikobewertung präzise und effizient gestaltet und so den finanziellen Erfolg steigert.",
+          "Die Bank vereint traditionelle Werte mit innovativen Technologien, um ein umfassendes, zukunftssicheres Dienstleistungsangebot zu bieten.",
+          "Interdisziplinäre Zusammenarbeit zwischen Finanzexperten, Datenanalysten und IT-Spezialisten modelliert komplexe Marktprozesse effizient und transparent.",
+          "Die strategische Nutzung von KI-gestützten Analysen generiert individuelle Anlageempfehlungen auf Basis umfangreicher Marktanalysen und Prognosen.",
+          "Nachhaltige Geschäftsstrategien verbinden wirtschaftlichen Erfolg mit ökologischen und sozialen Zielen in einer harmonischen Balance, die zukunftsweisend ist.",
+          "Die kontinuierliche Digitalisierung interner Prozesse steigert die Effizienz und Kundenzufriedenheit erheblich und sichert langfristigen Erfolg.",
+          "Modernste Sicherheitstechnologien gewährleisten den umfassenden Schutz sensibler Kundendaten in allen digitalen Kanälen und Anwendungen.",
+          "Die Fusion persönlicher Beratung mit digitalen Plattformen schafft ein hybrides Modell, das eine breite Kundenschicht optimal abdeckt.",
+          "Innovative Analysetools ermöglichen die Echtzeitanalyse komplexer Finanzmärkte zur Entwicklung dynamischer Investitionsstrategien, die flexibel auf Marktveränderungen reagieren.",
+          "Der Einsatz modernster Technologien optimiert den gesamten Zahlungsverkehr und garantiert höchste Sicherheitsstandards in allen Transaktionen.",
+          "Big-Data-Analysen erfassen individuelle Kundenbedürfnisse präzise und setzen sie in passgenaue Finanzprodukte um, die maximale Rendite bieten.",
+          "Die strategische Weiterentwicklung digitaler Plattformen ermöglicht einen stets aktuellen und sicheren Service, der den modernen Ansprüchen gerecht wird.",
+          "Moderne KI-Algorithmen integrieren sich nahtlos in Entscheidungsprozesse und optimieren die Risikoanalyse signifikant, was zu präziseren Finanzstrategien führt.",
+          "Die enge Kooperation mit internationalen Finanzmärkten ermöglicht es, globale Trends frühzeitig zu erkennen und in innovative Anlagestrategien umzusetzen.",
+          "Die kontinuierliche Digitalisierung interner Prozesse steigert die Flexibilität und Reaktionsgeschwindigkeit der Bank erheblich und sichert den Wettbewerbsvorteil.",
+          "Innovative Cloud-Technologien bieten eine skalierbare Infrastruktur, die den wachsenden Anforderungen des globalen Marktes gerecht wird und neue Möglichkeiten eröffnet.",
+          "Die Kombination aus analytischer Exzellenz und technologischer Innovation bildet das Rückgrat eines zukunftsorientierten Geschäftsmodells, das den Markt transformiert.",
+          "Predictive Analytics ermöglichen präzise Prognosen zukünftiger Marktbewegungen und optimieren so die Planung finanzieller Ressourcen auf höchstem Niveau.",
+          "Modernste IT-Infrastrukturen garantieren eine effiziente, sichere und transparente Abwicklung aller Finanztransaktionen in Echtzeit.",
+          "Interdisziplinäre Zusammenarbeit zwischen Finanz- und IT-Experten führt zu maßgeschneiderten, sicheren Finanzlösungen, die den individuellen Bedürfnissen gerecht werden.",
+          "Die strategische Fusion von klassischer Beratung und digitalen Innovationen sichert der Bank einen nachhaltigen Wettbewerbsvorteil in einem dynamischen Marktumfeld.",
+          "Durch kontinuierliche Investitionen in Forschung und Entwicklung digitaler Finanztechnologien bleibt die Bank stets am Puls der Zeit und innovativ.",
+          "Die Integration von KI-basierten Analysesystemen in den Zahlungsverkehr erhöht die Genauigkeit und Effizienz der Transaktionen signifikant und reduziert Risiken.",
+          "Die kontinuierliche Optimierung digitaler Plattformen garantiert einen stets aktuellen und benutzerfreundlichen Service, der höchste Standards erfüllt.",
+          "Die strategische Nutzung moderner Technologien führt zu einem hohen Maß an Transparenz und Effizienz im gesamten Geschäftsprozess und stärkt das Vertrauen der Kunden.",
+          "Die Bank setzt auf disruptive Innovationen, um ihren Kunden langfristig einen zuverlässigen und sicheren Finanzservice zu bieten, der den Markt revolutioniert.",
+          "Die enge Integration von Big-Data-Analysen und KI-Technologien ermöglicht es, individuelle Therapieansätze auf höchstem Niveau zu realisieren und passgenaue Finanzstrategien zu entwickeln.",
+          "Durch kontinuierlichen Ausbau digitaler Systeme wird der gesamte Finanzverkehr effizient gesteuert und vor unbefugtem Zugriff geschützt, was höchste Sicherheitsstandards gewährleistet.",
+          "Die Fusion von empirischer Forschung und praktischer Anwendung bildet die Grundlage für erfolgreiche, individualisierte Finanzdienstleistungen, die den modernen Anforderungen entsprechen.",
+          "Innovative digitale Tools und Analysetools ermöglichen einen reibungslosen, sicheren und transparenten Zahlungsverkehr, der den Kundenservice optimiert.",
+          "Die Bank kombiniert analytische Präzision mit persönlicher Beratung, um individuelle und nachhaltige Finanzstrategien zu entwickeln, die langfristig Erfolg sichern.",
+          "Durch den gezielten Einsatz modernster IT-Systeme werden alle Prozesse im Finanzwesen optimiert und transparent gestaltet, was das Kundenerlebnis verbessert."
+        ]
+      },
+      tierwelt: {
+        easy: [
+          "Der Hund bellt im Garten.",
+          "Die Katze jagt eine Maus.",
+          "Der Vogel fliegt über das Feld.",
+          "Das Pferd galoppiert auf der Weide.",
+          "Die Kuh grast friedlich auf der Wiese.",
+          "Der Hase hoppelt schnell über das Gras.",
+          "Die Ente schwimmt im Teich.",
+          "Der Frosch quakt laut am Teichrand.",
+          "Der Schmetterling fliegt von Blume zu Blume.",
+          "Die Biene sammelt fleißig Nektar.",
+          "Der Affe klettert geschickt auf den Baum.",
+          "Das Kaninchen versteckt sich im Gebüsch.",
+          "Der Vogel singt ein schönes Lied.",
+          "Die Eule ruft in der Nacht.",
+          "Der Fisch schwimmt im klaren Wasser.",
+          "Die Schildkröte kriecht langsam über den Sand.",
+          "Der Igel rollt sich zusammen.",
+          "Das Lama steht ruhig auf der Weide.",
+          "Der Adler kreist hoch am Himmel.",
+          "Die Ziege springt über einen Zaun.",
+          "Der Bär schläft in seiner Höhle.",
+          "Die Maus huscht flink durch den Raum.",
+          "Der Fuchs schleicht leise durch den Wald.",
+          "Die Gans watschelt gemächlich am Teichrand.",
+          "Der Pfau zeigt sein prächtiges Gefieder.",
+          "Die Taube fliegt friedlich über den Platz.",
+          "Der Kater schnurrt leise auf dem Sofa.",
+          "Die Henne legt ein Ei im Stall.",
+          "Der Hahn kräht am frühen Morgen.",
+          "Die Ratte huscht flink durch die Gänge.",
+          "Der Esel trägt Lasten auf dem Bauernhof.",
+          "Die Biber bauen emsig einen Damm.",
+          "Der Otter spielt fröhlich im Fluss.",
+          "Die Fledermaus hängt kopfüber in der Höhle.",
+          "Der Luchs schleicht durch den verschneiten Wald.",
+          "Die Robbe ruht sich am Strand aus.",
+          "Der Delfin springt elegant aus dem Wasser.",
+          "Die Qualle schwebt langsam im Ozean.",
+          "Der Seestern liegt ruhig auf dem Meeresboden.",
+          "Die Krabbe krabbelt über den Sand.",
+          "Der Pfau präsentiert stolz sein buntes Gefieder.",
+          "Die Libelle schwebt anmutig über das Wasser.",
+          "Der Papagei plappert fröhlich in seinem Käfig.",
+          "Die Giraffe frisst an den hohen Bäumen.",
+          "Der Elefant schreitet majestätisch durch die Savanne.",
+          "Die Nashornkuh grast in der afrikanischen Steppe.",
+          "Der Leopard schleicht durch das dichte Unterholz.",
+          "Die Krokodile liegen faul im Wasser.",
+          "Der Tiger brüllt laut im Dschungel.",
+          "Die Antilope springt elegant über das offene Feld."
+        ],
+        normal: [
+          "In der afrikanischen Savanne demonstriert die Giraffe mit ihrem langen Gang und ihren eleganten Bewegungen eine beeindruckende Anpassungsfähigkeit.",
+          "Die majestätische Elefantenherde zieht in harmonischer Formation durch die Ebenen, während die Ältesten die Gruppe anführen.",
+          "Im dichten Dschungel nutzt der Leopard seine lautlose Bewegung, um sich perfekt an seine Umgebung anzupassen und Beute zu überraschen.",
+          "Die farbenprächtigen Federn des Papageis spiegeln die Vielfalt tropischer Lebensräume wider und verleihen seinem Gesang eine einzigartige Note.",
+          "Die Robbe ruht entspannt an einem felsigen Strand, während das sanfte Rauschen des Meeres im Hintergrund erklingt.",
+          "Die flinke Antilope setzt ihre Geschwindigkeit ein, um Raubtieren in den offenen Ebenen der Steppe zu entkommen.",
+          "In einem versteckten Flussdelta schwimmt eine Gruppe bunter Fische, die in perfekter Harmonie ihre Bahnen zieht.",
+          "Die Fledermaus, ein Meister der Nacht, navigiert geschickt durch die Dunkelheit mithilfe ihrer hochentwickelten Echoortung.",
+          "Im üppigen Regenwald ernährt sich ein bunter Schmetterling von den verborgenen Nektarquellen zwischen den Blättern.",
+          "Die emsigen Bienen tragen zum Blütenzauber bei und sichern gleichzeitig das ökologische Gleichgewicht.",
+          "Der elegante Adler kreist hoch am klaren Himmel und behält sein weitläufiges Revier stets im Blick.",
+          "In der kargen Wüstenlandschaft beweist das Kamel seine außergewöhnliche Fähigkeit, selbst in extremen Bedingungen zu überleben.",
+          "Die Schildkröte, ein Symbol für Langlebigkeit, bewegt sich bedächtig über den sandigen Boden.",
+          "Die farbenprächtige Libelle schwebt mit beeindruckender Präzision über einen stillen See.",
+          "Im nordischen Wald beweist der Luchs durch seine geschärften Sinne und seine Tarnung seine Überlebenskünste.",
+          "Die elegante Gazelle zeigt in ihrer schnellen, anmutigen Bewegung die natürliche Schönheit der afrikanischen Ebenen.",
+          "Während der Tau die Blätter im frühen Morgenlicht benetzt, erwacht die Tierwelt zu einem leisen, harmonischen Erwachen.",
+          "Die kräftigen Flossen des Delfins ermöglichen es ihm, spielerisch aus dem Wasser zu springen und die Meeresoberfläche zu durchbrechen.",
+          "In den Tiefen des Ozeans leuchten biolumineszente Kreaturen und schaffen ein faszinierendes Spiel aus Licht und Schatten.",
+          "Der majestätische Wal zieht in einer langen Migration durch die Ozeane, getrieben von instinktiver Sehnsucht.",
+          "Die komplexen sozialen Strukturen in Wolfsrudeln verdeutlichen das enge Miteinander und die Kommunikation in der Tierwelt.",
+          "Im hohen Norden trotzt der Polarwolf den extremen klimatischen Bedingungen mit bemerkenswerter Anpassungsfähigkeit.",
+          "Bunte Korallenriffe bilden ein schillerndes Unterwasserparadies, in dem zahlreiche Fischarten in einem fragilen Gleichgewicht leben.",
+          "Die geschickte Art, wie ein Otter durch das Wasser gleitet, zeugt von seiner Anpassungsfähigkeit an das aquatische Leben.",
+          "Im dichten Dschungel offenbart der Tiger seine Macht und Eleganz, während er lautlos seine Beute überrascht.",
+          "Die ruhigen Bewegungen eines Seesterns am Meeresboden vermitteln eine fast meditative Gelassenheit.",
+          "Die komplexen Kommunikationsformen innerhalb einer Delfingruppe zeugen von hoher Intelligenz und sozialer Interaktion.",
+          "Der majestätische Pfau präsentiert sein farbenprächtiges Gefieder in einem imposanten Balzritual, das die Schönheit der Natur unterstreicht.",
+          "Die emsigen Bienen zeigen in ihrem geschäftigen Treiben ein erstaunliches Maß an Organisation und Kooperation.",
+          "In einem Flussdelta offenbart sich das harmonische Zusammenspiel von Wasser, Pflanzen und zahlreichen Tierarten.",
+          "Die ruhige Präsenz eines Bären in der Wildnis symbolisiert unerschütterliche Kraft und Gelassenheit.",
+          "Die kunstvoll getarnten Farben eines Chamäleons ermöglichen es ihm, sich nahezu unsichtbar an seine Umgebung anzupassen.",
+          "Im nächtlichen Dschungel navigiert ein Panther mit beeindruckender Geschmeidigkeit durch das Dickicht, stets auf der Suche nach Beute.",
+          "Die ausgeklügelten Balzrituale zahlreicher Vogelarten zeugen von einer reichen kulturellen Vielfalt in der Tierwelt.",
+          "Der kraftvolle Brüller eines Löwen hallt über die Ebenen und verkündet seine majestätische Herrschaft.",
+          "Die Anpassungsfähigkeit von Tieren an extreme Klimazonen, wie in der Arktis, ist ein eindrucksvolles Beispiel evolutionärer Widerstandsfähigkeit.",
+          "In den üppigen Regenwäldern zeigt sich die Tierwelt in ihrer ganzen Vielfalt, in einem fragilen ökologischen Gleichgewicht.",
+          "Die anmutigen Bewegungen eines Schwans über einen ruhigen See vermitteln ein Gefühl von Frieden und unberührter Schönheit.",
+          "Die synchronisierten Bewegungen eines Fischschwarms illustrieren ein beeindruckendes kollektives Verhalten, das weit über das Individuum hinausgeht."
+        ],
+        hard: [
+          "In den unendlichen Weiten der afrikanischen Savanne demonstriert die komplexe Sozialstruktur der Elefantenherde ein beeindruckendes Maß an Kommunikation und Zusammenhalt.",
+          "Die majestätische Elefantenherde zieht in harmonischer Formation durch die Ebenen, während die Ältesten das Wissen über Generationen weitergeben.",
+          "Im dichten Dschungel offenbart der Leopard durch seine lautlose Bewegung eine evolutionäre Raffinesse, die ihn zum Inbegriff der Tarnung erhebt.",
+          "Die farbenprächtigen Balzrituale zahlreicher Vogelarten zeugen von einer ausgeklügelten kulturellen Vielfalt, die die Tierwelt in all ihren Facetten widerspiegelt.",
+          "Das Chamäleon passt sich mit verblüffender Präzision an wechselnde Umgebungsbedingungen an, indem es seine Farbe dynamisch ändert.",
+          "Die synchronen Bewegungen eines Fischschwarms, die ein lebendiges Farbenspiel im Ozean kreieren, illustrieren ein kollektives Verhalten von höchster Raffinesse.",
+          "In den tiefsten Regionen des Ozeans erzeugen biolumineszente Kreaturen ein atemberaubendes Schauspiel, das die Grenzen zwischen Licht und Dunkelheit verwischt.",
+          "Der majestätische Adler, der hoch oben am Himmel kreist, symbolisiert Freiheit und die unendliche Weite der Natur in ihrer reinsten Form.",
+          "Die ausgeklügelte Kommunikationsfähigkeit von Walen, die in komplexen Gesängen ihre Emotionen und Botschaften über weite Entfernungen senden, zeugt von tierischer Intelligenz.",
+          "Die evolutionäre Anpassungsfähigkeit von Tieren in arktischen Regionen, die trotz extremen Wetters überleben, ist ein beeindruckendes Zeugnis natürlicher Widerstandskraft.",
+          "Im Korallenriff formen farbenprächtige Korallen ein schillerndes Unterwasserparadies, in dem zahlreiche Fischarten in einem fragilen Gleichgewicht leben.",
+          "Die lautlose Jagd eines Panthers im dichten Dschungel demonstriert eine evolutionäre Raffinesse, die ihn zum Inbegriff der Tarnung erhebt.",
+          "Die kunstvoll organisierten Nester zahlreicher Vogelarten zeugen von einer perfekten Symbiose aus Instinkt, Kreativität und architektonischem Können.",
+          "Die synchronen Aktivitäten eines Bienenschwarms, der in beeindruckender Präzision Nektar sammelt, illustrieren ein hohes Maß an kollektiver Intelligenz.",
+          "In den Tiefen tropischer Gewässer enthüllen biolumineszente Organismen ein magisches Lichtspiel, das die Grenzen zwischen Realität und Traum auflöst.",
+          "Die langwierige Migration von Walen über tausende Kilometer zeugt von einem tief verwurzelten, instinktiven Verständnis der Meeresumgebungen.",
+          "Die komplexen sozialen Strukturen in Wolfsrudeln, in denen Weisheit und Erfahrung von den Ältesten weitergegeben werden, demonstrieren kollektive Intelligenz auf höchstem Niveau.",
+          "Die kunstvoll choreografierten Balzrituale zahlreicher Vogelarten offenbaren eine kulturelle Vielfalt, die ihresgleichen sucht.",
+          "Der eindrucksvolle Blick eines Luchses, der in verschneiten Wäldern auf Beute lauert, zeugt von einer raffinierten Kombination aus Instinkt und Präzision.",
+          "Die nahezu unsichtbare Anpassungsfähigkeit eines Chamäleons an seine Umgebung illustriert evolutionäre Meisterschaft in der Tarnung.",
+          "Die synchronisierten Bewegungen eines Vogelschwarmes, die den Himmel in ein lebendiges Mosaik verwandeln, zeugen von kollektiver Intelligenz und Harmonie.",
+          "In einem mystischen Wald, wo jedes Rascheln eine Geschichte erzählt, offenbart sich die subtile Schönheit der Tierwelt in ihrer ganzen Vielfalt.",
+          "Die langwierige Migration von Zugvögeln über Kontinente hinweg ist ein beeindruckendes Phänomen, das von instinktiver Navigation und Überlebenswillen geprägt ist.",
+          "Die ausgeklügelten Überlebensstrategien von Beutetieren, die durch koordinierte Fluchtmanöver ihre Chancen maximieren, sind ein Zeugnis evolutionärer Innovation.",
+          "Die architektonisch beeindruckenden Bauten von Bibern zeugen von hoher Intelligenz und kooperativem, instinktiv gesteuertem Verhalten.",
+          "Subtile Veränderungen in den Lautäußerungen von Walen, die ihre emotionale Verfassung widerspiegeln, offenbaren ein ausgeprägtes Maß an Sensibilität.",
+          "Die schimmernden Schuppen eines exotischen Fisches, die das Sonnenlicht in einem atemberaubenden Farbenspiel reflektieren, demonstrieren natürliche Ästhetik auf höchstem Niveau.",
+          "Die komplexen Balzrituale von Insektenarten zeugen von einer überraschenden Vielfalt an Kommunikationsformen in der Natur.",
+          "Der elegante Tanz eines Schmetterlings, der von Blume zu Blume flattert, ist ein lebendiger Beweis für die Zerbrechlichkeit und Schönheit der Natur.",
+          "Die synchronisierten Sprünge einer Gazelle, die in einem anmutigen Ballett vor einem Raubtier flieht, illustrieren evolutionäre Raffinesse und Überlebensinstinkt.",
+          "In den unzugänglichen Tiefen eines tropischen Regenwaldes zeigt sich die beeindruckende Vielfalt an Arten, die in einem fragilen ökologischen Gleichgewicht existieren.",
+          "Die ausgeklügelten Tarnmechanismen zahlreicher Tierarten ermöglichen es ihnen, sich nahezu unsichtbar an ihre Umgebung anzupassen und so ihre Überlebenschancen zu maximieren.",
+          "Die koordinierte Flucht von Beutetieren in einem Schwarm demonstriert ein ausgeklügeltes System kollektiver Überlebensstrategien, das die Natur in ihrer Komplexität widerspiegelt.",
+          "Die kunstvoll orchestrierten Lautäußerungen von Walen, die als Kommunikationsmittel dienen, sind ein faszinierendes Zeugnis tierischer Intelligenz.",
+          "Der majestätische Flug eines Adlers, der hoch über weiten Landschaften kreist, symbolisiert die unendliche Freiheit und Stärke der Natur.",
+          "Die ausgefeilten Überlebensstrategien, die von komplexen Tarnmechanismen bis zu synchronisierten Fluchtbewegungen reichen, zeugen von der evolutionären Kreativität der Tierwelt.",
+          "In den weiten Ebenen der Savanne demonstriert die rasche Flucht einer Gazelle vor einem Raubtier einen hochentwickelten Überlebensinstinkt, der das Wesen der Natur prägt.",
+          "Die außergewöhnliche Anpassungsfähigkeit der Tiere an extreme Umweltbedingungen spiegelt die unermüdliche Kraft der Evolution wider.",
+          "Durch die komplexen sozialen Strukturen in Tierherden wird ein ausgeprägtes System von Kooperation und Kommunikation sichtbar.",
+          "Die natürliche Eleganz der Tierwelt, sichtbar in den harmonischen Bewegungen eines Schwans, verkörpert die unberührte Schönheit der Natur.",
+          "Die kunstvollen Balzrituale vieler Vogelarten zeugen von einem tiefen, instinktiven Verständnis für die Bedeutung von Partnerschaft und Fortpflanzung.",
+          "Die synchronisierten Flugmuster eines Vogelschwarmes, die den Himmel in ein atemberaubendes Farbspektakel tauchen, demonstrieren die kollektive Intelligenz und den Zusammenhalt der Tierwelt."
+        ]
+      }
+    };
+    
+    // Adventure Mode: Boss
+    let boss = null, bossDefeated = false;
+    
+    // Variablen für den neuen Boss-Schaden
+    let lastProcessedIndex = 0;       // Für inkrementelle Schadensberechnung
+    let lastHotStreakWordCount = 0;     // Für Hot-Streak Bonus
+    
+    // Belohnungen & Erfolge
+    let unlockedRewards = [];
+    if (localStorage.getItem("unlockedRewards")) {
+      unlockedRewards = JSON.parse(localStorage.getItem("unlockedRewards"));
+      updateRewardUI();
+    }
+    let sessionAchievements = {};
+    let copyAchieved = {};
+    
+    // Elemente
+    const modeSelect = document.getElementById("modeSelect");
+    const timeSelect = document.getElementById("timeSelect");
+    const difficultySelect = document.getElementById("difficultySelect");
+    const writeArea = document.getElementById("writeArea");
+    const timerDisplay = document.getElementById("timer");
+    const wordCountDisplay = document.getElementById("wordCount");
+    const goalProgressDisplay = document.getElementById("goalProgress");
+    const xpDisplay = document.getElementById("xpDisplay");
+    const levelDisplay = document.getElementById("levelDisplay");
+    const wpmDisplay = document.getElementById("wpmDisplay");
+    const apmDisplay = document.getElementById("apmDisplay");
+    const hotStreakIndicator = document.getElementById("hotStreakIndicator");
+    const achievementPopup = document.getElementById("achievementPopup");
+    const startBtn = document.getElementById("startBtn");
+    const resetBtn = document.getElementById("resetBtn");
+    const promptBtn = document.getElementById("promptBtn");
+    const shareBtn = document.getElementById("shareBtn");
+    const infoBtn = document.getElementById("infoBtn");
+    const infoModal = document.getElementById("infoModal");
+    const closeInfo = document.getElementById("closeInfo");
+    const bossContainer = document.getElementById("bossContainer");
+    const bossNameElem = document.getElementById("bossName");
+    const bossHealthElem = document.getElementById("bossHealth");
+    
+    // Für Copy Challenge
+    const copyTargetElem = document.getElementById("copyTarget");
+    const targetSentenceElem = document.getElementById("targetSentence");
+    const checkBtn = document.getElementById("checkBtn");
+    const copyScoreDisplay = document.getElementById("copyScoreDisplay");
+    
+    // End Session Popup Elemente
+    const endSessionPopup = document.getElementById("endSessionPopup");
+    const endSessionMessage = document.getElementById("endSessionMessage");
+    const closeEndSessionBtn = document.getElementById("closeEndSessionBtn");
+    
+    // Leaderboard
+    let leaderboard = JSON.parse(localStorage.getItem("leaderboard")) || [];
+    
+    // Schreibstarter-Prompts
+    const prompts = [
+      "Es war einmal ein geheimnisvoller Wald, in dem die Zeit stillzustehen schien...",
+      "Als die Sonne hinter den Bergen verschwand, begann ein Abenteuer, das alles verändern sollte...",
+      "Plötzlich ertönte ein seltsames Geräusch, und niemand wusste, was als Nächstes passieren würde...",
+      "In einem verborgenen Tal, wo Drachen über uralte Ruinen kreisen, erwachte eine längst vergessene Magie, die das Schicksal eines jungen Abenteurers für immer verändern sollte.",
+      "Während im Schatten der großen Pyramiden Ägyptens ein geheimnisvoller Pharao sein verlorenes Erbe suchte, brach ein Abenteuer auf, das die Grenzen von Zeit und Raum sprengte.",
+      "Als in einem abgelegenen Krankenhaus plötzlich Patienten mit rätselhaften Symptomen eingeliefert wurden, begann eine Ärztin, ein medizinisches Geheimnis zu lüften, das die Welt erschüttern könnte.",
+      "In den düsteren Gassen einer regnerischen Großstadt entdeckte ein abgeklärter Ermittler einen mysteriösen Hinweis, der ihn mitten ins Netz eines perfiden Verbrechens führte.",
+      "Es war einmal in einem kleinen Dorf, in dem ein geheimnisvoller Fremder erschien – jemand, der mit einem verzauberten Artefakt die Zukunft der Bewohner in seinen Händen hielt.",
+      "In einer Welt, in der die Sterne magische Portale zu anderen Dimensionen öffnen, trat ein junger Held an, um das Gleichgewicht zwischen Licht und Dunkelheit wiederherzustellen.",
+      "Im stürmischen Mittelalter, als Burgen, Ritter und Intrigen das Land beherrschten, entdeckte ein einfacher Schmied ein Geheimnis, das die Kriege beenden könnte.",
+      "Als ein renommierter Forscher in einem alten Kloster auf uralte medizinische Schriften stieß, entfaltete sich ein Wettlauf gegen die Zeit, um ein tödliches Rätsel zu lösen.",
+      "In einer Stadt, in der jeder Bewohner ein Geheimnis hatte, wurde ein unscheinbarer Brief gefunden – ein Dokument, das eine Kette von Ereignissen in Gang setzte, die niemand vorhersehen konnte.",
+      "Es hieß, tief im verwunschenen Wald verbarg sich ein verzaubertes Schloss, in dem ein alter Fluch lag – und nur der Glaube eines reinen Herzens konnte ihn brechen.",
+      "Eine Prophezeiung, in uralten Schriften verborgen, kündigte das Kommen eines Auserwählten an, der das Schicksal der Welten entscheiden würde – und der in den Träumen eines Kindes erwachte.",
+      "In den verwitterten Mauern eines alten Klosters entdeckte ein Historiker ein Tagebuch, das von dunklen Geheimnissen und verborgenen Schätzen erzählte – ein Erbe, das das Land für immer verändern sollte.",
+      "Als in einem abgelegenen Forschungszentrum unerklärliche Phänomene auftraten, stellte sich ein Team von Spezialisten der Frage, ob die Natur selbst ein Heilmittel bereithielt – oder ein tödliches Rätsel war.",
+      "In einer trüben Nacht, als der Nebel über der Stadt lag, enthüllte ein anonym zugestellter Hinweis einen perfiden Plan, der das Leben unschuldiger Menschen für immer verändern sollte.",
+      "In einem Land, wo jeder Sonnenaufgang ein neues Wunder versprach, tauchte plötzlich ein geheimnisvoller Wanderer auf, dessen Worte die Herzen der Menschen mit Hoffnung und Magie erfüllten."
+    ];
+    
+    /* --- Neue Funktionen zur Score-Berechnung und Rang-Ermittlung --- */
+    function calculateSessionScore(words, errorCount, wpm, sessionDuration) {
+      let baseScore = words * 10;
+      let errorPenalty = errorCount * 5;
+      let targetWPM = 40;
+      let tempoBonus = (wpm > targetWPM) ? Math.round((wpm - targetWPM) * 2) : 0;
+      let timeBonus = sessionDuration < 120 ? 20 : 0;
+      let finalScore = baseScore + tempoBonus + timeBonus - errorPenalty;
+      return finalScore > 0 ? finalScore : 0;
+    }
+    
+    function getPlayerRank() {
+      if (userStats.xp < 500) return "Bronze";
+      if (userStats.xp < 1000) return "Silber";
+      return "Gold";
+    }
+    
+    function updateProfileUI() {
+      const profileImgElem = document.getElementById("profileImage");
+      const playerNameElem = document.getElementById("playerName");
+      const playerCreditsElem = document.getElementById("playerCredits");
+      profileImgElem.src = userStats.profileImage || "https://via.placeholder.com/80";
+      playerNameElem.innerHTML = `${userStats.playerName} <span class="rank-badge">${getPlayerRank()}</span>`;
+      playerCreditsElem.textContent = "Credits: " + userStats.credits;
+    }
+    
+    function showSessionResults(words, wpm, apm, errorCount, sessionScore) {
+      let rank = getPlayerRank();
+      let bonusCredits = Math.round(sessionScore / 10);
+      let resultHTML = `
+        <h2>Session beendet!</h2>
+        <p>Spieler: ${userStats.playerName} – Rang: ${rank} (EPISCH)</p>
+        <p>Wörter: ${words}</p>
+        <p>WPM: ${wpm}</p>
+        <p>APM: ${apm}</p>
+        <p>Fehler: ${errorCount}</p>
+        <p>Session Score: ${sessionScore}</p>
+        <p>Bonus Credits: ${bonusCredits}</p>
+        <button onclick="closeResultsPopup()">Schließen</button>
+      `;
+      endSessionPopup.innerHTML = resultHTML;
+      endSessionPopup.style.display = "block";
+    }
+    
+    function closeResultsPopup() {
+      endSessionPopup.style.display = "none";
+    }
+    
+    /* --- Hot-Streak und Bonuswürfel --- */
+    function rollBonus() {
+      return Math.floor(Math.random() * (50 - 3 + 1)) + 3;
+    }
+    
+    function checkHotStreakBonus() {
+      const HOT_STREAK_THRESHOLD = 8;
+      if (hotStreakCounter >= HOT_STREAK_THRESHOLD) {
+        let bonus = rollBonus();
+        showDicePopup(bonus);
+        hotStreakCounter = 0;
+        return bonus;
+      }
+      return 0;
+    }
+    
+    function showDicePopup(bonus) {
+      const dicePopup = document.createElement("div");
+      dicePopup.innerHTML = `<div class="dice-animation">${bonus}</div>`;
+      dicePopup.style.position = "fixed";
+      dicePopup.style.top = "50%";
+      dicePopup.style.left = "50%";
+      dicePopup.style.transform = "translate(-50%, -50%)";
+      dicePopup.style.background = "rgba(0,0,0,0.8)";
+      dicePopup.style.color = "#fff";
+      dicePopup.style.padding = "20px";
+      dicePopup.style.borderRadius = "10px";
+      dicePopup.style.fontSize = "2em";
+      dicePopup.style.zIndex = "500";
+      document.body.appendChild(dicePopup);
+      setTimeout(() => {
+        dicePopup.classList.add("fade-out");
+        setTimeout(() => { document.body.removeChild(dicePopup); }, 1000);
+      }, 2000);
+    }
+    
+    /* --- Weitere Funktionen (Shop, Inventar, Profil, Leaderboard etc.) --- */
+    function renderShop() {
+      const shopProfileSection = document.getElementById("shopProfileSection");
+      shopProfileSection.innerHTML = "<h3>Profilbilder</h3>";
+      shopProfileItems.forEach(item => {
+        const btn = document.createElement("button");
+        btn.id = "shop_" + item.id;
+        if (userStats.inventory.profileImages && userStats.inventory.profileImages.includes(item.imgUrl)) {
+          btn.disabled = true;
+          btn.innerHTML = `<img src="${item.imgUrl}" style="width:32px; vertical-align:middle;"> Gekauft`;
+        } else {
+          btn.innerHTML = `<img src="${item.imgUrl}" style="width:32px; vertical-align:middle;"> ${item.price} Credits`;
+          btn.onclick = () => purchaseItem(item, "profile");
+        }
+        shopProfileSection.appendChild(btn);
+      });
+      const shopCursorSection = document.getElementById("shopCursorSection");
+      shopCursorSection.innerHTML = "<h3>Cursoren</h3>";
+      shopCursorItems.forEach(item => {
+        const btn = document.createElement("button");
+        btn.id = "shop_" + item.id;
+        if (userStats.inventory.cursors && userStats.inventory.cursors.includes(item.imgUrl)) {
+          btn.disabled = true;
+          btn.innerHTML = `<img src="${item.imgUrl}" style="width:32px; vertical-align:middle;"> Gekauft`;
+        } else {
+          btn.innerHTML = `<img src="${item.imgUrl}" style="width:32px; vertical-align:middle;"> ${item.price} Credits`;
+          btn.onclick = () => purchaseItem(item, "cursor");
+        }
+        shopCursorSection.appendChild(btn);
+      });
+    }
+    
+    function purchaseItem(item, type) {
+      if (userStats.credits >= item.price) {
+        userStats.credits -= item.price;
+        if (type === "profile") {
+          userStats.profileImage = item.imgUrl;
+          userStats.inventory.profileImages = userStats.inventory.profileImages || [];
+          if (!userStats.inventory.profileImages.includes(item.imgUrl)) {
+            userStats.inventory.profileImages.push(item.imgUrl);
+          }
+          unlockReward(`Profilbild ${item.id} freigeschaltet!`);
+        } else if (type === "cursor") {
+          document.getElementById("writeArea").style.cursor = "url('" + item.imgUrl + "'), auto";
+          userStats.inventory.cursors = userStats.inventory.cursors || [];
+          if (!userStats.inventory.cursors.includes(item.imgUrl)) {
+            userStats.inventory.cursors.push(item.imgUrl);
+          }
+          unlockReward(`Cursor ${item.id} freigeschaltet!`);
+        }
+        updateProfileUI();
+        renderInventory();
+        renderShop();
+        alert(`${item.id} wurde erfolgreich gekauft!`);
+      } else {
+        alert("Nicht genügend Credits! Verdiene mehr XP und Credits, indem du weiterschreibst.");
+      }
+    }
+    
+    function renderInventory() {
+      const container = document.getElementById("inventoryContainer");
+      container.innerHTML = "<h2>Inventar</h2>";
+      let profileDiv = document.createElement("div");
+      profileDiv.innerHTML = "<h3>Profilbilder</h3>";
+      userStats.inventory.profileImages = userStats.inventory.profileImages || [];
+      userStats.inventory.profileImages.forEach(imgUrl => {
+        let img = document.createElement("img");
+        img.src = imgUrl;
+        img.style.width = "50px";
+        img.style.marginRight = "5px";
+        img.style.cursor = "pointer";
+        img.title = "Klicke, um dieses Profilbild auszuwählen";
+        img.onclick = () => {
+          userStats.profileImage = imgUrl;
+          updateProfileUI();
+          renderInventory();
+        };
+        profileDiv.appendChild(img);
+      });
+      container.appendChild(profileDiv);
+      let cursorDiv = document.createElement("div");
+      cursorDiv.innerHTML = "<h3>Cursoren</h3>";
+      userStats.inventory.cursors = userStats.inventory.cursors || [];
+      userStats.inventory.cursors.forEach(curUrl => {
+        let img = document.createElement("img");
+        img.src = curUrl;
+        img.style.width = "50px";
+        img.style.marginRight = "5px";
+        img.style.cursor = "pointer";
+        img.title = "Klicke, um diesen Cursor auszuwählen";
+        img.onclick = () => {
+          document.getElementById("writeArea").style.cursor = "url('" + curUrl + "'), auto";
+        };
+        cursorDiv.appendChild(img);
+      });
+      container.appendChild(cursorDiv);
+    }
+    
+    function saveProfile() {
+      const profileChecksum = generateHash(userStats.credits.toString() + secretKey);
+      userStats.profileChecksum = profileChecksum;
+      
+      const data = JSON.stringify(userStats, null, 2);
+      const blob = new Blob([data], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "profile.json";
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+    
+    function loadProfile(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const loadedProfile = JSON.parse(e.target.result);
+          const expectedChecksum = generateHash(loadedProfile.credits.toString() + secretKey);
+          if (loadedProfile.profileChecksum !== expectedChecksum) {
+            alert("Profilprüfung fehlgeschlagen! Möglicher Betrugsversuch!");
+            return;
+          }
+          userStats = loadedProfile;
+          updateXPAndLevelDisplay();
+          updateProfileUI();
+          renderInventory();
+          renderShop();
+          alert("Profil erfolgreich geladen.");
+        } catch (error) {
+          alert("Fehler beim Laden des Profils: " + error);
+        }
+      };
+      reader.readAsText(file);
+    }
+    
+    function updateXPAndLevelDisplay() {
+      xpDisplay.textContent = `XP: ${userStats.xp}`;
+      levelDisplay.textContent = `Level: ${userStats.level}`;
+    }
+    
+    function checkLevelUp() {
+      const newLevel = Math.floor(userStats.xp / 100) + 1;
+      if (newLevel > userStats.level) {
+        userStats.level = newLevel;
+        alert(`Level Up! Du bist jetzt Level ${newLevel}.`);
+        userStats.credits += 50;
+        if (newLevel === 2) { unlockReward("😀 Emoji Profil"); }
+        if (newLevel === 3) { unlockReward("😎 Cool Emoji"); }
+        if (newLevel === 4) { unlockReward("🔥 Hot Emoji"); }
+        if (newLevel === 5) { unlockReward("🏆 Champion Emoji"); }
+      }
+      updateXPAndLevelDisplay();
+      updateProfileUI();
+    }
+    
+    function saveSessionToLeaderboard() {
+      const currentWords = countWords(writeArea.innerText);
+      const sessionData = { words: currentWords, xp: userStats.xp, timestamp: Date.now() };
+      leaderboard.push(sessionData);
+      leaderboard.sort((a, b) => b.words - a.words);
+      localStorage.setItem("leaderboard", JSON.stringify(leaderboard));
+    }
+    
+    function updateLeaderboard() {
+      const leaderboardBody = document.getElementById("leaderboardBody");
+      leaderboardBody.innerHTML = "";
+      leaderboard.slice(0, 10).forEach((session, index) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `<td>${index + 1} ⭐</td><td>${session.words} ✍️</td><td>${session.xp} 🏆</td>`;
+        leaderboardBody.appendChild(row);
+      });
+    }
+    
+    function shareResults() {
+      const summary = `Schreibabenteuer DemusOpalium Ergebnisse:\nWörter: ${countWords(writeArea.innerText)}\nXP: ${userStats.xp}\nLevel: ${userStats.level}`;
+      navigator.clipboard.writeText(summary).then(() => { alert("Ergebnisse kopiert!"); });
+    }
+    
+    function unlockReward(reward) {
+      if (!unlockedRewards.includes(reward)) {
+        unlockedRewards.push(reward);
+        alert("Reward freigeschaltet: " + reward);
+        localStorage.setItem("unlockedRewards", JSON.stringify(unlockedRewards));
+        updateRewardUI();
+      }
+    }
+    
+    function updateRewardUI() {
+      const rewardList = document.getElementById("rewardList");
+      rewardList.innerHTML = "";
+      unlockedRewards.forEach(r => {
+        const li = document.createElement("li");
+        li.textContent = r;
+        rewardList.appendChild(li);
+      });
+    }
+    
+    /* --- Event Listener --- */
+    infoBtn.addEventListener("click", () => { infoModal.style.display = "flex"; });
+    closeInfo.addEventListener("click", () => { infoModal.style.display = "none"; });
+    window.addEventListener("click", (event) => { if (event.target == infoModal) infoModal.style.display = "none"; });
+    startBtn.addEventListener("click", () => { resetSession(); });
+    resetBtn.addEventListener("click", resetSession);
+    promptBtn.addEventListener("click", showRandomPrompt);
+    shareBtn.addEventListener("click", shareResults);
+    checkBtn.addEventListener("click", checkCopySentence);
+    loadProfileBtn.addEventListener("click", () => { loadProfileInput.click(); });
+    loadProfileInput.addEventListener("change", loadProfile);
+    
+    writeArea.addEventListener("keydown", (e) => {
+      if (!sessionActive && waitingForStart && e.key === "Enter") {
+         e.preventDefault();
+         waitingForStart = false;
+         writeArea.innerText = "";
+         startSession();
+         return;
+      }
+      if (!sessionActive) return;
+      if (modeSelect.value === "copy" && e.key === "Enter") {
+         e.preventDefault();
+         checkCopySentence();
+         return;
+      }
+      resetIdleTimer();
+      updateWordCount();
+      keyPressCount++;
+      const currentTime = Date.now();
+      if (currentTime - lastKeyTime < hotStreakTimeThreshold) { hotStreakCounter++; }
+      else { hotStreakCounter = 1; }
+      lastKeyTime = currentTime;
+      if (hotStreakCounter >= hotStreakRequired) { showHotStreakIndicator(); }
+    });
+    
+    writeArea.addEventListener("paste", (e) => {
+      e.preventDefault();
+      showAchievement("Schummeln? Nur Tippen ist erlaubt!");
+    });
+    
+    modeSelect.addEventListener("change", () => {
+      promptBtn.style.display = modeSelect.value === "creative" ? "inline-block" : "none";
+      if (modeSelect.value === "copy") {
+        copyTargetElem.style.display = "block";
+        checkBtn.style.display = "inline-block";
+        copyScoreDisplay.style.display = "block";
+        initCopyMode();
+      } else {
+        copyTargetElem.style.display = "none";
+        checkBtn.style.display = "none";
+        copyScoreDisplay.style.display = "none";
+      }
+    });
+    
+    themeSelect.addEventListener("change", () => { document.body.className = themeSelect.value; });
+    fontSelect.addEventListener("change", () => { document.body.style.fontFamily = fontSelect.value; });
+    
+    /* --- Copy Challenge Funktionen --- */
+    function generateCopySentence() {
+      let lib = document.getElementById("librarySelect").value;
+      let diff = difficultySelect.value;
+      let sentencesLibrary = (sentenceLibraries[lib] && sentenceLibraries[lib][diff] && sentenceLibraries[lib][diff].length)
+                              ? sentenceLibraries[lib][diff]
+                              : standardSentences[diff];
+      let randomIndex = Math.floor(Math.random() * sentencesLibrary.length);
+      currentTargetSentence = sentencesLibrary[randomIndex];
+      targetSentenceElem.textContent = currentTargetSentence.trim();
+      writeArea.innerText = "";
+    }
+    
+    function checkCopySentence() {
+      let userInput = writeArea.innerText.replace(/\n/g, " ").trim().toLowerCase();
+      let target = currentTargetSentence.trim().toLowerCase();
+      if (userInput === target) {
+        let points = currentTargetSentence.split(" ").length * 10;
+        copyScore += points;
+        userStats.xp += points;
+        showAchievement("Satz korrekt! +" + points + " Punkte.");
+        checkCopyAchievements();
+        writeArea.innerText = "";
+        updateCopyScoreDisplay();
+        generateCopySentence();
+      } else {
+        showAchievement("Nicht exakt! Versuche es erneut.");
+      }
+    }
+    
+    function checkCopyAchievements() {
+      if (copyScore >= 100 && !copyAchieved["100"]) {
+         copyAchieved["100"] = true;
+         showAchievement("Copy Challenge Bronze erreicht! (+100 Punkte)");
+         unlockReward("🥉 Copy-Challenge Bronze");
+      }
+      if (copyScore >= 200 && !copyAchieved["200"]) {
+         copyAchieved["200"] = true;
+         showAchievement("Copy Challenge Silber erreicht! (+200 Punkte)");
+         unlockReward("🥈 Copy-Challenge Silber");
+      }
+      if (copyScore >= 300 && !copyAchieved["300"]) {
+         copyAchieved["300"] = true;
+         showAchievement("Copy Challenge Gold erreicht! (+300 Punkte)");
+         unlockReward("🥇 Copy-Challenge Gold");
+      }
+    }
+    
+    function initCopyMode() {
+      copyScore = 0;
+      copyAchieved = {};
+      generateCopySentence();
+      copyTargetElem.style.display = "block";
+      checkBtn.style.display = "inline-block";
+      copyScoreDisplay.style.display = "block";
+      writeArea.innerText = "Drücke Enter, um das Spiel zu starten";
+      waitingForStart = true;
+      updateCopyScoreDisplay();
+    }
+    
+    function updateCopyScoreDisplay() {
+      copyScoreDisplay.textContent = "Copy Score: " + copyScore;
+    }
+    
+    function startSession() {
+      endSessionPopup.style.display = "none";
+      sessionActive = true;
+      keyPressCount = 0;
+      hotStreakCounter = 0;
+      waitingForStart = false;
+      let idleLimit = (difficultySelect.value === "easy") ? 3000 : (difficultySelect.value === "normal") ? 2000 : 1000;
+      let thresholdTime = (difficultySelect.value === "easy") ? 250 : (difficultySelect.value === "normal") ? 200 : 150;
+      hotStreakTimeThreshold = thresholdTime;
+      idleTimeout = setTimeout(triggerInactivityWarning, idleLimit);
+    
+      const timeMode = parseInt(timeSelect.value);
+      remainingTime = timeMode * 60;
+      if (modeSelect.value !== "copy") {
+        window.baseTarget = (difficultySelect.value === "easy") ? timeMode * 65 : (difficultySelect.value === "normal") ? timeMode * 85 : timeMode * 100;
+        generateAchievements();
+      } else {
+        generateCopySentence();
+      }
+    
+      if (modeSelect.value === "adventure") {
+        initBoss();
+        lastProcessedIndex = 0;
+        lastHotStreakWordCount = countWords(writeArea.innerText);
+      }
+    
+      updateTimerDisplay();
+      updateWordCount();
+      sessionStartTime = Date.now();
+    
+      timerInterval = setInterval(() => {
+        remainingTime--;
+        updateTimerDisplay();
+        updateWPM();
+        updateAPM();
+        if (modeSelect.value === "adventure" && boss) { updateBossStatus(); }
+        if (remainingTime <= 0) { 
+          if (modeSelect.value !== "copy") {
+            let words = countWords(writeArea.innerText);
+            let wpm = Math.round(words / ((Date.now() - sessionStartTime) / 60000));
+            let apm = Math.round(keyPressCount / ((Date.now() - sessionStartTime) / 60000));
+            let errorCount = 0;
+            let sessionDuration = Math.floor((Date.now() - sessionStartTime) / 1000);
+            let sessionScore = calculateSessionScore(words, errorCount, wpm, sessionDuration);
+            userStats.credits += Math.round(sessionScore / 10);
+            updateXPAndLevelDisplay();
+            saveSessionToLeaderboard();
+            updateLeaderboard();
+            updateProfileUI();
+            showSessionResults(words, wpm, apm, errorCount, sessionScore);
+          }
+          endSession();
+        }
+      }, 1000);
+    }
+    
+    function resetSession() {
+      clearInterval(timerInterval);
+      clearTimeout(idleTimeout);
+      sessionActive = false;
+      remainingTime = parseInt(timeSelect.value) * 60;
+      writeArea.innerText = "Drücke Enter, um das Spiel zu starten";
+      waitingForStart = true;
+      updateTimerDisplay();
+      updateWordCount();
+      writeArea.classList.remove("warning");
+      keyPressCount = 0;
+      boss = null;
+      bossDefeated = false;
+      bossContainer.style.display = "none";
+      hotStreakIndicator.style.display = "none";
+      copyTargetElem.style.display = "none";
+      checkBtn.style.display = "none";
+      copyScoreDisplay.style.display = "none";
+      endSessionPopup.style.display = "none";
+      
+      if (modeSelect.value === "copy") {
+        initCopyMode();
+      }
+    }
+    
+    function endSession() {
+      clearInterval(timerInterval);
+      clearTimeout(idleTimeout);
+      sessionActive = false;
+      
+      if (modeSelect.value !== "copy") {
+        // Ergebnis-Popup wird bereits in startSession() über showSessionResults() angezeigt
+      } else {
+        let message = "Deine Copy Challenge Punkte: " + copyScore;
+        endSessionPopup.innerHTML = `<h2>Session beendet!</h2>
+                                     <p>${message}</p>
+                                     <button onclick="closeResultsPopup()">Schließen</button>`;
+        endSessionPopup.style.display = "block";
+      }
+      
+      const currentWords = countWords(writeArea.innerText);
+      for (let threshold in sessionAchievements) {
+        if (currentWords >= threshold && !sessionAchievements[threshold].achieved) {
+          sessionAchievements[threshold].achieved = true;
+          const achieveElem = document.getElementById("achieve" + threshold);
+          if (achieveElem) { achieveElem.textContent = "Erreicht"; }
+        }
+      }
+      const sessionDuration = Math.floor((Date.now() - sessionStartTime) / 1000);
+      const xpEarned = currentWords + Math.floor(sessionDuration / 10);
+      userStats.xp += xpEarned;
+      userStats.totalWords += currentWords;
+      if (sessionDuration > userStats.longestSession) { userStats.longestSession = sessionDuration; }
+      checkLevelUp();
+      saveSessionToLeaderboard();
+      updateLeaderboard();
+      copyTargetElem.style.display = "none";
+      checkBtn.style.display = "none";
+      copyScoreDisplay.style.display = "none";
+      updateProfileUI();
+    }
+    
+    /* --- Boss-Funktionen für Adventure Mode --- */
+    function initBoss() {
+      boss = { name: "Wort Boss", maxHealth: 500, currentHealth: 500, targetWords: window.baseTarget * 1.5 };
+      bossDefeated = false;
+      bossContainer.style.display = "block";
+      bossNameElem.textContent = boss.name;
+      updateBossUI();
+    }
+    
+    function updateBossUI() {
+      let healthPercent = (boss.currentHealth / boss.maxHealth) * 100;
+      bossHealthElem.style.width = healthPercent + "%";
+    }
+    
+    function processNewTextForBossDamage() {
+      let fullText = writeArea.innerText;
+      let newText = fullText.substring(lastProcessedIndex);
+      if (newText.trim().length === 0) return 0;
+      let damage = 0;
+      let sentenceRegex = /[^\.!\?]+[\.!\?]+/g;
+      let sentences = newText.match(sentenceRegex);
+      if (!sentences) { sentences = [newText]; }
+      sentences.forEach(sentence => {
+        let sentenceDamage = 0;
+        let words = sentence.trim().split(/\s+/);
+        words.forEach(word => {
+          let cleanedWord = word.replace(/^[^A-Za-zÄÖÜäöüß'-]+|[^A-Za-zÄÖÜäöüß'-]+$/g, '');
+          if (cleanedWord.length > 0) { sentenceDamage += cleanedWord.length; }
+        });
+        damage += sentenceDamage + Math.round(sentenceDamage * 0.2);
+      });
+      damage += checkHotStreakBonus();
+      lastProcessedIndex = fullText.length;
+      return damage;
+    }
+    
+    function updateBossStatus() {
+      let newDamage = processNewTextForBossDamage();
+      if (newDamage > 0) { boss.currentHealth = Math.max(boss.currentHealth - newDamage, 0); }
+      updateBossUI();
+      if (boss.currentHealth <= 0 && !bossDefeated) { bossDefeated = true; winGame(); }
+    }
+    
+    function winGame() {
+      showAchievement("Boss besiegt! Bonus XP erhalten!");
+      userStats.xp += 50;
+      unlockReward("🏆 Boss-Besieger Emoji");
+      clearInterval(timerInterval);
+      clearTimeout(idleTimeout);
+      endSessionPopup.innerHTML = `<h2>Gewonnen! Boss besiegt!</h2>
+                                   <button onclick="closeResultsPopup()">Schließen</button>`;
+      endSessionPopup.style.display = "block";
+      updateProfileUI();
+    }
+    
+    function generateAchievements() {
+      sessionAchievements = {};
+      let threshold = 25;
+      while (threshold <= window.baseTarget) {
+        sessionAchievements[threshold] = { achieved: false, category: (threshold < 100 ? "Freewrite" : threshold < 200 ? "Copy" : "Allgemein") };
+        threshold += 25;
+      }
+      updateAchievementsTable();
+    }
+    
+    function updateAchievementsTable() {
+      const tbody = document.getElementById("achievementBody");
+      tbody.innerHTML = "";
+      const tier = (difficultySelect.value === "easy") ? "Bronze" : (difficultySelect.value === "normal") ? "Silber" : "Gold";
+      const timeMode = parseInt(timeSelect.value);
+      const timeLabel = (timeMode === 1) ? "Minute" : "Minuten";
+      for (let threshold in sessionAchievements) {
+        const ach = sessionAchievements[threshold];
+        const row = document.createElement("tr");
+        row.setAttribute("data-category", ach.category);
+        row.innerHTML = `<td>${timeMode} ${timeLabel}: ${tier} ${threshold}+ Wörter</td>
+                         <td>Mindestens ${threshold} Wörter in ${timeMode} ${timeLabel}</td>
+                         <td id="achieve${threshold}">${ach.achieved ? "Erreicht" : "Nicht erreicht"}</td>`;
+        tbody.appendChild(row);
+      }
+    }
+    
+    function updateTimerDisplay() {
+      let min = Math.floor(remainingTime / 60);
+      let sec = remainingTime % 60;
+      timerDisplay.textContent = `Time: ${min}:${sec.toString().padStart(2, "0")}`;
+    }
+    
+    function countWords(text) {
+      return text.trim().split(/\s+/).filter(w => w.length > 0).length;
+    }
+    
+    function updateWordCount() {
+      const text = writeArea.innerText;
+      const count = countWords(text);
+      wordCountDisplay.textContent = `Words: ${count}`;
+      goalProgressDisplay.textContent = `Goal: ${count}/${window.baseTarget || "-"}`;
+      if (modeSelect.value === "adventure" && boss) { updateBossStatus(); }
+      if (modeSelect.value === "adventure" && boss) {
+         if (count - lastHotStreakWordCount >= 8) {
+             let bonus = rollBonus();
+             boss.currentHealth = Math.max(boss.currentHealth - bonus, 0);
+             updateBossUI();
+             showDicePopup(bonus);
+             lastHotStreakWordCount = count;
+         }
+      }
+      for (let threshold in sessionAchievements) {
+        if (count >= threshold && !sessionAchievements[threshold].achieved) {
+          sessionAchievements[threshold].achieved = true;
+          const achieveElem = document.getElementById("achieve" + threshold);
+          if (achieveElem) { achieveElem.textContent = "Erreicht"; }
+        }
+      }
+    }
+    
+    function updateWPM() {
+      if (!sessionStartTime) return;
+      const elapsedMinutes = (Date.now() - sessionStartTime) / 60000;
+      const wpm = Math.round(countWords(writeArea.innerText) / elapsedMinutes);
+      wpmDisplay.textContent = `WPM: ${wpm}`;
+    }
+    
+    function updateAPM() {
+      if (!sessionStartTime) return;
+      const elapsedMinutes = (Date.now() - sessionStartTime) / 60000;
+      const apm = elapsedMinutes > 0 ? Math.round(keyPressCount / elapsedMinutes) : 0;
+      apmDisplay.textContent = `APM: ${apm} max`;
+    }
+    
+    function resetIdleTimer() {
+      clearTimeout(idleTimeout);
+      let idleLimit = (difficultySelect.value === "easy") ? 3000 : (difficultySelect.value === "normal") ? 2000 : 1000;
+      idleTimeout = setTimeout(triggerInactivityWarning, idleLimit);
+      writeArea.classList.remove("warning");
+    }
+    
+    function triggerInactivityWarning() {
+      writeArea.classList.add("warning");
+      playWarningSound();
+      if (modeSelect.value === "hardcore") {
+        setTimeout(() => {
+          if (writeArea.classList.contains("warning")) {
+            writeArea.innerText = "";
+            updateWordCount();
+          }
+        }, 2000);
+      }
+    }
+    
+    function playWarningSound() {
+      warningSound.play().catch(e => console.log("Sound konnte nicht abgespielt werden:", e));
+    }
+    
+    function showRandomPrompt() {
+      const randomPrompt = prompts[Math.floor(Math.random() * prompts.length)];
+      writeArea.innerText = randomPrompt + "\n\n";
+      updateWordCount();
+    }
+    
+    function showAchievement(message) {
+      achievementPopup.textContent = message;
+      achievementPopup.style.display = "block";
+      achievementPopup.classList.add("animate__bounceIn");
+      setTimeout(() => {
+        achievementPopup.classList.remove("animate__bounceIn");
+        achievementPopup.style.display = "none";
+      }, 3000);
+    }
+    
+    function showHotStreakIndicator() {
+      hotStreakIndicator.style.display = "block";
+      hotStreakIndicator.classList.add("animate__flash");
+      setTimeout(() => {
+        hotStreakIndicator.classList.remove("animate__flash");
+        hotStreakIndicator.style.display = "none";
+      }, 2000);
+      hotStreakCounter = 0;
+    }
+    
+    // Initiale Renderings
+    renderShop();
+    renderInventory();
+    updateLeaderboard();
+    updateProfileUI();
+  </script>
+</body>
+</html>

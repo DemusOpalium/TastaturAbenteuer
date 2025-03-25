@@ -1,28 +1,17 @@
 Schreibabenteuer DemusOpalium
 
-Schreibabenteuer DemusOpalium ist ein Open‑Source Schreibspiel, in dem du in variablen Zeitmodi (1–5 Minuten) spannende Schreib‑Challenges meisterst – sei es kreativ, präzise oder unter hohem Druck! Das Spiel richtet sich in erster Linie an PC-Nutzer mit Tastatur, bietet aber auch eine voll responsiv optimierte Version für mobile Geräte, sodass du es auch unterwegs spielen kannst (Hauptaugenmerk liegt jedoch auf PC & Tastatur).
-
-```
-# ..... _  
-# . _ ( . ) _  
-# .(_ (%)_ )   
-# .. . (_ )\    
-# ......... | __  
-# ......... |/_ /  
-# ......... |  
-```
-
+Schreibabenteuer DemusOpalium ist ein Open‑Source-Schreibspiel, in dem du in variablen Zeitmodi (1–5 Minuten) spannende Schreib‑Challenges meisterst – sei es kreativ, präzise oder unter hohem Druck! Das Spiel richtet sich vor allem an PC-Nutzer mit Tastatur, bietet aber auch eine voll responsive Version für mobile Geräte.
 Hauptfunktionen und Spielmodi
 
     Mehrere Spielmodi:
 
         Freewrite: Kreatives Schreiben ohne Strafe.
 
-        Hardcore: Jeder Fehler oder Inaktivität löscht den Text.
+        Hardcore: Jeder Fehler oder jede Inaktivität löscht den Text.
 
         Adventure: Stelle dich dem „Wort Boss“ und kämpfe mit deinen geschriebenen Wörtern.
 
-        Copy Challenge: Tippe vorgegebene Sätze exakt nach – die verbesserte Logik sorgt dafür, dass das Spiel per Enter-Taste zuverlässig startet und beim Reset neue Sätze generiert werden.
+        Copy Challenge: Tippe vorgegebene Sätze exakt nach – dank verbesserter Logik startet das Spiel per Enter-Taste zuverlässig, und beim Reset werden stets neue Sätze generiert.
 
         Kreativmodus: Mit inspirierenden Schreibimpulsen für deine Kreativität.
 
@@ -30,25 +19,47 @@ Hauptfunktionen und Spielmodi
 
         Schalte Erfolge frei, wenn du bestimmte Meilensteine (z. B. eine bestimmte Wortanzahl) erreichst.
 
-        Erhalte Rewards und Abzeichen (z. B. Emoji-Rewards, spezielle Schriftfarben), die im Shop erworben werden können.
+        Erhalte Rewards und Abzeichen (wie spezielle Emoji-Rewards, Schriftfarben, etc.), die im Shop erworben werden können.
 
     Shop & Inventar:
 
-        Kaufe kosmetische Upgrades wie neue Profilbilder, Cursor und weitere Icons mit deinen verdienten Credits.
+        Kaufe kosmetische Upgrades wie neue Profilbilder, Glücksbringer und weitere Icons mit deinen verdienten Wissenspunkten.
 
-        Das System wurde hinsichtlich der Anzeige und Bedienbarkeit verbessert – sowohl für den PC als auch für mobile Geräte wurden die Icons und Buttons optimiert.
+        Das System wurde hinsichtlich der Anzeige und Bedienbarkeit verbessert – sowohl für PC als auch mobile Geräte wurden Icons und Buttons optimiert.
 
     Profil‑Sicherheit:
 
-        Um Manipulationen (z. B. durch direktes Ändern der JSON-Datei) zu verhindern, wird beim Speichern des Profils eine einfache Checksumme (basierend auf den Credits plus einem geheimen Schlüssel) erzeugt und mitgespeichert.
+        Um Manipulationen (z. B. durch direktes Ändern der JSON-Datei) zu verhindern, wird beim Speichern des Profils eine einfache Checksumme (basierend auf den Wissenspunkten plus einem geheimen Schlüssel) erzeugt und mitgespeichert.
 
         Beim Laden des Profils wird diese Checksumme überprüft – bei Unstimmigkeiten wird ein möglicher Betrugsversuch gemeldet.
+
+        Wichtig: Wir haben den Checksumme-Mechanismus erweitert, sodass jetzt auch alle relevanten Werte (wie dein Inventar an Glücksbringern) berücksichtigt werden.
 
     Copy Challenge Optimierungen:
 
         Verbesserte Logik bei den Copy Messages: Das Spiel startet nun zuverlässig per Enter-Taste, wenn der Start-Hinweis im Texteingabefeld angezeigt wird.
 
-        Das Reset-Problem im Copy-Modus wurde behoben – es werden nun immer neue Sätze generiert.
+        Das Reset-Problem im Copy-Modus wurde behoben – es werden stets neue Sätze generiert.
+
+Neue Features und Erweiterungen
+
+    Namensänderung im Profil:
+    Bisher gab es keine Möglichkeit, den Profilnamen zu ändern. Jetzt haben wir ein Eingabefeld und einen Button integriert, mit dem du deinen Namen direkt im Spiel anpassen kannst – die Änderung wird sofort in deinem Profilbereich angezeigt.
+
+    Terminologie-Anpassungen:
+
+        Credits wurden in Wissenspunkte umbenannt.
+
+        Cursoren wurden durch Glücksbringer ersetzt – inklusive Anpassung aller zugehörigen Variablen, Shop-Items und Anzeigeelemente.
+
+    Neue Kategorie "Code/Python":
+    Wir haben eine spannende neue Kategorie eingeführt, die eine große Sammlung von Python-Code-Beispielen enthält:
+
+        Easy (25 Beispiele): Basisbefehle, Variablenzuweisungen, Schleifen und einfache Ausgaben.
+
+        Normal (15 Beispiele): Funktionen, Bedingungen, List Comprehensions, Dateioperationen und Klassen.
+
+        Hard (10 Beispiele): Anspruchsvolle Beispiele wie Merge-Sort, DataFrame-Operationen, Dekoratoren, Singleton-Pattern, asynchrone Programmierung und Generatoren – humorvoll und übersichtlich dargestellt.
 
 Technischer Hintergrund und Motivation
 
@@ -59,36 +70,14 @@ Plattformen und Nutzung
     Der Hauptfokus liegt auf der PC-Version, die eine umfassende Nutzung von Tastatur und Maus ermöglicht. Alle Spielmodi, das Belohnungssystem, der Shop und das Profilmanagement sind für den PC optimiert.
 
     Mobile Version:
-    Parallel zur PC-Version wurde eine vollständig responsive Version entwickelt. Mit angepassten Schriftgrößen, größeren Touch-Zielen und optimierter Benutzeroberfläche kannst du das Spiel auch auf Smartphones problemlos spielen – ideal für unterwegs!
+    Eine vollständig responsive Version sorgt dafür, dass du das Spiel auch auf Smartphones problemlos spielen kannst – ideal für unterwegs, auch wenn der Schwerpunkt auf dem PC liegt.
 
-Credits werden in Schreibabenteuer DemusOpalium vor allem am Ende einer Session verdient. Konkret passiert Folgendes:
-
-    Session-Ende:
-    Beim Beenden einer normalen Session wird ein Session-Score basierend auf der Anzahl geschriebener Wörter, Tippgeschwindigkeit (WPM), Fehlern und weiteren Boni berechnet. Anschließend werden Credits in Höhe von Math.round(sessionScore / 10) deinem Profil hinzugefügt.
-
-    Level-Up:
-    Wenn du genügend XP sammelst und ein neues Level erreichst, erhältst du zusätzlich 50 Credits.
-
-    Copy Challenge:
-    Im Copy Challenge-Modus sammelst du Punkte, die in XP umgewandelt werden – und diese XP tragen wiederum zum Level-Up bei, wodurch du auch Credits erhältst.
-
-Diese Mechanismen sorgen dafür, dass du durch schnelles und präzises Tippen sowie durch konsequentes Schreiben belohnt wirst.
-
-```
-# ____####___####
-# __##____#_#____##
-# _#_______#______ _#
-# _#_______________#
-# __#_____________#
-# ___#__________#
-# ____ _#______#
-# _______#__#
-# ________#
-```
-
-
+Beim Beenden einer Session wird ein Score basierend auf der Anzahl geschriebener Wörter, Tippgeschwindigkeit (WPM), Fehlern und weiteren Boni berechnet. Dementsprechend erhältst du Wissenspunkte, die du im Shop einsetzen kannst – und beim Level-Up gibt es zusätzlich Belohnungen.
 Open Source & Community
 
 Der gesamte Code ist offen einsehbar und dient als Basis für weitere Verbesserungen und Erweiterungen. Wir freuen uns über Feedback, Bug-Meldungen und Beiträge der Community!
 
-Vielen Dank, dass du Schreibabenteuer DemusOpalium ausprobierst – viel Spaß beim Schreiben und Tippen, egal ob am PC oder mobil!
+Besonderer Dank:
+Dieses Projekt wurde in enger Zusammenarbeit mit einer wunderbaren KI entwickelt – sie liefert immer wieder kreative Ideen und sorgt dafür, dass wir gemeinsam großartigen Code erstellen. Ein großes Dankeschön an diese inspirierende Unterstützung!
+
+Vielen Dank, dass du Schreibabenteuer DemusOpalium ausprobierst – viel Spaß beim Schreiben, Tippen und Entdecken aller neuen Features!

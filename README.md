@@ -1,174 +1,234 @@
-Schreibabenteuer DemusOpalium
+Schreibabenteuer DemusOpalium / Writing Adventure DemusOpalium / Mchezo wa Kuandika DemusOpalium
 
-Schreibabenteuer DemusOpalium ist ein Open‑Source-Schreibspiel, in dem du in variablen Zeitmodi (1–5 Minuten) spannende Schreib‑Challenges meisterst – sei es kreativ, präzise oder unter hohem Druck! Das Spiel richtet sich vor allem an PC-Nutzer mit Tastatur, bietet aber auch eine voll responsive Version für mobile Geräte.
-Hauptfunktionen und Spielmodi
+    Hinweis: Dieses Projekt ist ein Open‑Source-Schreibspiel, das sich noch in der Entwicklung befindet. Wir freuen uns über Feedback, Bug‑Meldungen und Beiträge der Community!
 
-    Mehrere Spielmodi:
+Deutsch
+Einleitung
 
-        Freewrite: Kreatives Schreiben ohne Strafe.
+Schreibabenteuer DemusOpalium ist ein Open‑Source-Schreibspiel, in dem du in variablen Zeitmodi (1–5 Minuten) spannende Schreib‑Challenges meisterst – sei es kreativ, präzise oder unter hohem Druck. Das Spiel richtet sich vor allem an PC‑Nutzer mit Tastatur, bietet aber auch eine voll responsive Version für mobile Geräte.
+Hauptfunktionen & Spielmodi
 
-        Hardcore: Jeder Fehler oder jede Inaktivität löscht den Text.
+    Freewrite: Kreatives Schreiben ohne Strafe.
 
-        Adventure: Stelle dich dem „Wort Boss“ und kämpfe mit deinen geschriebenen Wörtern.
+    Hardcore: Jeder Fehler oder jede Inaktivität löscht den Text.
 
-        Copy Challenge: Tippe vorgegebene Sätze exakt nach – dank verbesserter Logik startet das Spiel per Enter-Taste zuverlässig, und beim Reset werden stets neue Sätze generiert.
+    Adventure: Stelle dich dem „Wort Boss“ und kämpfe mit deinen geschriebenen Wörtern.
 
-        Kreativmodus: Mit inspirierenden Schreibimpulsen für deine Kreativität.
+    Copy Challenge: Tippe vorgegebene Sätze exakt nach – das Spiel startet zuverlässig per Enter‑Taste, und beim Reset werden stets neue Sätze generiert.
 
-    Belohnungssystem & Erfolge:
+    Kreativmodus: Erhalte inspirierende Schreibimpulse, um deine Kreativität anzukurbeln.
 
-        Schalte Erfolge frei, wenn du bestimmte Meilensteine (z. B. eine bestimmte Wortanzahl) erreichst.
+Belohnungssystem & Erfolge
 
-        Erhalte Rewards und Abzeichen (wie spezielle Emoji-Rewards, Schriftfarben, etc.), die im Shop erworben werden können.
+    Erreiche bestimmte Meilensteine (z. B. eine bestimmte Wortanzahl) und schalte Erfolge frei.
 
-    Shop & Inventar:
+    Verdiene Rewards und Abzeichen (z. B. spezielle Emoji‑Rewards, Schriftfarben etc.), die im Shop erworben werden können.
 
-        Kaufe kosmetische Upgrades wie neue Profilbilder, Glücksbringer und weitere Icons mit deinen verdienten Wissenspunkten.
+Shop & Inventar
 
-        Das System wurde hinsichtlich der Anzeige und Bedienbarkeit verbessert – sowohl für PC als auch mobile Geräte wurden Icons und Buttons optimiert.
+    Kaufe kosmetische Upgrades wie neue Profilbilder, Glücksbringer und weitere Icons mit deinen verdienten Wissenspunkten.
 
-    Profil‑Sicherheit:
+    Das System wurde hinsichtlich Anzeige und Bedienbarkeit optimiert – Icons und Buttons passen sich sowohl an PC als auch mobile Geräte an.
 
-        Um Manipulationen (z. B. durch direktes Ändern der JSON-Datei) zu verhindern, wird beim Speichern des Profils eine einfache Checksumme (basierend auf den Wissenspunkten plus einem geheimen Schlüssel) erzeugt und mitgespeichert.
+Profil‑Sicherheit
 
-        Beim Laden des Profils wird diese Checksumme überprüft – bei Unstimmigkeiten wird ein möglicher Betrugsversuch gemeldet.
+    Beim Speichern deines Profils wird eine einfache Checksumme (basierend auf deinen Wissenspunkten plus einem geheimen Schlüssel) erzeugt und mitgespeichert.
 
-        Wichtig: Wir haben den Checksumme-Mechanismus erweitert, sodass jetzt auch alle relevanten Werte (wie dein Inventar an Glücksbringern) berücksichtigt werden.
+    Beim Laden des Profils wird diese Checksumme überprüft – Unstimmigkeiten werden als möglicher Betrugsversuch gemeldet.
 
-    Copy Challenge Optimierungen:
+    Neu: Der Mechanismus berücksichtigt jetzt alle relevanten Werte (z. B. dein Inventar an Glücksbringern).
 
-        Verbesserte Logik bei den Copy Messages: Das Spiel startet nun zuverlässig per Enter-Taste, wenn der Start-Hinweis im Texteingabefeld angezeigt wird.
+Copy Challenge Optimierungen
 
-        Das Reset-Problem im Copy-Modus wurde behoben – es werden stets neue Sätze generiert.
+    Verbesserte Logik bei den Copy‑Messages: Das Spiel startet zuverlässig per Enter‑Taste, sobald der Start-Hinweis im Texteingabefeld erscheint.
 
-Neue Features und Erweiterungen
+    Das Reset‑Problem im Copy‑Modus wurde behoben – neue Sätze werden stets generiert.
 
-    Namensänderung im Profil:
-    Bisher gab es keine Möglichkeit, den Profilnamen zu ändern. Jetzt haben wir ein Eingabefeld und einen Button integriert, mit dem du deinen Namen direkt im Spiel anpassen kannst – die Änderung wird sofort in deinem Profilbereich angezeigt.
+Neue Features & Erweiterungen
+
+    Namensänderung im Profil: Ein Eingabefeld und Button ermöglichen es, den Profilnamen direkt im Spiel zu ändern – die Änderung wird sofort im Profilbereich angezeigt.
 
     Terminologie-Anpassungen:
 
-        Credits wurden in Wissenspunkte umbenannt.
+        „Credits“ wurden in Wissenspunkte umbenannt.
 
-        Cursoren wurden durch Glücksbringer ersetzt – inklusive Anpassung aller zugehörigen Variablen, Shop-Items und Anzeigeelemente.
+        „Cursoren“ wurden durch Glücksbringer ersetzt – alle zugehörigen Variablen, Shop‑Items und Anzeigeelemente wurden angepasst.
 
     Neue Kategorie "Code/Python":
-    Wir haben eine spannende neue Kategorie eingeführt, die eine große Sammlung von Python-Code-Beispielen enthält:
 
         Easy (25 Beispiele): Basisbefehle, Variablenzuweisungen, Schleifen und einfache Ausgaben.
 
         Normal (15 Beispiele): Funktionen, Bedingungen, List Comprehensions, Dateioperationen und Klassen.
 
-        Hard (10 Beispiele): Anspruchsvolle Beispiele wie Merge-Sort, DataFrame-Operationen, Dekoratoren, Singleton-Pattern, asynchrone Programmierung und Generatoren – humorvoll und übersichtlich dargestellt.
+        Hard (10 Beispiele): Anspruchsvolle Beispiele wie Merge‑Sort, DataFrame‑Operationen, Dekoratoren, Singleton‑Pattern, asynchrone Programmierung und Generatoren – humorvoll und übersichtlich dargestellt.
 
-Technischer Hintergrund und Motivation
+Technischer Hintergrund & Motivation
 
-Nach 17 Jahren intensiver Tipp-Erfahrung und dem Experimentieren mit meiner neuen HotSwap 60%-Tastatur – inklusive einer mit Kork gedämmten Unterlage – stellte sich die Frage: Wie schnell kann ich wirklich tippen? Auf der Suche nach einem passenden Tool stieß ich auf „Write or Die“, das jedoch nicht mehr aktiv weiterentwickelt wurde. Andere Lösungen erforderten oft eine aufwendige Registrierung – etwas, das mir nicht zusagte. Schreibabenteuer DemusOpalium entstand also als offene, flexible Plattform, um den Spaß am Schreiben mit einem Belohnungssystem und verschiedenen Herausforderungen zu kombinieren.
-Plattformen und Nutzung
+Nach 17 Jahren intensiver Tipp-Erfahrung und dem Experimentieren mit meiner neuen HotSwap 60%-Tastatur (inklusive einer mit Kork gedämmten Unterlage) stellte sich die Frage: Wie schnell kann ich wirklich tippen? Auf der Suche nach einem passenden Tool stieß ich auf „Write or Die“, das jedoch nicht mehr aktiv weiterentwickelt wurde. Schreibabenteuer DemusOpalium entstand als offene, flexible Plattform, um den Spaß am Schreiben mit einem Belohnungssystem und verschiedenen Herausforderungen zu kombinieren.
+Plattformen & Nutzung
 
-    PC (Tastatur):
-    Der Hauptfokus liegt auf der PC-Version, die eine umfassende Nutzung von Tastatur und Maus ermöglicht. Alle Spielmodi, das Belohnungssystem, der Shop und das Profilmanagement sind für den PC optimiert.
+    PC (Tastatur): Optimiert für die Nutzung von Tastatur und Maus. Alle Spielmodi, das Belohnungssystem, der Shop und das Profilmanagement sind für den PC optimiert.
 
-    Mobile Version:
-    Eine vollständig responsive Version sorgt dafür, dass du das Spiel auch auf Smartphones problemlos spielen kannst – ideal für unterwegs, auch wenn der Schwerpunkt auf dem PC liegt.
+    Mobile Version: Eine vollständig responsive Version ermöglicht das Spielen auch auf Smartphones – ideal für unterwegs.
 
-Beim Beenden einer Session wird ein Score basierend auf der Anzahl geschriebener Wörter, Tippgeschwindigkeit (WPM), Fehlern und weiteren Boni berechnet. Dementsprechend erhältst du Wissenspunkte, die du im Shop einsetzen kannst – und beim Level-Up gibt es zusätzlich Belohnungen.
+Beim Beenden einer Session wird ein Score basierend auf der Anzahl geschriebener Wörter, Tippgeschwindigkeit (WPM), Fehlern und weiteren Boni berechnet. Du erhältst Wissenspunkte, die im Shop ausgegeben werden können – sowie zusätzliche Belohnungen beim Level‑Up.
 Open Source & Community
 
-Der gesamte Code ist offen einsehbar und dient als Basis für weitere Verbesserungen und Erweiterungen. Wir freuen uns über Feedback, Bug-Meldungen und Beiträge der Community!
+Der gesamte Code ist offen einsehbar und dient als Grundlage für weitere Verbesserungen und Erweiterungen. Wir freuen uns über Feedback, Bug‑Meldungen und Community‑Beiträge!
+Besonderer Dank
 
-Besonderer Dank:
-Dieses Projekt wurde in enger Zusammenarbeit mit einer wunderbaren KI entwickelt – sie liefert immer wieder kreative Ideen und sorgt dafür, dass wir gemeinsam großartigen Code erstellen. Ein großes Dankeschön an diese inspirierende Unterstützung!
+Dieses Projekt wurde in enger Zusammenarbeit mit einer wunderbaren KI entwickelt, die uns immer wieder kreative Ideen liefert und dazu beiträgt, großartigen Code zu erstellen. Vielen Dank für diese inspirierende Unterstützung!
+English
+Introduction
 
-Vielen Dank, dass du Schreibabenteuer DemusOpalium ausprobierst – viel Spaß beim Schreiben, Tippen und Entdecken aller neuen Features!
-
-
-
-####################################ENGL##################################
-
-Writing Adventure DemusOpalium
-
-Writing Adventure DemusOpalium is an open‑source typing game where you tackle exciting writing challenges in variable time modes (1–5 minutes) – whether you're being creative, precise, or under intense pressure! The game is primarily designed for PC users with a keyboard, but it also offers a fully responsive version for mobile devices.
-
-Main Features and Game Modes
-
-Multiple Game Modes:
+Writing Adventure DemusOpalium is an open‑source typing game where you tackle exciting writing challenges in variable time modes (1–5 minutes) – whether you’re being creative, precise, or under intense pressure. Designed primarily for PC users with a keyboard, the game also offers a fully responsive version for mobile devices.
+Main Features & Game Modes
 
     Freewrite: Creative writing without penalty.
 
     Hardcore: Every mistake or period of inactivity deletes your text.
 
-    Adventure: Face off against the “Word Boss” and battle using your typed words.
+    Adventure: Face the “Word Boss” and battle using your typed words.
 
-    Copy Challenge: Type given sentences exactly as shown – thanks to improved logic, the game reliably starts with the Enter key, and new sentences are always generated upon reset.
+    Copy Challenge: Type given sentences exactly as shown – with improved logic, the game reliably starts with the Enter key and always generates new sentences upon reset.
 
     Creative Mode: Enjoy inspiring writing prompts to boost your creativity.
 
-Reward System & Achievements:
+Reward System & Achievements
 
-    Unlock achievements when you hit specific milestones (for example, reaching a certain word count).
+    Unlock achievements when you reach specific milestones (e.g., a certain word count).
 
-    Earn rewards and badges (such as special emoji rewards, font colors, etc.) that you can purchase in the shop.
+    Earn rewards and badges (such as special emoji rewards, font colors, etc.) that can be purchased in the shop.
 
-Shop & Inventory:
+Shop & Inventory
 
     Buy cosmetic upgrades like new profile images, charms, and other icons using your earned Knowledge Points.
 
-    The system’s display and usability have been improved – icons and buttons are optimized for both PC and mobile devices.
+    The interface has been optimized for both PC and mobile devices, with improved icon and button designs.
 
-Profile Security:
+Profile Security
 
     To prevent tampering (e.g., by directly editing the JSON file), a simple checksum (based on your Knowledge Points plus a secret key) is generated and saved when you save your profile.
 
     When loading your profile, this checksum is verified – any discrepancies are flagged as potential cheating.
 
-    Important: We have enhanced the checksum mechanism so that all relevant values (such as your inventory of charms) are now taken into account.
+    New: The mechanism now takes all relevant values (e.g., your inventory of charms) into account.
 
-Copy Challenge Optimizations:
+Copy Challenge Optimizations
 
     Improved logic for copy messages: the game now reliably starts with the Enter key when the start prompt appears in the text input field.
 
     The reset issue in Copy Mode has been fixed – new sentences are always generated.
 
-New Features and Enhancements
+New Features & Enhancements
 
-Profile Name Change:
-Previously, there was no way to change your profile name. Now, an input field and a button have been integrated so you can update your name directly in the game – the change is immediately reflected in your profile area.
+    Profile Name Change: An input field and button allow you to update your profile name directly in the game – the change is immediately reflected in your profile area.
 
-Terminology Adjustments:
+    Terminology Adjustments:
 
-    “Credits” have been renamed to “Knowledge Points.”
+        “Credits” have been renamed to Knowledge Points.
 
-    “Cursors” have been replaced by “Charms” – with all related variables, shop items, and display elements updated accordingly.
+        “Cursors” have been replaced by Charms – with all related variables, shop items, and display elements updated accordingly.
 
-New "Code/Python" Category:
-We have introduced an exciting new category that features a large collection of Python code examples:
+    New "Code/Python" Category:
 
-    Easy (25 examples): Basic commands, variable assignments, loops, and simple outputs.
+        Easy (25 examples): Basic commands, variable assignments, loops, and simple outputs.
 
-    Normal (15 examples): Functions, conditions, list comprehensions, file operations, and classes.
+        Normal (15 examples): Functions, conditions, list comprehensions, file operations, and classes.
 
-    Hard (10 examples): Challenging examples such as merge sort, DataFrame operations, decorators, the singleton pattern, asynchronous programming, and generators – presented humorously and clearly.
+        Hard (10 examples): Challenging examples such as merge sort, DataFrame operations, decorators, the singleton pattern, asynchronous programming, and generators – presented humorously and clearly.
 
-Technical Background and Motivation
+Technical Background & Motivation
 
-After 17 years of intensive typing experience and experimenting with my new HotSwap 60%-keyboard – complete with a cork-dampened base – I asked myself: How fast can I really type? While searching for a suitable tool, I discovered “Write or Die,” which, however, is no longer actively developed. Other solutions often required an elaborate registration process – something that didn’t appeal to me. Writing Adventure DemusOpalium was thus created as an open, flexible platform to combine the fun of writing with a reward system and various challenges.
+After 17 years of intensive typing experience and experimenting with my new HotSwap 60%-keyboard (complete with a cork-dampened base), I asked myself: How fast can I really type? On the search for a suitable tool, I discovered “Write or Die,” which is no longer actively developed. Writing Adventure DemusOpalium was created as an open, flexible platform to combine the fun of writing with a reward system and various challenges.
+Platforms & Usage
 
-Platforms and Usage
+    PC (Keyboard): Optimized for full use of keyboard and mouse. All game modes, the reward system, shop, and profile management are PC‑optimized.
 
-PC (Keyboard):
-The main focus is on the PC version, which makes full use of the keyboard and mouse. All game modes, the reward system, the shop, and profile management are optimized for PC.
+    Mobile Version: A fully responsive version ensures you can play the game seamlessly on smartphones – perfect for on‑the‑go use.
 
-Mobile Version:
-A fully responsive version ensures that you can play the game seamlessly on smartphones – perfect for on-the-go use, even though the main focus remains on the PC.
-
-When you finish a session, a score is calculated based on the number of words written, typing speed (WPM), errors, and additional bonuses. Accordingly, you earn Knowledge Points that can be spent in the shop – and extra rewards are given when you level up.
-
+After a session, your score is calculated based on the number of words written, typing speed (WPM), errors, and additional bonuses. You earn Knowledge Points that can be spent in the shop – with extra rewards given on level‑up.
 Open Source & Community
 
-The entire code is open source and serves as a foundation for further improvements and enhancements. We welcome feedback, bug reports, and community contributions!
+All code is open source and serves as the foundation for further improvements and enhancements. We welcome feedback, bug reports, and community contributions!
+Special Thanks
 
-Special Thanks:
-This project was developed in close collaboration with an amazing AI that continually provides creative ideas and helps us create outstanding code together. A big thank you for this inspiring support!
+This project was developed in close collaboration with an amazing AI that continually provides creative ideas and helps us create outstanding code. A big thank you for this inspiring support!
+Swahili
+Utangulizi
 
-Thank you for trying out Writing Adventure DemusOpalium – have fun writing, typing, and discovering all the new features!
+Mchezo wa Kuandika DemusOpalium ni mchezo wa kuandika (typing game) wa open‑source ambapo unakabiliana na changamoto za kuandika katika muda tofauti (dakika 1–5) – iwe unaunda, unaandika kwa usahihi, au chini ya shinikizo kubwa. Mchezo umeundwa hasa kwa watumiaji wa PC wenye kibodi, lakini pia unatoa toleo linalobadilika kikamilifu kwa vifaa vya simu.
+Vipengele Vikuu & Aina za Mchezo
+
+    Freewrite: Kuandika kwa ubunifu bila adhabu.
+
+    Hardcore: Kosa lolote au kukosa shughuli kunafuta maandishi yako.
+
+    Adventure: Lingana na “Bosi wa Maneno” na pigana kwa kutumia maneno yako yaliyoandikwa.
+
+    Copy Challenge: Nakili sentensi zilizoonyeshwa kwa usahihi – kwa sababu ya ubunifu ulioboreshwa, mchezo huanza kwa ufahamu wa kitufe cha Enter na kila reset sentensi mpya huundwa.
+
+    Creative Mode: Pata msukumo wa kuandika ili kuongeza ubunifu wako.
+
+Mfumo wa Tuzo na Mafanikio
+
+    Fungua mafanikio unapofikia vipengele maalum (kwa mfano, idadi fulani ya maneno).
+
+    Pata tuzo na medali (kama vile emoji maalum, rangi za herufi, nk.) ambazo unaweza kununua katika duka.
+
+Duka & Hazina
+
+    Nunua maboresho ya mwonekano kama picha mpya za wasifu, vibonzo, na icons nyingine kwa kutumia Alama za Maarifa ulizopata.
+
+    Mfumo umeboreshwa kwa ufanisi kwa PC na vifaa vya simu – icons na vitufe vimeboreshwa.
+
+Usalama wa Wasifu
+
+    Ili kuzuia udanganyifu (mfano, kwa kubadilisha faili ya JSON moja kwa moja), checksum rahisi (iliyobainishwa kwa kutumia Alama zako za Maarifa pamoja na ufunguo wa siri) hutengenezwa na kuhifadhiwa wakati wa kuhifadhi wasifu wako.
+
+    Wakati wa kupakia wasifu, checksum hii inakaguliwa – tofauti yoyote inashughulikiwa kama jaribio la udanganyifu.
+
+    Mpya: Mfumo sasa unazingatia thamani zote muhimu (kwa mfano, hazina yako ya vibonzo).
+
+Maboresho ya Copy Challenge
+
+    Logiki iliyoboreshwa kwa ujumbe wa nakili: Mchezo sasa huanza kwa kitufe cha Enter mara tu miongozo ya kuanza huonekana katika sehemu ya kuingiza maandishi.
+
+    Tatizo la reset katika Copy Mode limetatuliwa – sentensi mpya huundwa kila wakati.
+
+Vipengele Vipya na Uboreshaji
+
+    Kubadilisha Jina la Wasifu: Awali hakuwezekana kubadilisha jina la wasifu. Sasa, sehemu ya kuingiza na kitufe kimeongezwa ili urekebishe jina lako moja kwa moja ndani ya mchezo – mabadiliko yanaonekana mara moja katika sehemu ya wasifu.
+
+    Marekebisho ya Terminolojia:
+
+        "Credits" zimebadilishwa kuwa Alama za Maarifa.
+
+        "Cursors" zimenakuliwa na Vibonzo – pamoja na kurekebishwa kwa vigezo, vitu vya duka, na vipengele vya uonyesho.
+
+    Kategoria Mpya "Code/Python":
+
+        Rahisi (25 mifano): Amri za msingi, uelekezaji wa variable, mizunguko, na matokeo rahisi.
+
+        Kawaida (15 mifano): Functions, masharti, list comprehensions, shughuli za faili, na madarasa.
+
+        Gumu (10 mifano): Mifano changamano kama merge sort, shughuli za DataFrame, decorators, singleton pattern, programu zisizo za kusubiri, na generators – zimewasilishwa kwa njia ya ucheshi na wazi.
+
+Maelezo ya Kiufundi na Mmotivation
+
+Baada ya miaka 17 ya uzoefu mkubwa wa kuandika na kujaribu kibodi yangu mpya ya HotSwap 60% (ikiwa na msingi uliosafishwa kwa korki), nilijiuliza: Naweza kuandika kwa kasi kiasi gani kweli? Nilipokuwa nikitafuta zana inayofaa, nilikuta “Write or Die” ambayo haijaendelea kusasishwa. Mchezo wa Kuandika DemusOpalium umeundwa kama jukwaa huria na linalobadilika ili kuchanganya furaha ya kuandika na mfumo wa tuzo pamoja na changamoto mbalimbali.
+Majukwaa na Matumizi
+
+    PC (Kibodi): Lengo kuu ni PC, ambapo matumizi ya kibodi na panya yanaangaziwa kikamilifu. Aina zote za mchezo, mfumo wa tuzo, duka, na usimamizi wa wasifu zimeboreshwa kwa PC.
+
+    Toleo la Simu: Toleo linalobadilika kikamilifu linahakikisha unaweza kucheza mchezo hata kwenye simu – bora kwa matumizi ya nje.
+
+Kila baada ya sesheni, score inahesabiwa kulingana na idadi ya maneno yaliyoandikwa, kasi ya kuandika (WPM), makosa, na bonus nyingine. Hivyo, unapata Alama za Maarifa ambazo unaweza kutumia katika duka – pamoja na tuzo za ziada unapopanda kiwango.
+Open Source & Jamii
+
+Msimbo mzima uko wazi na unatumika kama msingi wa maboresho na uboreshaji zaidi. Tunakaribisha maoni, taarifa za makosa, na michango kutoka kwa jamii!
+Shukrani Maalum
+
+Mradi huu umeundwa kwa ushirikiano wa karibu na AI ya ajabu inayotoa mawazo ya ubunifu na kutusaidia kuunda msimbo bora. Shukrani kubwa kwa msaada huu unaosisimua!
+
+Feel free to modify this README as the project evolves. Happy coding and writing – enjoy the adventure!

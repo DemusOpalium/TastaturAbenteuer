@@ -231,4 +231,4 @@ Shukrani Maalum
 
 Mradi huu umeundwa kwa ushirikiano wa karibu na AI ya ajabu inayotoa mawazo ya ubunifu na kutusaidia kuunda msimbo bora. Shukrani kubwa kwa msaada huu unaosisimua!
 
-Feel free to modify this README as the project evolves. Happy coding and writing – enjoy the adventure!
+Feel free to modify . Happy coding and writing – enjoy the adventure!

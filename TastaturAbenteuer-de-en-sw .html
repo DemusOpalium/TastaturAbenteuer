@@ -146,7 +146,6 @@
       height: 100%;
       overflow: auto;
       background-color: rgba(0,0,0,0.7);
-      display: flex;
       align-items: center;
       justify-content: center;
     }
@@ -866,7 +865,6 @@
           elem.placeholder = translations[currentLanguage][key];
         }
       });
-      // Button-Text für Sprachumschaltung: de->EN, en->SW, sw->DE
       document.getElementById('langBtn').textContent = (currentLanguage === 'de') ? 'EN' : (currentLanguage === 'en' ? 'SW' : 'DE');
     }
     updateLanguage();
@@ -1747,11 +1745,8 @@ const sentenceLibraries_sw = {
     ]
   }
 };
-
-// Die Bibliotheken für Englisch und Kiswahili können ebenfalls weiter angepasst werden – siehe oben.
-
-console.log("Neue deutsche, englische und kiswahili Satzbibliotheken wurden erstellt.");
-
+    // Die Bibliotheken für Englisch und Kiswahili können ebenfalls weiter angepasst werden – siehe oben.
+    console.log("Neue deutsche, englische und kiswahili Satzbibliotheken wurden erstellt.");
 
     let boss = null, bossDefeated = false;
     let lastProcessedIndex = 0;
@@ -2209,11 +2204,9 @@ console.log("Neue deutsche, englische und kiswahili Satzbibliotheken wurden erst
       let lib = document.getElementById("librarySelect").value;
       let diff = difficultySelect.value;
       let sentences;
-      // Falls Englisch und Kategorie "tierwelt" gewählt, auf "animalworld" umstellen
       if (currentLanguage === 'en' && lib === 'tierwelt') {
         lib = 'animalworld';
       }
-      // Falls Swahili und Kategorie "tierwelt" gewählt, auf "wanyama" umstellen
       if (currentLanguage === 'sw' && lib === 'tierwelt') {
         lib = 'wanyama';
       }
@@ -2282,6 +2275,28 @@ console.log("Neue deutsche, englische und kiswahili Satzbibliotheken wurden erst
       document.getElementById("copyScoreDisplay").textContent = "Copy Score: " + copyScore;
     }
     
+    /* --- Neue Funktion: Schreibimpuls-Popup im Kreativ-Modus --- */
+    function showPromptPopup() {
+      // Positioniere das Popup über dem Schreibbereich
+      const writeAreaRect = writeArea.getBoundingClientRect();
+      const promptPopup = document.createElement("div");
+      promptPopup.style.position = "absolute";
+      promptPopup.style.top = (window.scrollY + writeAreaRect.top - 50) + "px";
+      promptPopup.style.left = (window.scrollX + writeAreaRect.left) + "px";
+      promptPopup.style.width = writeAreaRect.width + "px";
+      promptPopup.style.background = "rgba(0,0,0,0.8)";
+      promptPopup.style.color = "#fff";
+      promptPopup.style.padding = "10px";
+      promptPopup.style.borderRadius = "5px";
+      promptPopup.style.textAlign = "center";
+      promptPopup.style.zIndex = "400";
+      // Wähle einen zufälligen Prompt aus
+      promptPopup.textContent = prompts[Math.floor(Math.random() * prompts.length)];
+      document.body.appendChild(promptPopup);
+      // Entferne das Popup nach 10 Sekunden
+      setTimeout(() => { promptPopup.remove(); }, 10000);
+    }
+    
     function startSession() {
       endSessionPopup.style.display = "none";
       sessionActive = true;
@@ -2307,6 +2322,9 @@ console.log("Neue deutsche, englische und kiswahili Satzbibliotheken wurden erst
         lastProcessedIndex = 0;
         lastHotStreakWordCount = countWords(writeArea.innerText);
       }
+      
+      // Wenn Kreativ-Modus ausgewählt: Zeige Schreibimpuls-Popup für 10 Sekunden
+      if (modeSelect.value === "creative") { showPromptPopup(); }
     
       updateTimerDisplay();
       updateWordCount();
@@ -2510,28 +2528,24 @@ console.log("Neue deutsche, englische und kiswahili Satzbibliotheken wurden erst
       if (hotStreakCounter >= hotStreakRequired) { showHotStreakIndicator(); }
     });
     
-// ... bereits vorhandene Event-Listener und Funktionen
-
-// Event-Listener für das Theme-Dropdown
-document.getElementById("themeSelect").addEventListener("change", function() {
-  // Entferne alle Theme-Klassen vom Body
-  document.body.className = "";
-  // Füge die ausgewählte Theme-Klasse hinzu
-  document.body.classList.add(this.value);
-});
-
-// Event-Listener für das Schriftart-Dropdown
-document.getElementById("fontSelect").addEventListener("change", function() {
-  // Ändert die Schriftart des Bodys
-  document.body.style.fontFamily = this.value;
-});
-
-// Initiales Rendern
-renderShop();
-renderInventory();
-updateLeaderboard();
-updateProfileUI();
-
+    // ... bereits vorhandene Event-Listener und Funktionen
+    
+    // Event-Listener für das Theme-Dropdown
+    document.getElementById("themeSelect").addEventListener("change", function() {
+      document.body.className = "";
+      document.body.classList.add(this.value);
+    });
+    
+    // Event-Listener für das Schriftart-Dropdown
+    document.getElementById("fontSelect").addEventListener("change", function() {
+      document.body.style.fontFamily = this.value;
+    });
+    
+    // Initiales Rendern
+    renderShop();
+    renderInventory();
+    updateLeaderboard();
+    updateProfileUI();
   </script>
 </body>
 </html>

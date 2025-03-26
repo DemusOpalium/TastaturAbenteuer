@@ -2125,6 +2125,8 @@ function loadProfile(event) {
         let points = currentTargetSentence.split(" ").length * 10;
         copyScore += points;
         userStats.xp += points;
+        // Hier wird nun auch der Wissenspunkte-Bonus vergeben:
+        userStats.wissenspunkte += points;
         showAchievement("Satz korrekt! +" + points + " Punkte.");
         checkCopyAchievements();
         writeArea.innerText = "";
@@ -2332,13 +2334,19 @@ function loadProfile(event) {
       if (boss.currentHealth <= 0 && !bossDefeated) { bossDefeated = true; winGame(); }
     }
     
+    // In winGame() wurde die Logik zur Vergabe von XP und Wissenspunkten ergänzt
     function winGame() {
-      showAchievement("Boss besiegt! Bonus XP erhalten!");
-      userStats.xp += 50;
+      let bonusXP = 50;
+      let bonusWissenspunkte = 50;
+      showAchievement("Boss besiegt! Bonus XP und Wissenspunkte erhalten!");
+      userStats.xp += bonusXP;
+      userStats.wissenspunkte += bonusWissenspunkte;
       unlockReward("🏆 Boss-Besieger Emoji");
       clearInterval(timerInterval);
       clearTimeout(idleTimeout);
       endSessionPopup.innerHTML = `<h2>Gewonnen! Boss besiegt!</h2>
+                                   <p>Bonus XP: ${bonusXP}</p>
+                                   <p>Bonus Wissenspunkte: ${bonusWissenspunkte}</p>
                                    <button onclick="closeResultsPopup()">Schließen</button>`;
       endSessionPopup.style.display = "block";
       updateProfileUI();

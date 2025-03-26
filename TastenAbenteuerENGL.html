@@ -11,7 +11,6 @@
   <style>
     /* Basis-Reset */
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    
     /* Grundlayout und Themes */
     body {
       font-family: 'Roboto', sans-serif;
@@ -32,7 +31,6 @@
     .theme-ocean { background: #1e3d59; color: #a2d5f2; }
     .theme-forest { background: #2d4739; color: #cdeac0; }
     .theme-sunset { background: #ff9a8d; color: #4b134f; }
-    
     /* Rahmen für Buttons, Selects und Labels */
     .theme-dark button, .theme-dark select, .theme-dark label { border: 1px solid #444; }
     .theme-light button, .theme-light select, .theme-light label { border: 1px solid #ccc; }
@@ -42,7 +40,6 @@
     .theme-ocean button, .theme-ocean select, .theme-ocean label { border: 1px solid #a2d5f2; }
     .theme-forest button, .theme-forest select, .theme-forest label { border: 1px solid #cdeac0; }
     .theme-sunset button, .theme-sunset select, .theme-sunset label { border: 1px solid #4b134f; }
-    
     /* Überschrift */
     .title {
       font-family: 'Lora', serif;
@@ -51,7 +48,6 @@
       text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
       text-transform: uppercase;
     }
-    
     /* Profilbereich */
     #profileContainer {
       width: 100%;
@@ -84,7 +80,6 @@
       margin-left: 8px;
       font-size: 0.8em;
     }
-    
     /* Shopbereich */
     #shopContainer {
       width: 100%;
@@ -115,7 +110,6 @@
       border: none;
     }
     #shopContainer .refresh-btn:hover { background: #005fa3; }
-    
     /* Inventarbereich */
     #inventoryContainer {
       width: 100%;
@@ -128,7 +122,6 @@
     #inventoryContainer h2 { text-align: center; margin-bottom: 10px; }
     #inventoryContainer div { margin-bottom: 10px; }
     #inventoryContainer img { margin: 5px; border: 2px solid #fff; border-radius: 4px; cursor: pointer; }
-    
     /* Info Button & Modal */
     #infoBtn {
       position: fixed;
@@ -175,7 +168,6 @@
       cursor: pointer;
     }
     .close-btn:hover { color: #000; }
-    
     /* Dropdowns & Buttons */
     .design-controls, .extra-controls {
       margin-bottom: 20px;
@@ -196,7 +188,6 @@
     .design-controls select:hover, .extra-controls select:hover, .extra-controls button:hover {
       background: rgba(255,255,255,0.4);
     }
-    
     /* Statusleiste */
     .status-bar {
       margin-bottom: 15px;
@@ -211,7 +202,6 @@
     }
     .status-item { min-width: 100px; text-align: center; }
     #copyScoreDisplay { display: none; }
-    
     /* Schreibbereich */
     #writeArea {
       width: 100%;
@@ -238,7 +228,6 @@
     .theme-sunset #writeArea { border-color: #4b134f; }
     #writeArea.warning { background: rgba(200,50,50,0.5); animation: shake 0.5s infinite alternate; }
     @keyframes shake { from { transform: translateX(0); } to { transform: translateX(3px); } }
-    
     /* Copy Challenge */
     #copyTarget {
       display: none;
@@ -252,7 +241,6 @@
       border-radius: 5px;
     }
     #targetSentence { font-weight: bold; }
-    
     /* Steuerungselemente */
     .controls {
       margin-top: 15px;
@@ -273,7 +261,6 @@
     .controls button:hover, .controls select:hover, .controls label:hover {
       background: rgba(255,255,255,0.4);
     }
-    
     /* Boss-Anzeige */
     #bossContainer { display: none; margin-top: 10px; text-align: center; }
     #bossName { font-size: 1.2em; font-weight: bold; margin-bottom: 5px; }
@@ -291,7 +278,6 @@
       height: 100%;
       transition: width 0.5s ease;
     }
-    
     /* Achievement-Popup */
     .achievement {
       margin-top: 20px;
@@ -304,7 +290,6 @@
       display: none;
       box-shadow: 0 4px 6px rgba(0,0,0,0.3);
     }
-    
     /* Erfolge & Belohnungen */
     .achievements-rewards-container {
       display: flex;
@@ -340,7 +325,6 @@
       border-bottom: 1px solid rgba(255,255,255,0.2);
     }
     #achievementTable th { background: rgba(255,255,255,0.2); }
-    
     /* Leaderboard */
     .leaderboard {
       margin-top: 20px;
@@ -361,7 +345,6 @@
       border-bottom: 1px solid rgba(255,255,255,0.2);
     }
     .leaderboard th { background: rgba(255,255,255,0.2); }
-    
     /* End Session Popup */
     #endSessionPopup {
       display: none;
@@ -390,7 +373,6 @@
       transition: background 0.3s ease;
     }
     #endSessionPopup button:hover { background: #005fa3; }
-    
     /* CSS Animation für Würfel-Popup */
     .dice-animation {
       animation: rollDice 0.5s ease-in-out;
@@ -406,7 +388,6 @@
     @keyframes fadeOut {
       to { opacity: 0; }
     }
-    
     /* Responsive Layout */
     @media (max-width: 600px) {
       #writeArea { height: 250px; }
@@ -415,7 +396,6 @@
       }
       #profileContainer { flex-direction: column; align-items: center; }
     }
-    
     /* Button für Sprachumschaltung */
     #langBtn {
       position: fixed;
@@ -658,7 +638,7 @@
   
   <!-- End Session Popup -->
   <div id="endSessionPopup" style="display:none;">
-    <!-- Der Popup-Inhalt wird nun dynamisch über showSessionResults() befüllt -->
+    <!-- Der Popup-Inhalt wird dynamisch befüllt -->
   </div>
   
   <script>
@@ -799,21 +779,18 @@
     function updateLanguage() {
       document.documentElement.lang = currentLanguage;
       document.title = translations[currentLanguage].title;
-      // Alle Elemente mit data-translate aktualisieren
       document.querySelectorAll('[data-translate]').forEach(elem => {
         let key = elem.getAttribute('data-translate');
         if (translations[currentLanguage][key]) {
           elem.textContent = translations[currentLanguage][key];
         }
       });
-      // Platzhalter (z. B. in Inputs) aktualisieren
       document.querySelectorAll('[data-translate-placeholder]').forEach(elem => {
         let key = elem.getAttribute('data-translate-placeholder');
         if (translations[currentLanguage][key]) {
           elem.placeholder = translations[currentLanguage][key];
         }
       });
-      // Aktualisiere den Text des Sprachumschalt-Buttons
       document.getElementById('langBtn').textContent = currentLanguage === 'de' ? 'EN' : 'DE';
     }
 
@@ -822,11 +799,9 @@
       currentLanguage = currentLanguage === 'de' ? 'en' : 'de';
       updateLanguage();
     }
-
-    // Initiale Aktualisierung der Sprache
     updateLanguage();
 
-    /* --- Hier folgt dein bestehender JavaScript-Code --- */
+    /* --- Restlicher JavaScript-Code --- */
     let timerInterval = null, idleTimeout = null;
     let sessionActive = false;
     let sessionStartTime = null;
@@ -839,7 +814,7 @@
     let waitingForStart = false;
     let copyScore = 0;
     let currentTargetSentence = "";
-    
+
     let userStats = { 
       xp: 0,
       totalWords: 0,
@@ -872,16 +847,13 @@
       "https://i.imgur.com/E3B6FT4.png",
       "https://i.imgur.com/PsEpoi4.png"
     ];
-    
     const shopProfileItems = availableProfileImages.map((url, index) => {
-      return { id: "Profilbild " + (index+1), imgUrl: url, price: 150 + (index * 25) };
+      return { id: "Profilbild " + (index + 1), imgUrl: url, price: 150 + (index * 25) };
     });
     const shopGluecksbringerItems = availableGluecksbringer.map((url, index) => {
-      return { id: "Glücksbringer " + (index+1), imgUrl: url, price: 150 + (index * 25) };
+      return { id: "Glücksbringer " + (index + 1), imgUrl: url, price: 150 + (index * 25) };
     });
-    
     const secretKey = "geheimerSchluessel123";
-    
     function generateHash(input) {
       let hash = 0;
       for (let i = 0; i < input.length; i++) {
@@ -891,25 +863,24 @@
       }
       return hash;
     }
-    
-    // Standard Copy-Sätze
-    const standardSentences = {
-      easy: [
-        "Der Hund läuft schnell.",
-        "Die Sonne geht langsam unter."
-      ],
-      normal: [
-        "Ein majestätischer Adler kreist hoch am azurblauen Himmel und inspiriert alle, die ihn beobachten.",
-        "Die sanfte Berührung eines kühlen Windes bringt den Duft des Frühlings direkt in dein Herz."
-      ],
-      hard: [
-        "Inmitten eines tobenden Sturms bahnt sich ein einsamer Held seinen Weg durch die übersäteten Trümmer der verlassenen Stadt, während der Wind unerbittlich heult.",
-        "Die synchronisierten Flugmuster eines Vogelschwarmes, die den Himmel in ein atemberaubendes Farbspektakel tauchen, demonstrieren die kollektive Intelligenz und den Zusammenhalt der Tierwelt."
-      ]
-    };
 
+    /* --- Copy-Sätze --- */
+    // Deutsche Satzbibliothek
     const sentenceLibraries = {
-      standard: standardSentences,
+      standard: {
+        easy: [
+          "Der Hund läuft schnell.",
+          "Die Sonne geht langsam unter."
+        ],
+        normal: [
+          "Ein majestätischer Adler kreist hoch am azurblauen Himmel und inspiriert alle, die ihn beobachten.",
+          "Die sanfte Berührung eines kühlen Windes bringt den Duft des Frühlings direkt in dein Herz."
+        ],
+        hard: [
+          "Inmitten eines tobenden Sturms bahnt sich ein einsamer Held seinen Weg durch die übersäteten Trümmer der verlassenen Stadt, während der Wind unerbittlich heult.",
+          "Die synchronisierten Flugmuster eines Vogelschwarmes, die den Himmel in ein atemberaubendes Farbspektakel tauchen, demonstrieren die kollektive Intelligenz und den Zusammenhalt der Tierwelt."
+        ]
+      },
       realschule: {
         easy: [
           "Der Schüler lernt täglich in der Realschule.",
@@ -992,6 +963,38 @@
         hard: [
           "def complex_function(x):\n    return [i for i in range(x) if i % 2 == 0]\nprint(complex_function(10))",
           "try:\n    import non_existent_module\nexcept ImportError:\n    print('Modul nicht gefunden!')"
+        ]
+      }
+    };
+
+    // Englische Copy-Sätze – nur für ausgewählte Kategorien (hier: standard und tierwelt → animalworld)
+    const sentenceLibraries_en = {
+      standard: {
+        easy: [
+          "The dog runs fast.",
+          "The sun sets slowly."
+        ],
+        normal: [
+          "A majestic eagle soars high in the azure sky, inspiring everyone who watches it.",
+          "The gentle caress of a cool breeze brings the scent of spring directly to your heart."
+        ],
+        hard: [
+          "Amidst a raging storm, a lone hero makes his way through the scattered ruins of an abandoned city as the wind howls relentlessly.",
+          "The synchronized flight patterns of a flock of birds, turning the sky into a breathtaking spectacle, demonstrate the collective intelligence and unity of the animal kingdom."
+        ]
+      },
+      animalworld: {
+        easy: [
+          "The dog barks in the garden.",
+          "The antelope jumps gracefully across the open field."
+        ],
+        normal: [
+          "In the African savannah, the giraffe demonstrates impressive adaptability with its long stride and elegant movements.",
+          "The synchronized movements of a school of fish illustrate a remarkable collective behavior that transcends the individual."
+        ],
+        hard: [
+          "Across the vast African plains, the complex social structure of an elephant herd showcases an impressive level of communication and unity.",
+          "The coordinated flight of a flock of birds, turning the sky into a dazzling spectacle, exemplifies the collective intelligence and cohesion of the animal world."
         ]
       }
     };
@@ -1224,12 +1227,12 @@
       };
       reader.readAsText(file);
     }
-    
+
     function updateXPAndLevelDisplay() {
       xpDisplay.textContent = `XP: ${userStats.xp}`;
       levelDisplay.textContent = `Level: ${userStats.level}`;
     }
-    
+
     function checkLevelUp() {
       const newLevel = Math.floor(userStats.xp / 100) + 1;
       if (newLevel > userStats.level) {
@@ -1244,7 +1247,7 @@
       updateXPAndLevelDisplay();
       updateProfileUI();
     }
-    
+
     function saveSessionToLeaderboard() {
       const currentWords = countWords(writeArea.innerText);
       const sessionData = { words: currentWords, xp: userStats.xp, timestamp: Date.now() };
@@ -1252,7 +1255,7 @@
       leaderboard.sort((a, b) => b.words - a.words);
       localStorage.setItem("leaderboard", JSON.stringify(leaderboard));
     }
-    
+
     function updateLeaderboard() {
       const leaderboardBody = document.getElementById("leaderboardBody");
       leaderboardBody.innerHTML = "";
@@ -1262,12 +1265,12 @@
         leaderboardBody.appendChild(row);
       });
     }
-    
+
     function shareResults() {
       const summary = `${currentLanguage === 'de' ? "Schreibabenteuer DemusOpalium Ergebnisse:" : "Writing Adventure DemusOpalium Results:"}\n${currentLanguage === 'de' ? "Wörter:" : "Words:"} ${countWords(writeArea.innerText)}\n${currentLanguage === 'de' ? "XP:" : "XP:"} ${userStats.xp}\n${currentLanguage === 'de' ? "Level:" : "Level:"} ${userStats.level}`;
       navigator.clipboard.writeText(summary).then(() => { alert(currentLanguage === 'de' ? "Ergebnisse kopiert!" : "Results copied!"); });
     }
-    
+
     function unlockReward(reward) {
       if (!unlockedRewards.includes(reward)) {
         unlockedRewards.push(reward);
@@ -1276,7 +1279,7 @@
         updateRewardUI();
       }
     }
-    
+
     function updateRewardUI() {
       const rewardList = document.getElementById("rewardList");
       rewardList.innerHTML = "";
@@ -1286,7 +1289,7 @@
         rewardList.appendChild(li);
       });
     }
-    
+
     /* --- Event Listener --- */
     document.getElementById("changeNameBtn").addEventListener("click", function() {
       const newName = document.getElementById("playerNameInput").value.trim();
@@ -1298,20 +1301,23 @@
         alert(currentLanguage === 'de' ? "Bitte gib einen gültigen Namen ein." : "Please enter a valid name.");
       }
     });
-    
+
     document.getElementById("saveProfileBtn").addEventListener("click", saveProfile);
     document.getElementById("loadProfileBtn").addEventListener("click", () => { loadProfileInput.click(); });
     document.getElementById("loadProfileInput").addEventListener("change", loadProfile);
-    
-    document.getElementById("infoBtn").addEventListener("click", () => { infoModal.style.display = "flex"; });
-    document.getElementById("closeInfo").addEventListener("click", () => { infoModal.style.display = "none"; });
-    window.addEventListener("click", (event) => { if (event.target == infoModal) infoModal.style.display = "none"; });
+
+    document.getElementById("infoBtn").addEventListener("click", () => { document.getElementById("infoModal").style.display = "flex"; });
+    document.getElementById("closeInfo").addEventListener("click", () => { document.getElementById("infoModal").style.display = "none"; });
+    window.addEventListener("click", (event) => { 
+      const infoModal = document.getElementById("infoModal");
+      if (event.target === infoModal) { infoModal.style.display = "none"; }
+    });
     document.getElementById("startBtn").addEventListener("click", () => { resetSession(); });
     document.getElementById("resetBtn").addEventListener("click", resetSession);
     document.getElementById("promptBtn").addEventListener("click", showRandomPrompt);
     document.getElementById("shareBtn").addEventListener("click", shareResults);
     document.getElementById("checkBtn").addEventListener("click", checkCopySentence);
-    
+
     const modeSelect = document.getElementById("modeSelect");
     const timeSelect = document.getElementById("timeSelect");
     const difficultySelect = document.getElementById("difficultySelect");
@@ -1342,7 +1348,6 @@
       "Plötzlich ertönte ein seltsames Geräusch, und niemand wusste, was als Nächstes passieren würde...",
       "In einer Stadt, in der jeder Bewohner ein Geheimnis hatte, wurde ein unscheinbarer Brief gefunden..."
     ];
-    
     const warningSound = new Audio('warning.mp3');
     
     function countWords(text) {
@@ -1443,10 +1448,20 @@
       hotStreakCounter = 0;
     }
     
+    /* --- Copy Challenge Funktionen --- */
     function generateCopySentence() {
       let lib = document.getElementById("librarySelect").value;
       let diff = difficultySelect.value;
-      let sentences = sentenceLibraries[lib][diff];
+      let sentences;
+      // Falls Englisch und Kategorie "tierwelt" gewählt, auf "animalworld" umstellen
+      if (currentLanguage === 'en' && lib === 'tierwelt') {
+        lib = 'animalworld';
+      }
+      if (currentLanguage === 'de') {
+        sentences = sentenceLibraries[lib][diff];
+      } else {
+        sentences = sentenceLibraries_en[lib] ? sentenceLibraries_en[lib][diff] : sentenceLibraries[lib][diff];
+      }
       let randomIndex = Math.floor(Math.random() * sentences.length);
       currentTargetSentence = sentences[randomIndex];
       targetSentenceElem.textContent = currentTargetSentence.trim();
@@ -1738,6 +1753,7 @@
     renderInventory();
     updateLeaderboard();
     updateProfileUI();
+
   </script>
 </body>
 </html>

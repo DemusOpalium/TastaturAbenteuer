@@ -2,14 +2,6 @@ Schreibabenteuer DemusOpalium / Writing Adventure DemusOpalium / Mchezo wa Kuand
 
     Hinweis: Dieses Projekt ist ein Open‑Source-Schreibspiel, das sich noch in der Entwicklung befindet. Wir freuen uns über Feedback, Bug‑Meldungen und Beiträge der Community!
 
- .........(....\...../....)
- ...........\....\.../..../
- ............\....\ /..../
- ..../¯.|.¯.\....|..../
- .../... |....|.(_|¯¯ \
- ...|´¯.|´¯.|.....\.. \
- ...\¯....¯.........../
-
 
 ######################  Deutsch -  Einleitung  ######################
 
@@ -254,3 +246,13 @@ Shukrani Maalum
 Mradi huu umeundwa kwa ushirikiano wa karibu na AI ya ajabu inayotoa mawazo ya ubunifu na kutusaidia kuunda msimbo bora. Shukrani kubwa kwa msaada huu unaosisimua!
 
 Feel free to modify . Happy coding and writing – enjoy the adventure!
+
+# ____####___####
+# __##____#_#____##
+# _#_______#______ _#
+# _#_______________#
+# __#_____________#
+# ___#__________#
+# ____ _#______#
+# _______#__#
+# ________#

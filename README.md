@@ -2,16 +2,13 @@ Schreibabenteuer DemusOpalium / Writing Adventure DemusOpalium / Mchezo wa Kuand
 
     Hinweis: Dieses Projekt ist ein Open‑Source-Schreibspiel, das sich noch in der Entwicklung befindet. Wir freuen uns über Feedback, Bug‑Meldungen und Beiträge der Community!
 
-```
- ____####___####
- __##____#_#____##
- _#_______#______ _#
- _#_______________#
- __#_____________#
- ___#__________#
- ____ _#______#
- _______#__#
- ________#
+ .........(....\...../....)
+ ...........\....\.../..../
+ ............\....\ /..../
+ ..../¯.|.¯.\....|..../
+ .../... |....|.(_|¯¯ \
+ ...|´¯.|´¯.|.....\.. \
+ ...\¯....¯.........../
 
 
 ######################  Deutsch -  Einleitung  ######################

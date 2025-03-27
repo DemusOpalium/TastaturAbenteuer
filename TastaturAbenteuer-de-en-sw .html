@@ -1,11 +1,11 @@
-<!DOCTYPE html>
+&lt;!DOCTYPE html&gt;
 &lt;html lang=&quot;de&quot;&gt;
 &lt;head&gt;
   &lt;meta charset=&quot;UTF-8&quot;&gt;
   &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
   &lt;title data-translate=&quot;title&quot;&gt;Schreibabenteuer DemusOpalium&lt;/title&gt;
   &lt;!-- Google Fonts --&gt;
-  &lt;link href=&quot;https://fonts.googleapis.com/css2?family=Lora:wght@700&amp;family=Roboto:wght@400;700&amp;display=swap&quot; rel=&quot;stylesheet&quot;&gt;
+  &lt;link href=&quot;https://fonts.googleapis.com/css2?family=Lora:wght@700&amp;family=Roboto:wght@400;700&amp;family=Merriweather:wght@400;700&amp;family=Open+Sans:wght@400;700&amp;display=swap&quot; rel=&quot;stylesheet&quot;&gt;
   &lt;!-- Animate.css f&uuml;r Animationen --&gt;
   &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css&quot;/&gt;
   &lt;style&gt;
@@ -122,7 +122,7 @@
     #inventoryContainer h2 { text-align: center; margin-bottom: 10px; }
     #inventoryContainer div { margin-bottom: 10px; }
     #inventoryContainer img { margin: 5px; border: 2px solid #fff; border-radius: 4px; cursor: pointer; }
-    /* Info Button &amp;amp; Modal */
+    /* Info Button &amp; Modal */
     #infoBtn {
       position: fixed;
       top: 10px;
@@ -167,7 +167,7 @@
       cursor: pointer;
     }
     .close-btn:hover { color: #000; }
-    /* Dropdowns &amp;amp; Buttons */
+    /* Dropdowns &amp; Buttons */
     .design-controls, .extra-controls {
       margin-bottom: 20px;
       display: flex;
@@ -239,10 +239,6 @@
       margin-bottom: 10px;
       border-radius: 5px;
     }
-    /* Das &amp;quot;&amp;gt;&amp;quot; in copyTarget wird per CSS-Pseudoelement ausgegeben */
-    #copyTarget::before {
-      content: &quot;\003E &quot;;
-    }
     #targetSentence { font-weight: bold; }
     /* Steuerungselemente */
     .controls {
@@ -293,7 +289,7 @@
       display: none;
       box-shadow: 0 4px 6px rgba(0,0,0,0.3);
     }
-    /* Erfolge &amp;amp; Belohnungen */
+    /* Erfolge &amp; Belohnungen */
     .achievements-rewards-container {
       display: flex;
       flex-wrap: wrap;
@@ -436,8 +432,8 @@
     &lt;h2 data-translate=&quot;shopTitle&quot;&gt;Shop&lt;/h2&gt;
     &lt;div id=&quot;shopProfileSection&quot;&gt;&lt;/div&gt;
     &lt;div id=&quot;shopGluecksbringerSection&quot;&gt;&lt;/div&gt;
-    &lt;button class=&quot;refresh-btn&quot; onclick=&quot;renderShop()&quot; data-translate=&quot;profileRefresh&quot;&gt;Profil Refresh&lt;/button&gt;
-    &lt;button class=&quot;refresh-btn&quot; onclick=&quot;renderShop()&quot; data-translate=&quot;gluecksbringerRefresh&quot;&gt;Gl&uuml;cksbringer Refresh&lt;/button&gt;
+    &lt;button class=&quot;refresh-btn&quot; onclick=&quot;refreshProfile()&quot; data-translate=&quot;profileRefresh&quot;&gt;Profil Refresh&lt;/button&gt;
+    &lt;button class=&quot;refresh-btn&quot; onclick=&quot;refreshGluecksbringer()&quot; data-translate=&quot;gluecksbringerRefresh&quot;&gt;Gl&uuml;cksbringer Refresh&lt;/button&gt;
   &lt;/div&gt;
   
   &lt;!-- Inventarbereich --&gt;
@@ -446,7 +442,7 @@
     &lt;!-- Inventar wird dynamisch gerendert --&gt;
   &lt;/div&gt;
   
-  &lt;!-- Info Button &amp;amp; Modal --&gt;
+  &lt;!-- Info Button &amp; Modal --&gt;
   &lt;button id=&quot;infoBtn&quot;&gt;ℹ️&lt;/button&gt;
   &lt;div id=&quot;infoModal&quot; class=&quot;modal&quot;&gt;
     &lt;div class=&quot;modal-content&quot;&gt;
@@ -471,7 +467,7 @@
         &lt;/span&gt;
       &lt;/p&gt;
       &lt;p&gt;
-        &lt;strong data-translate=&quot;infoRewardsTitle&quot;&gt;🎉 Belohnungen &amp;amp; Erfolge:&lt;/strong&gt;&lt;br&gt;
+        &lt;strong data-translate=&quot;infoRewardsTitle&quot;&gt;🎉 Belohnungen &amp; Erfolge:&lt;/strong&gt;&lt;br&gt;
         &lt;span data-translate=&quot;infoRewards&quot;&gt;
           Schalte Erfolge frei und erhalte coole Rewards &ndash; dein Fortschritt wird gespeichert!
         &lt;/span&gt;
@@ -482,7 +478,7 @@
   &lt;!-- &Uuml;berschrift --&gt;
   &lt;div class=&quot;title&quot; data-translate=&quot;title&quot;&gt;Schreibabenteuer DemusOpalium&lt;/div&gt;
   
-  &lt;!-- Design &amp;amp; Extra Controls --&gt;
+  &lt;!-- Design &amp; Extra Controls --&gt;
   &lt;div class=&quot;design-controls&quot;&gt;
     &lt;label for=&quot;themeSelect&quot; data-translate=&quot;chooseTheme&quot;&gt;Theme w&auml;hlen:&lt;/label&gt;
     &lt;select id=&quot;themeSelect&quot;&gt;
@@ -500,6 +496,8 @@
       &lt;option value=&quot;'Roboto', sans-serif&quot; selected&gt;Roboto&lt;/option&gt;
       &lt;option value=&quot;'Lora', serif&quot;&gt;Lora&lt;/option&gt;
       &lt;option value=&quot;'Merriweather', serif&quot;&gt;Merriweather&lt;/option&gt;
+      &lt;option value=&quot;'Open Sans', sans-serif&quot;&gt;Open Sans&lt;/option&gt;
+      &lt;option value=&quot;'Courier New', monospace&quot;&gt;Courier New&lt;/option&gt;
     &lt;/select&gt;
   &lt;/div&gt;
   &lt;div class=&quot;extra-controls&quot;&gt;
@@ -543,7 +541,7 @@
     &lt;label for=&quot;modeSelect&quot; data-translate=&quot;mode&quot;&gt;Modus:&lt;/label&gt;
     &lt;select id=&quot;modeSelect&quot;&gt;
       &lt;option value=&quot;free&quot; data-translate=&quot;freeMode&quot;&gt;Freewrite (keine Strafe)&lt;/option&gt;
-      &lt;option value=&quot;hardcore&quot; data-translate=&quot;hardcoreMode&quot;&gt;Hardcore (Text l&amp;ouml;schen)&lt;/option&gt;
+      &lt;option value=&quot;hardcore&quot; data-translate=&quot;hardcoreMode&quot;&gt;Hardcore (Text l&ouml;schen)&lt;/option&gt;
       &lt;option value=&quot;creative&quot; data-translate=&quot;creativeMode&quot;&gt;Kreativ (mit Schreibimpuls)&lt;/option&gt;
       &lt;option value=&quot;adventure&quot; data-translate=&quot;adventureMode&quot;&gt;Adventure (Boss &amp;amp; EPIC)&lt;/option&gt;
       &lt;option value=&quot;copy&quot; data-translate=&quot;copyMode&quot;&gt;Copy Challenge&lt;/option&gt;
@@ -562,7 +560,7 @@
   &lt;/div&gt;
   
   &lt;!-- Copy Challenge --&gt;
-  &lt;div id=&quot;copyTarget&quot; style=&quot;display:none;&quot;&gt;&lt;span id=&quot;targetSentence&quot;&gt;&lt;/span&gt;&lt;/div&gt;
+  &lt;div id=&quot;copyTarget&quot; style=&quot;display:none;&quot;&gt;&amp;gt; &lt;span id=&quot;targetSentence&quot;&gt;&lt;/span&gt;&lt;/div&gt;
   &lt;button id=&quot;checkBtn&quot; style=&quot;display:none;&quot; data-translate=&quot;checkSentence&quot;&gt;Satz pr&uuml;fen&lt;/button&gt;
   
   &lt;!-- Boss-Anzeige --&gt;
@@ -577,7 +575,7 @@
   &lt;!-- Achievement-Popup --&gt;
   &lt;div class=&quot;achievement animate__animated&quot; id=&quot;achievementPopup&quot;&gt;Achievement unlocked! 🎉&lt;/div&gt;
   
-  &lt;!-- Erfolge &amp;amp; Belohnungen --&gt;
+  &lt;!-- Erfolge &amp; Belohnungen --&gt;
   &lt;div class=&quot;achievements-rewards-container&quot;&gt;
     &lt;div class=&quot;achievements-section&quot;&gt;
       &lt;h2 data-translate=&quot;achievementsTitle&quot;&gt;Erfolge&lt;/h2&gt;
@@ -663,7 +661,7 @@
         &quot;infoModes&quot;: &quot;Freewrite, Adventure (gegen den Wort-Boss), Copy Challenge und Hardcore.&quot;,
         &quot;infoNoticeTitle&quot;: &quot;⚠️ Hinweis:&quot;,
         &quot;infoNotice&quot;: &quot;Copy-Paste ist verboten! Schummeln gibt&lsquo;s nicht!&quot;,
-        &quot;infoRewardsTitle&quot;: &quot;🎉 Belohnungen &amp;amp; Erfolge:&quot;,
+        &quot;infoRewardsTitle&quot;: &quot;🎉 Belohnungen &amp; Erfolge:&quot;,
         &quot;infoRewards&quot;: &quot;Schalte Erfolge frei und erhalte coole Rewards &ndash; dein Fortschritt wird gespeichert!&quot;,
         &quot;chooseTheme&quot;: &quot;Theme w&auml;hlen:&quot;,
         &quot;chooseFont&quot;: &quot;Schriftart w&auml;hlen:&quot;,
@@ -683,9 +681,9 @@
         &quot;copyScore&quot;: &quot;Copy Score: 0&quot;,
         &quot;mode&quot;: &quot;Modus:&quot;,
         &quot;freeMode&quot;: &quot;Freewrite (keine Strafe)&quot;,
-        &quot;hardcoreMode&quot;: &quot;Hardcore (Text l&amp;ouml;schen)&quot;,
+        &quot;hardcoreMode&quot;: &quot;Hardcore (Text l&ouml;schen)&quot;,
         &quot;creativeMode&quot;: &quot;Kreativ (mit Schreibimpuls)&quot;,
-        &quot;adventureMode&quot;: &quot;Adventure (Boss &amp;amp; EPIC)&quot;,
+        &quot;adventureMode&quot;: &quot;Adventure (Boss &amp; EPIC)&quot;,
         &quot;copyMode&quot;: &quot;Copy Challenge&quot;,
         &quot;timeMode&quot;: &quot;Zeitmodus:&quot;,
         &quot;prepareGame&quot;: &quot;Spiel vorbereiten&quot;,
@@ -726,7 +724,7 @@
         &quot;infoModes&quot;: &quot;Freewrite, Adventure (against the Word Boss), Copy Challenge and Hardcore.&quot;,
         &quot;infoNoticeTitle&quot;: &quot;⚠️ Notice:&quot;,
         &quot;infoNotice&quot;: &quot;Copy-paste is prohibited! No cheating allowed!&quot;,
-        &quot;infoRewardsTitle&quot;: &quot;🎉 Rewards &amp;amp; Achievements:&quot;,
+        &quot;infoRewardsTitle&quot;: &quot;🎉 Rewards &amp; Achievements:&quot;,
         &quot;infoRewards&quot;: &quot;Unlock achievements and receive cool rewards &ndash; your progress will be saved!&quot;,
         &quot;chooseTheme&quot;: &quot;Choose Theme:&quot;,
         &quot;chooseFont&quot;: &quot;Choose Font:&quot;,
@@ -748,7 +746,7 @@
         &quot;freeMode&quot;: &quot;Freewrite (no penalty)&quot;,
         &quot;hardcoreMode&quot;: &quot;Hardcore (text deletion)&quot;,
         &quot;creativeMode&quot;: &quot;Creative (with writing prompt)&quot;,
-        &quot;adventureMode&quot;: &quot;Adventure (Boss &amp;amp; EPIC)&quot;,
+        &quot;adventureMode&quot;: &quot;Adventure (Boss &amp; EPIC)&quot;,
         &quot;copyMode&quot;: &quot;Copy Challenge&quot;,
         &quot;timeMode&quot;: &quot;Time Mode:&quot;,
         &quot;prepareGame&quot;: &quot;Prepare Game&quot;,
@@ -811,7 +809,7 @@
         &quot;freeMode&quot;: &quot;Freewrite (hakuna adhabu)&quot;,
         &quot;hardcoreMode&quot;: &quot;Hardcore (maandishi yatafutwa)&quot;,
         &quot;creativeMode&quot;: &quot;Ubunifu (na dalili ya kuandika)&quot;,
-        &quot;adventureMode&quot;: &quot;Adventure (Bosi &amp;amp; EPIC)&quot;,
+        &quot;adventureMode&quot;: &quot;Adventure (Bosi &amp; EPIC)&quot;,
         &quot;copyMode&quot;: &quot;Copy Challenge&quot;,
         &quot;timeMode&quot;: &quot;Muda:&quot;,
         &quot;prepareGame&quot;: &quot;Andaa Mchezo&quot;,
@@ -839,11 +837,15 @@
     // Aktuelle Sprache (Standard: Deutsch)
     let currentLanguage = 'de';
 
-    // Sprachumschaltung zyklisch: de -&amp;gt; en -&amp;gt; sw -&amp;gt; de ...
+    // Sprachumschaltung zyklisch: de -&gt; en -&gt; sw -&gt; de ...
     function toggleLanguage() {
-      if (currentLanguage === 'de') { currentLanguage = 'en'; }
-      else if (currentLanguage === 'en') { currentLanguage = 'sw'; }
-      else { currentLanguage = 'de'; }
+      if (currentLanguage === 'de') {
+        currentLanguage = 'en';
+      } else if (currentLanguage === 'en') {
+        currentLanguage = 'sw';
+      } else {
+        currentLanguage = 'de';
+      }
       updateLanguage();
     }
 
@@ -1744,7 +1746,9 @@ const sentenceLibraries_sw = {
   }
 };
 
-    console.log(&quot;Neue deutsche, englische und kiswahili Satzbibliotheken wurden erstellt.&quot;);
+// Die Bibliotheken f&uuml;r Englisch und Kiswahili k&ouml;nnen ebenfalls weiter angepasst werden &ndash; siehe oben.
+
+console.log(&quot;Neue deutsche, englische und kiswahili Satzbibliotheken wurden erstellt.&quot;);
 
     let boss = null, bossDefeated = false;
     let lastProcessedIndex = 0;
@@ -1886,11 +1890,7 @@ const sentenceLibraries_sw = {
         renderShop();
         alert(`${item.id} wurde erfolgreich gekauft!`);
       } else {
-        alert(currentLanguage === 'de'
-          ? &quot;Nicht gen&uuml;gend Wissenspunkte! Verdiene mehr XP und Wissenspunkte, indem du weiterschreibst.&quot;
-          : (currentLanguage === 'en'
-            ? &quot;Not enough Knowledge Points! Earn more XP and points by writing.&quot;
-            : &quot;Hatutoshi alama za maarifa! Pata XP zaidi kwa kuandika.&quot;));
+        alert(currentLanguage === 'de' ? &quot;Nicht gen&uuml;gend Wissenspunkte! Verdiene mehr XP und Wissenspunkte, indem du weiterschreibst.&quot; : (currentLanguage === 'en' ? &quot;Not enough Knowledge Points! Earn more XP and points by writing.&quot; : &quot;Hatutoshi alama za maarifa! Pata XP zaidi kwa kuandika.&quot;));
       }
     }
     
@@ -1938,6 +1938,7 @@ const sentenceLibraries_sw = {
     }
 
     function saveProfile() {
+      const profileChecksum = generateHash(userStats.wissenspunkte.toString() + secretKey);
       userStats.profileChecksum = generateProfileChecksum(userStats);
       const data = JSON.stringify(userStats, null, 2);
       const blob = new Blob([data], { type: &quot;application/json&quot; });
@@ -1962,7 +1963,7 @@ const sentenceLibraries_sw = {
           const loadedProfile = JSON.parse(e.target.result);
           const expectedChecksum = generateProfileChecksum(loadedProfile);
           if (loadedProfile.profileChecksum !== expectedChecksum) {
-            alert(&quot;Profilpr&amp;uuml;fung fehlgeschlagen! M&amp;ouml;glicher Betrugsversuch!&quot;);
+            alert(&quot;Profilpr&uuml;fung fehlgeschlagen! M&ouml;glicher Betrugsversuch!&quot;);
             return;
           }
           userStats = loadedProfile;
@@ -1987,11 +1988,7 @@ const sentenceLibraries_sw = {
       const newLevel = Math.floor(userStats.xp / 100) + 1;
       if (newLevel &gt; userStats.level) {
         userStats.level = newLevel;
-        alert(currentLanguage === 'de'
-          ? `Level Up! Du bist jetzt Level ${newLevel}.`
-          : (currentLanguage === 'en'
-            ? `Level Up! You are now level ${newLevel}.`
-            : `Kiwango kimepanda! Umefikia kiwango cha ${newLevel}.`));
+        alert(currentLanguage === 'de' ? `Level Up! Du bist jetzt Level ${newLevel}.` : (currentLanguage === 'en' ? `Level Up! You are now level ${newLevel}.` : `Kiwango kimepanda! Umefikia kiwango cha ${newLevel}.`));
         userStats.wissenspunkte += 50;
         if (newLevel === 2) { unlockReward(&quot;😀 Emoji Profil&quot;); }
         if (newLevel === 3) { unlockReward(&quot;😎 Cool Emoji&quot;); }
@@ -2021,40 +2018,16 @@ const sentenceLibraries_sw = {
     }
 
     function shareResults() {
-      const summary = `${currentLanguage === 'de'
-          ? &quot;Schreibabenteuer DemusOpalium Ergebnisse:&quot;
-          : (currentLanguage === 'en'
-            ? &quot;Writing Adventure DemusOpalium Results:&quot;
-            : &quot;Matokeo ya Mchezo wa Kuandika DemusOpalium:&quot;)}\n${currentLanguage === 'de'
-          ? &quot;W&ouml;rter:&quot;
-          : (currentLanguage === 'en'
-            ? &quot;Words:&quot;
-            : &quot;Maneno:&quot;)} ${countWords(writeArea.innerText)}\n${currentLanguage === 'de'
-          ? &quot;XP:&quot;
-          : (currentLanguage === 'en'
-            ? &quot;XP:&quot;
-            : &quot;XP:&quot;)} ${userStats.xp}\n${currentLanguage === 'de'
-          ? &quot;Level:&quot;
-          : (currentLanguage === 'en'
-            ? &quot;Level:&quot;
-            : &quot;Kiwango:&quot;)} ${userStats.level}`;
+      const summary = `${currentLanguage === 'de' ? &quot;Schreibabenteuer DemusOpalium Ergebnisse:&quot; : (currentLanguage === 'en' ? &quot;Writing Adventure DemusOpalium Results:&quot; : &quot;Matokeo ya Mchezo wa Kuandika DemusOpalium:&quot;)}\n${currentLanguage === 'de' ? &quot;W&ouml;rter:&quot; : (currentLanguage === 'en' ? &quot;Words:&quot; : &quot;Maneno:&quot;)} ${countWords(writeArea.innerText)}\n${currentLanguage === 'de' ? &quot;XP:&quot; : (currentLanguage === 'en' ? &quot;XP:&quot; : &quot;XP:&quot;)} ${userStats.xp}\n${currentLanguage === 'de' ? &quot;Level:&quot; : (currentLanguage === 'en' ? &quot;Level:&quot; : &quot;Kiwango:&quot;)} ${userStats.level}`;
       navigator.clipboard.writeText(summary).then(() =&gt; { 
-        alert(currentLanguage === 'de'
-          ? &quot;Ergebnisse kopiert!&quot;
-          : (currentLanguage === 'en'
-            ? &quot;Results copied!&quot;
-            : &quot;Matokeo yamekunakili!&quot;)); 
+        alert(currentLanguage === 'de' ? &quot;Ergebnisse kopiert!&quot; : (currentLanguage === 'en' ? &quot;Results copied!&quot; : &quot;Matokeo yamekunakili!&quot;)); 
       });
     }
 
     function unlockReward(reward) {
       if (!unlockedRewards.includes(reward)) {
         unlockedRewards.push(reward);
-        alert(currentLanguage === 'de'
-          ? &quot;Reward freigeschaltet: &quot; + reward
-          : (currentLanguage === 'en'
-            ? &quot;Reward unlocked: &quot; + reward
-            : &quot;Tuzo limetolewa: &quot; + reward));
+        alert(currentLanguage === 'de' ? &quot;Reward freigeschaltet: &quot; + reward : (currentLanguage === 'en' ? &quot;Reward unlocked: &quot; + reward : &quot;Tuzo limetolewa: &quot; + reward));
         localStorage.setItem(&quot;unlockedRewards&quot;, JSON.stringify(unlockedRewards));
         updateRewardUI();
       }
@@ -2076,17 +2049,9 @@ const sentenceLibraries_sw = {
       if (newName) {
         userStats.playerName = newName;
         updateProfileUI();
-        alert(currentLanguage === 'de'
-          ? &quot;Name wurde ge&auml;ndert!&quot;
-          : (currentLanguage === 'en'
-            ? &quot;Name changed!&quot;
-            : &quot;Jina limetabadilishwa!&quot;));
+        alert(currentLanguage === 'de' ? &quot;Name wurde ge&auml;ndert!&quot; : (currentLanguage === 'en' ? &quot;Name changed!&quot; : &quot;Jina limetabadilishwa!&quot;));
       } else {
-        alert(currentLanguage === 'de'
-          ? &quot;Bitte gib einen g&amp;uuml;ltigen Namen ein.&quot;
-          : (currentLanguage === 'en'
-            ? &quot;Please enter a valid name.&quot;
-            : &quot;Tafadhali ingiza jina halali.&quot;));
+        alert(currentLanguage === 'de' ? &quot;Bitte gib einen g&uuml;ltigen Namen ein.&quot; : (currentLanguage === 'en' ? &quot;Please enter a valid name.&quot; : &quot;Tafadhali ingiza jina halali.&quot;));
       }
     });
 
@@ -2133,7 +2098,7 @@ const sentenceLibraries_sw = {
     const prompts = [
       &quot;Es war einmal ein geheimnisvoller Wald, in dem die Zeit stillzustehen schien...&quot;,
       &quot;Als die Sonne hinter den Bergen verschwand, begann ein Abenteuer, das alles ver&auml;ndern sollte...&quot;,
-      &quot;Pl&ouml;tzlich ert&ouml;nte ein seltsames Ger&auml;usch, und niemand wusste, was als N&amp;auml;chstes passieren w&uuml;rde...&quot;,
+      &quot;Pl&ouml;tzlich ert&ouml;nte ein seltsames Ger&auml;usch, und niemand wusste, was als N&auml;chstes passieren w&uuml;rde...&quot;,
       &quot;In einer Stadt, in der jeder Bewohner ein Geheimnis hatte, wurde ein unscheinbarer Brief gefunden...&quot;
     ];
     const warningSound = new Audio('warning.mp3');
@@ -2241,8 +2206,12 @@ const sentenceLibraries_sw = {
       let lib = document.getElementById(&quot;librarySelect&quot;).value;
       let diff = difficultySelect.value;
       let sentences;
-      if (currentLanguage === 'en' &amp;&amp; lib === 'tierwelt') { lib = 'animalworld'; }
-      if (currentLanguage === 'sw' &amp;&amp; lib === 'tierwelt') { lib = 'wanyama'; }
+      if (currentLanguage === 'en' &amp;&amp; lib === 'tierwelt') {
+        lib = 'animalworld';
+      }
+      if (currentLanguage === 'sw' &amp;&amp; lib === 'tierwelt') {
+        lib = 'wanyama';
+      }
       if (currentLanguage === 'de') {
         sentences = sentenceLibraries[lib][diff];
       } else if (currentLanguage === 'en') {
@@ -2264,50 +2233,30 @@ const sentenceLibraries_sw = {
         copyScore += points;
         userStats.xp += points;
         userStats.wissenspunkte += points;
-        showAchievement(currentLanguage === 'de'
-          ? &quot;Satz korrekt! +&quot; + points + &quot; Punkte.&quot;
-          : (currentLanguage === 'en'
-            ? &quot;Sentence correct! +&quot; + points + &quot; points.&quot;
-            : &quot;Sentensi sahihi! +&quot; + points + &quot; pointi.&quot;));
+        showAchievement(currentLanguage === 'de' ? &quot;Satz korrekt! +&quot; + points + &quot; Punkte.&quot; : (currentLanguage === 'en' ? &quot;Sentence correct! +&quot; + points + &quot; points.&quot; : &quot;Sentensi sahihi! +&quot; + points + &quot; pointi.&quot;));
         checkCopyAchievements();
         writeArea.innerText = &quot;&quot;;
         updateCopyScoreDisplay();
         generateCopySentence();
       } else {
-        showAchievement(currentLanguage === 'de'
-          ? &quot;Nicht exakt! Versuche es erneut.&quot;
-          : (currentLanguage === 'en'
-            ? &quot;Not exactly! Try again.&quot;
-            : &quot;Sio sahihi! Jaribu tena.&quot;));
+        showAchievement(currentLanguage === 'de' ? &quot;Nicht exakt! Versuche es erneut.&quot; : (currentLanguage === 'en' ? &quot;Not exactly! Try again.&quot; : &quot;Sio sahihi! Jaribu tena.&quot;));
       }
     }
     
     function checkCopyAchievements() {
       if (copyScore &gt;= 100 &amp;&amp; !copyAchieved[&quot;100&quot;]) {
          copyAchieved[&quot;100&quot;] = true;
-         showAchievement(currentLanguage === 'de'
-           ? &quot;Copy Challenge Bronze erreicht! (+100 Punkte)&quot;
-           : (currentLanguage === 'en'
-             ? &quot;Copy Challenge Bronze reached! (+100 points)&quot;
-             : &quot;Copy Challenge Bronze imefikia! (+100 pointi)&quot;));
+         showAchievement(currentLanguage === 'de' ? &quot;Copy Challenge Bronze erreicht! (+100 Punkte)&quot; : (currentLanguage === 'en' ? &quot;Copy Challenge Bronze reached! (+100 points)&quot; : &quot;Copy Challenge Bronze imefikia! (+100 pointi)&quot;));
          unlockReward(&quot;🥉 Copy-Challenge Bronze&quot;);
       }
       if (copyScore &gt;= 200 &amp;&amp; !copyAchieved[&quot;200&quot;]) {
          copyAchieved[&quot;200&quot;] = true;
-         showAchievement(currentLanguage === 'de'
-           ? &quot;Copy Challenge Silber erreicht! (+200 Punkte)&quot;
-           : (currentLanguage === 'en'
-             ? &quot;Copy Challenge Silver reached! (+200 points)&quot;
-             : &quot;Copy Challenge Silver imefikia! (+200 pointi)&quot;));
+         showAchievement(currentLanguage === 'de' ? &quot;Copy Challenge Silber erreicht! (+200 Punkte)&quot; : (currentLanguage === 'en' ? &quot;Copy Challenge Silver reached! (+200 points)&quot; : &quot;Copy Challenge Silver imefikia! (+200 pointi)&quot;));
          unlockReward(&quot;🥈 Copy-Challenge Silber&quot;);
       }
       if (copyScore &gt;= 300 &amp;&amp; !copyAchieved[&quot;300&quot;]) {
          copyAchieved[&quot;300&quot;] = true;
-         showAchievement(currentLanguage === 'de'
-           ? &quot;Copy Challenge Gold erreicht! (+300 Punkte)&quot;
-           : (currentLanguage === 'en'
-             ? &quot;Copy Challenge Gold reached! (+300 points)&quot;
-             : &quot;Copy Challenge Gold imefikia! (+300 pointi)&quot;));
+         showAchievement(currentLanguage === 'de' ? &quot;Copy Challenge Gold erreicht! (+300 Punkte)&quot; : (currentLanguage === 'en' ? &quot;Copy Challenge Gold reached! (+300 points)&quot; : &quot;Copy Challenge Gold imefikia! (+300 pointi)&quot;));
          unlockReward(&quot;🥇 Copy-Challenge Gold&quot;);
       }
     }
@@ -2319,11 +2268,7 @@ const sentenceLibraries_sw = {
       copyTargetElem.style.display = &quot;block&quot;;
       document.getElementById(&quot;checkBtn&quot;).style.display = &quot;inline-block&quot;;
       document.getElementById(&quot;copyScoreDisplay&quot;).style.display = &quot;block&quot;;
-      writeArea.innerText = currentLanguage === 'de'
-        ? &quot;Dr&uuml;cke Enter, um das Spiel zu starten&quot;
-        : (currentLanguage === 'en'
-            ? &quot;Press Enter to start the game&quot;
-            : &quot;Bonyeza Enter kuanza mchezo&quot;);
+      writeArea.innerText = currentLanguage === 'de' ? &quot;Dr&uuml;cke Enter, um das Spiel zu starten&quot; : (currentLanguage === 'en' ? &quot;Press Enter to start the game&quot; : &quot;Bonyeza Enter kuanza mchezo&quot;);
       waitingForStart = true;
       updateCopyScoreDisplay();
     }
@@ -2332,8 +2277,9 @@ const sentenceLibraries_sw = {
       document.getElementById(&quot;copyScoreDisplay&quot;).textContent = &quot;Copy Score: &quot; + copyScore;
     }
     
-    /* --- Schreibimpuls-Popup im Kreativ-Modus --- */
+    /* --- Neue Funktion: Schreibimpuls-Popup im Kreativ-Modus --- */
     function showPromptPopup() {
+      // Positioniere das Popup &uuml;ber dem Schreibbereich
       const writeAreaRect = writeArea.getBoundingClientRect();
       const promptPopup = document.createElement(&quot;div&quot;);
       promptPopup.style.position = &quot;absolute&quot;;
@@ -2346,8 +2292,10 @@ const sentenceLibraries_sw = {
       promptPopup.style.borderRadius = &quot;5px&quot;;
       promptPopup.style.textAlign = &quot;center&quot;;
       promptPopup.style.zIndex = &quot;400&quot;;
+      // W&auml;hle einen zuf&auml;lligen Prompt aus
       promptPopup.textContent = prompts[Math.floor(Math.random() * prompts.length)];
       document.body.appendChild(promptPopup);
+      // Entferne das Popup nach 10 Sekunden
       setTimeout(() =&gt; { promptPopup.remove(); }, 10000);
     }
     
@@ -2365,11 +2313,7 @@ const sentenceLibraries_sw = {
       const timeMode = parseInt(timeSelect.value);
       remainingTime = timeMode * 60;
       if (modeSelect.value !== &quot;copy&quot;) {
-        window.baseTarget = (difficultySelect.value === &quot;easy&quot;)
-          ? timeMode * 65
-          : (difficultySelect.value === &quot;normal&quot;)
-            ? timeMode * 85
-            : timeMode * 100;
+        window.baseTarget = (difficultySelect.value === &quot;easy&quot;) ? timeMode * 65 : (difficultySelect.value === &quot;normal&quot;) ? timeMode * 85 : timeMode * 100;
         generateAchievements();
       } else {
         generateCopySentence();
@@ -2381,6 +2325,7 @@ const sentenceLibraries_sw = {
         lastHotStreakWordCount = countWords(writeArea.innerText);
       }
       
+      // Wenn Kreativ-Modus ausgew&auml;hlt: Zeige Schreibimpuls-Popup f&uuml;r 10 Sekunden
       if (modeSelect.value === &quot;creative&quot;) { showPromptPopup(); }
     
       updateTimerDisplay();
@@ -2418,9 +2363,7 @@ const sentenceLibraries_sw = {
       clearTimeout(idleTimeout);
       sessionActive = false;
       remainingTime = parseInt(timeSelect.value) * 60;
-      writeArea.innerText = currentLanguage === 'de'
-        ? &quot;Dr&uuml;cke Enter, um das Spiel zu starten&quot;
-        : (currentLanguage === 'en' ? &quot;Press Enter to start the game&quot; : &quot;Bonyeza Enter kuanza mchezo&quot;);
+      writeArea.innerText = currentLanguage === 'de' ? &quot;Dr&uuml;cke Enter, um das Spiel zu starten&quot; : (currentLanguage === 'en' ? &quot;Press Enter to start the game&quot; : &quot;Bonyeza Enter kuanza mchezo&quot;);
       waitingForStart = true;
       updateTimerDisplay();
       updateWordCount();
@@ -2435,7 +2378,9 @@ const sentenceLibraries_sw = {
       document.getElementById(&quot;copyScoreDisplay&quot;).style.display = &quot;none&quot;;
       endSessionPopup.style.display = &quot;none&quot;;
       
-      if (modeSelect.value === &quot;copy&quot;) { initCopyMode(); }
+      if (modeSelect.value === &quot;copy&quot;) {
+        initCopyMode();
+      }
     }
     
     function endSession() {
@@ -2444,13 +2389,9 @@ const sentenceLibraries_sw = {
       sessionActive = false;
       
       if (modeSelect.value !== &quot;copy&quot;) {
-        // Das Ergebnis-Popup wird in showSessionResults() angezeigt.
+        // Ergebnis-Popup wird in showSessionResults() angezeigt
       } else {
-        let message = currentLanguage === 'de'
-          ? &quot;Deine Copy Challenge Punkte: &quot; + copyScore
-          : (currentLanguage === 'en'
-            ? &quot;Your Copy Challenge score: &quot; + copyScore
-            : &quot;Alama zako za Copy Challenge: &quot; + copyScore);
+        let message = currentLanguage === 'de' ? &quot;Deine Copy Challenge Punkte: &quot; + copyScore : (currentLanguage === 'en' ? &quot;Your Copy Challenge score: &quot; + copyScore : &quot;Alama zako za Copy Challenge: &quot; + copyScore);
         endSessionPopup.innerHTML = `&lt;h2&gt;${currentLanguage === 'de' ? &quot;Session beendet!&quot; : (currentLanguage === 'en' ? &quot;Session Ended!&quot; : &quot;Muda umekwisha!&quot;)}&lt;/h2&gt;
                                      &lt;p&gt;${message}&lt;/p&gt;
                                      &lt;button onclick=&quot;closeResultsPopup()&quot;&gt;${currentLanguage === 'de' ? &quot;Schlie&szlig;en&quot; : (currentLanguage === 'en' ? &quot;Close&quot; : &quot;Funga&quot;)}&lt;/button&gt;`;
@@ -2524,21 +2465,13 @@ const sentenceLibraries_sw = {
     function winGame() {
       let bonusXP = 50;
       let bonusWissenspunkte = 50;
-      showAchievement(currentLanguage === 'de'
-        ? &quot;Boss besiegt! Bonus XP und Wissenspunkte erhalten!&quot;
-        : (currentLanguage === 'en'
-            ? &quot;Boss defeated! Bonus XP and points awarded!&quot;
-            : &quot;Boss imefanywa! Pokea bonus XP na alama!&quot;));
+      showAchievement(currentLanguage === 'de' ? &quot;Boss besiegt! Bonus XP und Wissenspunkte erhalten!&quot; : (currentLanguage === 'en' ? &quot;Boss defeated! Bonus XP and points awarded!&quot; : &quot;Boss imefanywa! Pokea bonus XP na alama!&quot;));
       userStats.xp += bonusXP;
       userStats.wissenspunkte += bonusWissenspunkte;
       unlockReward(&quot;🏆 Boss-Besieger Emoji&quot;);
       clearInterval(timerInterval);
       clearTimeout(idleTimeout);
-      endSessionPopup.innerHTML = `&lt;h2&gt;${currentLanguage === 'de'
-          ? &quot;Gewonnen! Boss besiegt!&quot;
-          : (currentLanguage === 'en'
-              ? &quot;You Won! Boss Defeated!&quot;
-              : &quot;Umeshinda! Boss imeshindwa!&quot;)}&lt;/h2&gt;
+      endSessionPopup.innerHTML = `&lt;h2&gt;${currentLanguage === 'de' ? &quot;Gewonnen! Boss besiegt!&quot; : (currentLanguage === 'en' ? &quot;You Won! Boss Defeated!&quot; : &quot;Umeshinda! Boss imeshindwa!&quot;)}&lt;/h2&gt;
                                    &lt;p&gt;${currentLanguage === 'de' ? &quot;Bonus XP:&quot; : (currentLanguage === 'en' ? &quot;Bonus XP:&quot; : &quot;Bonus XP:&quot;)} ${bonusXP}&lt;/p&gt;
                                    &lt;p&gt;${currentLanguage === 'de' ? &quot;Bonus Wissenspunkte:&quot; : (currentLanguage === 'en' ? &quot;Bonus Points:&quot; : &quot;Bonus Alama:&quot;)} ${bonusWissenspunkte}&lt;/p&gt;
                                    &lt;button onclick=&quot;closeResultsPopup()&quot;&gt;${currentLanguage === 'de' ? &quot;Schlie&szlig;en&quot; : (currentLanguage === 'en' ? &quot;Close&quot; : &quot;Funga&quot;)}&lt;/button&gt;`;
@@ -2597,13 +2530,15 @@ const sentenceLibraries_sw = {
       if (hotStreakCounter &gt;= hotStreakRequired) { showHotStreakIndicator(); }
     });
     
-    // Event-Listener f&amp;uuml;r das Theme-Dropdown
+    // ... bereits vorhandene Event-Listener und Funktionen
+    
+    // Event-Listener f&uuml;r das Theme-Dropdown
     document.getElementById(&quot;themeSelect&quot;).addEventListener(&quot;change&quot;, function() {
       document.body.className = &quot;&quot;;
       document.body.classList.add(this.value);
     });
     
-    // Event-Listener f&amp;uuml;r das Schriftart-Dropdown
+    // Event-Listener f&uuml;r das Schriftart-Dropdown
     document.getElementById(&quot;fontSelect&quot;).addEventListener(&quot;change&quot;, function() {
       document.body.style.fontFamily = this.value;
     });

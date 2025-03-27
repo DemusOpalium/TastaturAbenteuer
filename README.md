@@ -80,11 +80,12 @@ Besonderer Dank
 
 Dieses Projekt wurde in enger Zusammenarbeit mit einer wunderbaren KI entwickelt, die uns immer wieder kreative Ideen liefert und dazu beiträgt, großartigen Code zu erstellen. Vielen Dank für diese inspirierende Unterstützung!
 
- ***/\__/\***
- **((@v@))**
- **(#):::(#)**
- ***VV--VV***
-
+```
+# ..@..@
+# .(-------)
+# ( }___{ )
+# ^^ ~ ^^
+```
 ######################  English  -  Introduction  ######################
 
 Writing Adventure DemusOpalium is an open‑source typing game where you tackle exciting writing challenges in variable time modes (1–5 minutes) – whether you’re being creative, precise, or under intense pressure. Designed primarily for PC users with a keyboard, the game also offers a fully responsive version for mobile devices.
@@ -161,13 +162,6 @@ Special Thanks
 
 This project was developed in close collaboration with an amazing AI that continually provides creative ideas and helps us create outstanding code. A big thank you for this inspiring support!
 
- . .ε[||]3
- . . .|||
- . . ,|||_
- . ( .|||. )
- . .) (_) (
- . ( """"" )
- . .`▬▬´
 
 ######################  Swahili -  Utangulizi  ######################
 
@@ -246,13 +240,3 @@ Shukrani Maalum
 Mradi huu umeundwa kwa ushirikiano wa karibu na AI ya ajabu inayotoa mawazo ya ubunifu na kutusaidia kuunda msimbo bora. Shukrani kubwa kwa msaada huu unaosisimua!
 
 Feel free to modify . Happy coding and writing – enjoy the adventure!
-
-# ____####___####
-# __##____#_#____##
-# _#_______#______ _#
-# _#_______________#
-# __#_____________#
-# ___#__________#
-# ____ _#______#
-# _______#__#
-# ________#

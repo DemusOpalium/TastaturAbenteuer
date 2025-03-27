@@ -249,4 +249,26 @@ Shukrani Maalum
 
 Mradi huu umeundwa kwa ushirikiano wa karibu na AI ya ajabu inayotoa mawazo ya ubunifu na kutusaidia kuunda msimbo bora. Shukrani kubwa kwa msaada huu unaosisimua!
 
+```
+# ____####___####
+# __##____#_#____##
+# _#_______#______ _#
+# _#_______________#
+# __#_____________#
+# ___#__________#
+# ____ _#______#
+# _______#__#
+# ________#
+```
+
 Feel free to modify . Happy coding and writing – enjoy the adventure!
+
+```
+# .........(....\...../....)
+# ...........\....\.../..../
+# ............\....\ /..../
+# ..../¯.|.¯.\....|..../
+# .../... |....|.(_|¯¯ \
+# ...|´¯.|´¯.|.....\.. \
+# ...\¯....¯.........../
+```

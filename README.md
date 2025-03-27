@@ -2,7 +2,12 @@ Schreibabenteuer DemusOpalium / Writing Adventure DemusOpalium / Mchezo wa Kuand
 
     Hinweis: Dieses Projekt ist ein Open‑Source-Schreibspiel, das sich noch in der Entwicklung befindet. Wir freuen uns über Feedback, Bug‑Meldungen und Beiträge der Community!
 
-
+```
+# ***/\__/\***
+# **((@v@))**
+# **(#):::(#)**
+# ***VV--VV***
+```
 ######################  Deutsch -  Einleitung  ######################
 
 Schreibabenteuer DemusOpalium ist ein Open‑Source-Schreibspiel, in dem du in variablen Zeitmodi (1–5 Minuten) spannende Schreib‑Challenges meisterst – sei es kreativ, präzise oder unter hohem Druck. Das Spiel richtet sich vor allem an PC‑Nutzer mit Tastatur, bietet aber auch eine voll responsive Version für mobile Geräte.
@@ -81,10 +86,10 @@ Besonderer Dank
 Dieses Projekt wurde in enger Zusammenarbeit mit einer wunderbaren KI entwickelt, die uns immer wieder kreative Ideen liefert und dazu beiträgt, großartigen Code zu erstellen. Vielen Dank für diese inspirierende Unterstützung!
 
 ```
-# ..@..@
-# .(-------)
-# ( }___{ )
-# ^^ ~ ^^
+# ***/\__/\***
+# **((@v@))**
+# **(#):::(#)**
+# ***VV--VV***
 ```
 ######################  English  -  Introduction  ######################
 
@@ -162,7 +167,12 @@ Special Thanks
 
 This project was developed in close collaboration with an amazing AI that continually provides creative ideas and helps us create outstanding code. A big thank you for this inspiring support!
 
-
+```
+# ***/\__/\***
+# **((@v@))**
+# **(#):::(#)**
+# ***VV--VV***
+```
 ######################  Swahili -  Utangulizi  ######################
 
 Mchezo wa Kuandika DemusOpalium ni mchezo wa kuandika (typing game) wa open‑source ambapo unakabiliana na changamoto za kuandika katika muda tofauti (dakika 1–5) – iwe unaunda, unaandika kwa usahihi, au chini ya shinikizo kubwa. Mchezo umeundwa hasa kwa watumiaji wa PC wenye kibodi, lakini pia unatoa toleo linalobadilika kikamilifu kwa vifaa vya simu.

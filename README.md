@@ -2,8 +2,7 @@ Schreibabenteuer DemusOpalium / Writing Adventure DemusOpalium / Mchezo wa Kuand
 
     Hinweis: Dieses Projekt ist ein Open‑Source-Schreibspiel, das sich noch in der Entwicklung befindet. Wir freuen uns über Feedback, Bug‑Meldungen und Beiträge der Community!
 
-Deutsch
-Einleitung
+######################  Deutsch -  Einleitung  ######################
 
 Schreibabenteuer DemusOpalium ist ein Open‑Source-Schreibspiel, in dem du in variablen Zeitmodi (1–5 Minuten) spannende Schreib‑Challenges meisterst – sei es kreativ, präzise oder unter hohem Druck. Das Spiel richtet sich vor allem an PC‑Nutzer mit Tastatur, bietet aber auch eine voll responsive Version für mobile Geräte.
 Hauptfunktionen & Spielmodi
@@ -78,8 +77,10 @@ Der gesamte Code ist offen einsehbar und dient als Grundlage für weitere Verbes
 Besonderer Dank
 
 Dieses Projekt wurde in enger Zusammenarbeit mit einer wunderbaren KI entwickelt, die uns immer wieder kreative Ideen liefert und dazu beiträgt, großartigen Code zu erstellen. Vielen Dank für diese inspirierende Unterstützung!
-English
-Introduction
+
+
+
+######################  English  -  Introduction  ######################
 
 Writing Adventure DemusOpalium is an open‑source typing game where you tackle exciting writing challenges in variable time modes (1–5 minutes) – whether you’re being creative, precise, or under intense pressure. Designed primarily for PC users with a keyboard, the game also offers a fully responsive version for mobile devices.
 Main Features & Game Modes
@@ -154,8 +155,9 @@ All code is open source and serves as the foundation for further improvements an
 Special Thanks
 
 This project was developed in close collaboration with an amazing AI that continually provides creative ideas and helps us create outstanding code. A big thank you for this inspiring support!
-Swahili
-Utangulizi
+
+
+######################  Swahili -  Utangulizi  ######################
 
 Mchezo wa Kuandika DemusOpalium ni mchezo wa kuandika (typing game) wa open‑source ambapo unakabiliana na changamoto za kuandika katika muda tofauti (dakika 1–5) – iwe unaunda, unaandika kwa usahihi, au chini ya shinikizo kubwa. Mchezo umeundwa hasa kwa watumiaji wa PC wenye kibodi, lakini pia unatoa toleo linalobadilika kikamilifu kwa vifaa vya simu.
 Vipengele Vikuu & Aina za Mchezo

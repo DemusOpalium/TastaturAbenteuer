@@ -2,6 +2,8 @@ Schreibabenteuer DemusOpalium / Writing Adventure DemusOpalium / Mchezo wa Kuand
 
     Hinweis: Dieses Projekt ist ein Open‑Source-Schreibspiel, das sich noch in der Entwicklung befindet. Wir freuen uns über Feedback, Bug‑Meldungen und Beiträge der Community!
 
+
+
 ######################  Deutsch -  Einleitung  ######################
 
 Schreibabenteuer DemusOpalium ist ein Open‑Source-Schreibspiel, in dem du in variablen Zeitmodi (1–5 Minuten) spannende Schreib‑Challenges meisterst – sei es kreativ, präzise oder unter hohem Druck. Das Spiel richtet sich vor allem an PC‑Nutzer mit Tastatur, bietet aber auch eine voll responsive Version für mobile Geräte.
@@ -61,6 +63,7 @@ Neue Features & Erweiterungen
 
         Hard (10 Beispiele): Anspruchsvolle Beispiele wie Merge‑Sort, DataFrame‑Operationen, Dekoratoren, Singleton‑Pattern, asynchrone Programmierung und Generatoren – humorvoll und übersichtlich dargestellt.
 
+
 Technischer Hintergrund & Motivation
 
 Nach 17 Jahren intensiver Tipp-Erfahrung und dem Experimentieren mit meiner neuen HotSwap 60%-Tastatur (inklusive einer mit Kork gedämmten Unterlage) stellte sich die Frage: Wie schnell kann ich wirklich tippen? Auf der Suche nach einem passenden Tool stieß ich auf „Write or Die“, das jedoch nicht mehr aktiv weiterentwickelt wurde. Schreibabenteuer DemusOpalium entstand als offene, flexible Plattform, um den Spaß am Schreiben mit einem Belohnungssystem und verschiedenen Herausforderungen zu kombinieren.
@@ -77,6 +80,11 @@ Der gesamte Code ist offen einsehbar und dient als Grundlage für weitere Verbes
 Besonderer Dank
 
 Dieses Projekt wurde in enger Zusammenarbeit mit einer wunderbaren KI entwickelt, die uns immer wieder kreative Ideen liefert und dazu beiträgt, großartigen Code zu erstellen. Vielen Dank für diese inspirierende Unterstützung!
+
+
+
+
+
 
 
 
@@ -155,6 +163,11 @@ All code is open source and serves as the foundation for further improvements an
 Special Thanks
 
 This project was developed in close collaboration with an amazing AI that continually provides creative ideas and helps us create outstanding code. A big thank you for this inspiring support!
+
+
+
+
+
 
 
 ######################  Swahili -  Utangulizi  ######################

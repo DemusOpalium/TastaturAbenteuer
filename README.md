@@ -2,6 +2,16 @@ Schreibabenteuer DemusOpalium / Writing Adventure DemusOpalium / Mchezo wa Kuand
 
     Hinweis: Dieses Projekt ist ein Open‑Source-Schreibspiel, das sich noch in der Entwicklung befindet. Wir freuen uns über Feedback, Bug‑Meldungen und Beiträge der Community!
 
+```
+ ____####___####
+ __##____#_#____##
+ _#_______#______ _#
+ _#_______________#
+ __#_____________#
+ ___#__________#
+ ____ _#______#
+ _______#__#
+ ________#
 
 
 ######################  Deutsch -  Einleitung  ######################
@@ -81,12 +91,10 @@ Besonderer Dank
 
 Dieses Projekt wurde in enger Zusammenarbeit mit einer wunderbaren KI entwickelt, die uns immer wieder kreative Ideen liefert und dazu beiträgt, großartigen Code zu erstellen. Vielen Dank für diese inspirierende Unterstützung!
 
-
-
-
-
-
-
+ ***/\__/\***
+ **((@v@))**
+ **(#):::(#)**
+ ***VV--VV***
 
 ######################  English  -  Introduction  ######################
 
@@ -164,11 +172,13 @@ Special Thanks
 
 This project was developed in close collaboration with an amazing AI that continually provides creative ideas and helps us create outstanding code. A big thank you for this inspiring support!
 
-
-
-
-
-
+ . .ε[||]3
+ . . .|||
+ . . ,|||_
+ . ( .|||. )
+ . .) (_) (
+ . ( """"" )
+ . .`▬▬´
 
 ######################  Swahili -  Utangulizi  ######################
 

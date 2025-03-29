@@ -1,0 +1,1278 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ultimate Effekte Sandbox</title>
+  <!-- Optionale externe Animationen -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+  <style>
+    /* Global & Reset */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: sans-serif; background: #222; color: #eee; }
+
+    /* Grid-Layout: Linke Sidebar (Steuerung) & Main-Bereich (Anzeige) */
+    .container-grid {
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      grid-template-rows: auto 1fr auto;
+      grid-template-areas:
+        "header header"
+        "sidebar main"
+        "footer footer";
+      height: 100vh;
+      width: 100%;
+    }
+    header { 
+      grid-area: header; 
+      padding: 10px; 
+      background: #333; 
+      border-bottom: 2px solid #555; 
+    }
+    #controlBoard { 
+      grid-area: sidebar; 
+      padding: 10px; 
+      background: #444; 
+      overflow-y: auto; 
+    }
+    #mainContent { 
+      grid-area: main; 
+      padding: 10px; 
+      overflow-y: auto; 
+    }
+    footer { 
+      grid-area: footer; 
+      padding: 10px; 
+      text-align: center; 
+      background: #333; 
+      border-top: 2px solid #555; 
+    }
+
+    /* Steuerungs-Panels in der Sidebar */
+    .control-panel {
+      background: #555;
+      border: 1px solid #777;
+      border-radius: 8px;
+      padding: 10px;
+      margin-bottom: 15px;
+    }
+    .control-panel h2 { margin-bottom: 8px; }
+    .control-panel label { display: block; margin: 5px 0; }
+    .control-panel select,
+    .control-panel input[type="color"],
+    .control-panel input[type="text"],
+    .control-panel input[type="range"],
+    .control-panel textarea {
+      width: 100%;
+      padding: 5px;
+      margin-bottom: 5px;
+      border-radius: 4px;
+      border: 1px solid #777;
+      background: #666;
+      color: #eee;
+    }
+    .control-panel button {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border: none;
+      border-radius: 4px;
+      background: #39ff14;
+      color: #111;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .control-panel button:hover { background: #2ecc71; }
+
+     /* Main-Bereich: Grid für alle Effekt-Container */
+     #effectDisplayArea {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      grid-auto-rows: 200px;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .effect-container {
+      background: #333;
+      border: 2px solid #555;
+      border-radius: 8px;
+      padding: 10px;
+      position: relative;
+      overflow: hidden;
+    }
+    .effect-container h3 {
+      position: absolute;
+      top: 5px;
+      left: 10px;
+      margin: 0;
+      font-size: 16px;
+      z-index: 2;
+    }
+    
+    /* Hier den neuen Block einfügen */
+    #imageEffectDisplay,
+    /* Morph-Container auf Standardgröße setzen */
+    #morphEffectDisplay {
+      grid-row: span 1;  /* Nur eine Grid-Zeile belegen */
+      min-height: 200px;  /* Standardhöhe */
+      padding: 10px;
+      font-size: 16px;
+    }
+
+    /* Speziell für Bild-Effekt: Oben Eingabefeld, unten Container */
+    #imageEffectDisplay {
+      display: flex;
+      flex-direction: column;
+    }
+    #imageEffectDisplay input[type="text"] { margin-bottom: 5px; }
+    #loadedImageContainer {
+      flex: 1;
+      background: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Chat-Bereich */
+    #chatContainer {
+      background: #222;
+      border: 2px solid #555;
+      border-radius: 8px;
+      padding: 10px;
+      height: 150px;
+      overflow-y: auto;
+    }
+    canvas { width: 100%; height: 100%; background: #111; }
+  </style>
+</head>
+<body>
+  <div class="container-grid">
+    <!-- Header -->
+    <header>
+      <h1>Ultimate Effekte Sandbox</h1>
+    </header>
+
+    <!-- Linke Sidebar: Steuerelemente (Dropdowns, Buttons, Chat Input) -->
+    <aside id="controlBoard">
+      <!-- Canvas Effects -->
+      <div class="control-panel">
+        <h2>Canvas Effects</h2>
+        <label for="canvasEffectSelect">Effekt auswählen:</label>
+        <select id="canvasEffectSelect">
+          <option value="0">Dark Art: Schwarz-Weiß-Rauschen</option>
+          <option value="1">Horror: Flackernder roter Effekt</option>
+          <option value="2">Fantasy: Magische Funken</option>
+          <option value="3">Colorful: Bunte, sich ändernde Kreise</option>
+          <option value="4">Kreativ: Zufällige Linien</option>
+          <option value="5">Simpel: Wackelnde Rechtecke</option>
+          <option value="6">Vintage: Sepia-Farbfilter</option>
+          <option value="7">Neon: Neon-Effekt mit leuchtenden Rändern</option>
+          <option value="8">Dark Art: Verschwommene Schatten</option>
+          <option value="9">Horror: Pulsierende Schatten</option>
+        </select>
+        <button onclick="startCanvasAnimationEffectCustom(parseInt(document.getElementById('canvasEffectSelect').value))">Effekt starten</button>
+      </div>
+      
+      <!-- CSS Gradient Effects -->
+      <div class="control-panel">
+        <h2>CSS Gradient Effects</h2>
+        <label for="gradientEffectSelect">Effekt auswählen:</label>
+        <select id="gradientEffectSelect">
+          <option value="0">Gradient: Dark</option>
+          <option value="1">Gradient: Horror</option>
+          <option value="2">Gradient: Fantasy</option>
+          <option value="3">Gradient: Bunt</option>
+          <option value="4">Gradient: Kreativ</option>
+          <option value="5">Gradient: Simpel/Vintage</option>
+          <option value="6">Gradient: Neon 1</option>
+          <option value="7">Gradient: Neon 2</option>
+          <option value="8">Gradient: Warm Vintage</option>
+          <option value="9">Gradient: Dark Art</option>
+        </select>
+        <button onclick="triggerCssGradientEffectCustom(parseInt(document.getElementById('gradientEffectSelect').value))">Effekt starten</button>
+      </div>
+      
+      <!-- Glitch Effects -->
+      <div class="control-panel">
+        <h2>Glitch Effects</h2>
+        <label for="glitchEffectSelect">Effekt auswählen:</label>
+        <select id="glitchEffectSelect">
+          <option value="glitch_text">Glitch Text (CSS)</option>
+          <option value="glitch_image">Glitch Image (CSS)</option>
+          <option value="blackmirror">Black Mirror Style</option>
+          <option value="canvas_glitch">Canvas Glitch (TV-Störung)</option>
+        </select>
+        <button onclick="triggerSelectedEffect('glitchEffectSelect')">Effekt starten</button>
+      </div>
+      
+      <!-- Horror Effects -->
+      <div class="control-panel">
+        <h2>Horror Effects</h2>
+        <label for="horrorEffectSelect">Effekt auswählen:</label>
+        <select id="horrorEffectSelect">
+          <option value="horror_blood">Blut-Tropfender Text</option>
+          <option value="horror_flicker">Flackernder Schriftzug</option>
+          <option value="horror_shake">Zittriger Text</option>
+          <option value="horror_fog">Nebel-Effekt (Canvas-Partikel)</option>
+        </select>
+        <button onclick="triggerSelectedEffect('horrorEffectSelect')">Effekt starten</button>
+      </div>
+      
+      <!-- Fantasy Effects -->
+      <div class="control-panel">
+        <h2>Fantasy Effects</h2>
+        <label for="fantasyEffectSelect">Effekt auswählen:</label>
+        <select id="fantasyEffectSelect">
+          <option value="fantasy_stars">Glitzersterne (CSS)</option>
+          <option value="fantasy_glow">Magischer Glow (CSS)</option>
+          <option value="fantasy_float">Schwebende Objekte (CSS Hover)</option>
+          <option value="fantasy_trail">Partikel-Schweif (Canvas)</option>
+        </select>
+        <button onclick="triggerSelectedEffect('fantasyEffectSelect')">Effekt starten</button>
+      </div>
+      
+      <!-- Neon Effects -->
+      <div class="control-panel">
+        <h2>Neon Effects</h2>
+        <label for="neonEffectSelect">Effekt auswählen:</label>
+        <select id="neonEffectSelect">
+          <option value="neon_text">Neon-Text mit Glow</option>
+          <option value="neon_flicker">Neon-Flackern</option>
+          <option value="neon_box">Neon-Rahmen</option>
+          <option value="neon_line">Neon-Linien (Canvas)</option>
+        </select>
+        <button onclick="triggerSelectedEffect('neonEffectSelect')">Effekt starten</button>
+      </div>
+      
+      <!-- Particle Effects -->
+      <div class="control-panel">
+        <h2>Particle Effects</h2>
+        <label for="particleEffectSelect">Effekt auswählen:</label>
+        <select id="particleEffectSelect">
+          <option value="particle_firework">Feuerwerk (Canvas)</option>
+          <option value="particle_confetti">Konfetti-Regen (Canvas)</option>
+          <option value="particle_rain">Regen (CSS)</option>
+          <option value="particle_snow">Schnee (CSS)</option>
+        </select>
+        <button onclick="triggerSelectedEffect('particleEffectSelect')">Effekt starten</button>
+      </div>
+      
+      <!-- Energy Effects -->
+      <div class="control-panel">
+        <h2>Energy Effects</h2>
+        <label for="energyEffectSelect">Effekt auswählen:</label>
+        <select id="energyEffectSelect">
+          <option value="energy_lightning">Blitz-Effekt (Canvas)</option>
+          <option value="energy_shockwave">Schockwellen-Explosion (CSS)</option>
+          <option value="energy_laser">Laserstrahl (CSS)</option>
+          <option value="energy_circle">Energie-Ladekreis (Canvas)</option>
+        </select>
+        <button onclick="triggerSelectedEffect('energyEffectSelect')">Effekt starten</button>
+      </div>
+      
+      <!-- Vintage/Retro Effects -->
+      <div class="control-panel">
+        <h2>Vintage/Retro Effects</h2>
+        <label for="vintageEffectSelect">Effekt auswählen:</label>
+        <select id="vintageEffectSelect">
+          <option value="vintage_sepia">Sepia-Filter (CSS)</option>
+          <option value="vintage_crt">CRT-Effekt (Scanlines, CSS)</option>
+          <option value="vintage_pixel">Pixel-Art-Effekt (Canvas)</option>
+          <option value="vintage_vhs">VHS-Rauschen (Canvas)</option>
+        </select>
+        <button onclick="triggerSelectedEffect('vintageEffectSelect')">Effekt starten</button>
+      </div>
+      
+      <!-- Fade/Slide Effects -->
+      <div class="control-panel">
+        <h2>Fade/Slide Effects</h2>
+        <label for="fadeEffectSelect">Effekt auswählen:</label>
+        <select id="fadeEffectSelect">
+          <option value="fade_fadein">Einblenden (Fade-In, CSS)</option>
+          <option value="fade_crossfade">Überblenden (Crossfade, CSS)</option>
+          <option value="fade_slidein">Hereinsliden (Slide-In, CSS)</option>
+          <option value="fade_scalein">Aufpoppen (Scale-In, CSS)</option>
+        </select>
+        <button onclick="triggerSelectedEffect('fadeEffectSelect')">Effekt starten</button>
+      </div>
+      
+      <!-- Typewriter Effects -->
+      <div class="control-panel">
+        <h2>Typewriter Effects</h2>
+        <label for="typewriterEffectSelect">Effekt auswählen:</label>
+        <select id="typewriterEffectSelect">
+          <option value="typewriter_css">Schreibmaschine (CSS)</option>
+          <option value="typewriter_js">Typewriter (JS)</option>
+          <option value="typewriter_delete">Schreib- &amp; Lösch-Effekt (JS)</option>
+          <option value="counter">Zähler-Effekt (JS)</option>
+        </select>
+        <button onclick="triggerSelectedEffect('typewriterEffectSelect')">Effekt starten</button>
+      </div>
+      
+      <!-- Blur/Schatten Effekte -->
+      <div class="control-panel">
+        <h2>Blur/Schatten Effekte</h2>
+        <label for="blurShadowEffectSelect">Effekt auswählen:</label>
+        <select id="blurShadowEffectSelect">
+          <option value="blur_focus">Fokus-Unschärfe (CSS)</option>
+          <option value="motion_blur">Motion Blur (CSS)</option>
+          <option value="shadow_anim">Schatten-Animation (CSS)</option>
+        </select>
+        <button onclick="triggerSelectedEffect('blurShadowEffectSelect')">Effekt starten</button>
+      </div>
+      
+      <!-- Chat-Steuerung -->
+      <div class="control-panel">
+        <h2>Chat</h2>
+        <textarea id="chatInput" placeholder="Gib deine Nachricht ein..." style="height:60px; resize:none;"></textarea>
+        <button onclick="sendChatMessage()">Nachricht senden</button>
+      </div>
+    </aside>
+
+    <!-- Main-Bereich: Alle Effekt-Container + Chat-Anzeige -->
+    <main id="mainContent">
+      <div id="effectDisplayArea">
+        <!-- Jeder Container zeigt einen Effekt; bei Canvas- oder Zeichen-Effekten wird ein Canvas verwendet -->
+        <div class="effect-container" id="canvasEffectDisplay">
+          <h3>Canvas Effekt</h3>
+          <canvas id="canvasEffectCanvas" width="300" height="200"></canvas>
+        </div>
+        <div class="effect-container" id="gradientEffectDisplay">
+          <h3>CSS Gradient Effekt</h3>
+          <div id="gradientBanner" style="width:100%; height:100%; display:flex; align-items:center; justify-content:center;">
+            Gradient Effekt
+          </div>
+        </div>
+        <div class="effect-container" id="glitchEffectDisplay">
+          <h3>Glitch Effekt</h3>
+          <div id="glitchDisplay" style="width:100%; height:100%; display:flex; align-items:center; justify-content:center;">
+            Glitch Effekt
+          </div>
+        </div>
+        <div class="effect-container" id="horrorEffectDisplay">
+          <h3>Horror Effekt</h3>
+          <div id="horrorDisplay" style="width:100%; height:100%; display:flex; align-items:center; justify-content:center;">
+            Horror Effekt
+          </div>
+        </div>
+        <div class="effect-container" id="fantasyEffectDisplay">
+          <h3>Fantasy Effekt</h3>
+          <div id="fantasyDisplay" style="width:100%; height:100%; display:flex; align-items:center; justify-content:center;">
+            Fantasy Effekt
+          </div>
+        </div>
+        <div class="effect-container" id="neonEffectDisplay">
+          <h3>Neon Effekt</h3>
+          <div id="neonDisplay" style="width:100%; height:100%; display:flex; align-items:center; justify-content:center;">
+            Neon Effekt
+          </div>
+        </div>
+        <div class="effect-container" id="particleEffectDisplay">
+          <h3>Particle Effekt</h3>
+          <canvas id="particleCanvas" width="300" height="200"></canvas>
+        </div>
+        <div class="effect-container" id="energyEffectDisplay">
+          <h3>Energy Effekt</h3>
+          <canvas id="energyCanvas" width="300" height="200"></canvas>
+        </div>
+        <div class="effect-container" id="vintageEffectDisplay">
+          <h3>Vintage/Retro Effekt</h3>
+          <div id="vintageDisplay" style="width:100%; height:100%; display:flex; align-items:center; justify-content:center;">
+            Vintage Effekt
+          </div>
+        </div>
+        <div class="effect-container" id="fadeEffectDisplay">
+          <h3>Fade/Slide Effekt</h3>
+          <div id="fadeDisplay" style="width:100%; height:100%; display:flex; align-items:center; justify-content:center;">
+            Fade Effekt
+          </div>
+        </div>
+        <div class="effect-container" id="typewriterEffectDisplay">
+          <h3>Typewriter Effekt</h3>
+          <div id="typewriterDisplay" style="width:100%; height:100%; display:flex; align-items:center; justify-content:center;">
+            Typewriter Effekt
+          </div>
+        </div>
+        <div class="effect-container" id="blurEffectDisplay">
+          <h3>Blur/Schatten Effekt</h3>
+          <div id="blurDisplay" style="width:100%; height:100%; display:flex; align-items:center; justify-content:center;">
+            Blur Effekt
+          </div>
+        </div>
+        <div class="effect-container" id="imageEffectDisplay">
+          <h3>Bild Effekt</h3>
+          <input type="text" id="imgUrlInput" placeholder="Bild-URL z.B. https://i.imgur.com/xyz.png">
+          <button onclick="loadImageEffect()">Bild laden</button>
+          <div id="loadedImageContainer">Geladenes Bild</div>
+        </div>
+        <div class="effect-container" id="morphEffectDisplay">
+          <h3>Morph Effekt</h3>
+          <input type="text" id="morphInput" placeholder="Dein Morph-Text" value="Morph Me!">
+          <input type="range" id="morphStrength" min="0" max="100" value="50">
+          <button onclick="applyMorphEffect()">Morph ausführen</button>
+          <div id="morphOutput" style="margin-top:10px; text-align:center;">Morph Output</div>
+        </div>
+      </div>
+      <!-- Chat-Anzeige -->
+      <div id="chatContainer">
+        <h3>Chat</h3>
+        <div id="chatMessages"></div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+      &copy; 2025 Ultimate Effekte Sandbox
+    </footer>
+  </div>
+
+  <script>
+    /* ---------------------------
+       Effekt-Funktionen & Global Arrays
+       --------------------------- */
+    const canvasEffects = [
+      function(ctx, elapsed) {
+        let imageData = ctx.createImageData(ctx.canvas.width, ctx.canvas.height);
+        for (let i = 0; i < imageData.data.length; i += 4) {
+          let val = Math.random() * 255;
+          imageData.data[i] = val;
+          imageData.data[i+1] = val;
+          imageData.data[i+2] = val;
+          imageData.data[i+3] = 255;
+        }
+        ctx.putImageData(imageData, 0, 0);
+      },
+      function(ctx, elapsed) {
+        ctx.fillStyle = "rgba(200,0,0," + (0.5 + 0.5 * Math.sin(elapsed/100)) + ")";
+        ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+      },
+      function(ctx, elapsed) {
+        ctx.fillStyle = "#9b59b6";
+        for (let i = 0; i < 50; i++) {
+          let x = Math.random() * ctx.canvas.width;
+          let y = Math.random() * ctx.canvas.height;
+          ctx.beginPath();
+          ctx.arc(x, y, Math.random() * 3, 0, 2 * Math.PI);
+          ctx.fill();
+        }
+      },
+      function(ctx, elapsed) {
+        let radius = (ctx.canvas.width / 10) * (0.5 + 0.5 * Math.sin(elapsed / 300));
+        ctx.fillStyle = "hsl(" + (elapsed / 10 % 360) + ", 80%, 50%)";
+        ctx.beginPath();
+        ctx.arc(ctx.canvas.width / 2, ctx.canvas.height / 2, radius, 0, 2 * Math.PI);
+        ctx.fill();
+      },
+      function(ctx, elapsed) {
+        ctx.strokeStyle = "hsl(" + (elapsed / 10 % 360) + ", 100%, 50%)";
+        ctx.beginPath();
+        ctx.moveTo(Math.random() * ctx.canvas.width, Math.random() * ctx.canvas.height);
+        ctx.lineTo(Math.random() * ctx.canvas.width, Math.random() * ctx.canvas.height);
+        ctx.stroke();
+      },
+      function(ctx, elapsed) {
+        let x = (ctx.canvas.width / 2) + 20 * Math.sin(elapsed / 200);
+        ctx.fillStyle = "#39ff14";
+        ctx.fillRect(x, 20, 50, 40);
+      },
+      function(ctx, elapsed) {
+        ctx.fillStyle = "rgba(112,66,20,0.5)";
+        ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+      },
+      function(ctx, elapsed) {
+        ctx.strokeStyle = "#ff00ff";
+        ctx.lineWidth = 5;
+        ctx.strokeRect(10, 10, ctx.canvas.width - 20, ctx.canvas.height - 20);
+      },
+      function(ctx, elapsed) {
+        ctx.fillStyle = "rgba(0,0,0,0.5)";
+        ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+        ctx.fillStyle = "#ffffff";
+        ctx.font = "20px monospace";
+        ctx.fillText("Dark Art", 10, 50);
+      },
+      function(ctx, elapsed) {
+        let opacity = 0.5 + 0.5 * Math.sin(elapsed / 150);
+        ctx.fillStyle = "rgba(255,0,0," + opacity + ")";
+        ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+      }
+    ];
+    
+    const cssGradientEffects = [
+      "linear-gradient(90deg, #000000, #434343)",
+      "linear-gradient(90deg, #660000, #990000)",
+      "linear-gradient(90deg, #8e44ad, #3498db)",
+      "linear-gradient(90deg, #ff0080, #ff8c00)",
+      "linear-gradient(90deg, #16a085, #f4d03f)",
+      "linear-gradient(90deg, #bdc3c7, #2c3e50)",
+      "linear-gradient(90deg, #ff416c, #ff4b2b)",
+      "linear-gradient(90deg, #00c6ff, #0072ff)",
+      "linear-gradient(90deg, #f7971e, #ffd200)",
+      "linear-gradient(90deg, #00bf8f, #001510)"
+    ];
+    
+    /* ---------------------------
+       Effekt-Ausführung in den jeweiligen Containern
+       --------------------------- */
+    
+    // Canvas Effekt: Wird im Container "canvasEffectDisplay" gezeigt
+    function startCanvasAnimationEffectCustom(index) {
+      const canvas = document.getElementById('canvasEffectCanvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      let startTime = null;
+      const effectFunc = canvasEffects[index];
+      function animateCanvas(timestamp) {
+        if (!startTime) startTime = timestamp;
+        const elapsed = timestamp - startTime;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        effectFunc(ctx, elapsed);
+        if (elapsed < 2000) {
+          requestAnimationFrame(animateCanvas);
+        }
+      }
+      requestAnimationFrame(animateCanvas);
+    }
+    
+    // CSS Gradient Effekt
+    function triggerCssGradientEffectCustom(index) {
+      const banner = document.getElementById('gradientBanner');
+      if (!banner) return;
+      banner.style.background = cssGradientEffects[index];
+      banner.textContent = "Effekt " + (index + 1);
+    }
+    
+    // Allgemeiner Effekt-Trigger anhand der Dropdown-Auswahl
+    function triggerSelectedEffect(selectId) {
+      const effect = document.getElementById(selectId).value;
+      if (effect === "glitch_text") {
+        glitchTextEffect();
+      } else if (effect === "glitch_image") {
+        glitchImageEffect();
+      } else if (effect === "blackmirror") {
+        blackMirrorEffect();
+      } else if (effect === "canvas_glitch") {
+        canvasGlitchEffect();
+      } else if (effect === "horror_blood") {
+        horrorBloodEffect();
+      } else if (effect === "horror_flicker") {
+        horrorFlickerEffect();
+      } else if (effect === "horror_shake") {
+        horrorShakeEffect();
+      } else if (effect === "horror_fog") {
+        horrorFogEffect();
+      } else if (effect === "fantasy_stars") {
+        fantasyStarsEffect();
+      } else if (effect === "fantasy_glow") {
+        fantasyGlowEffect();
+      } else if (effect === "fantasy_float") {
+        fantasyFloatEffect();
+      } else if (effect === "fantasy_trail") {
+        fantasyTrailEffect();
+      } else if (effect === "neon_text") {
+        neonTextEffect();
+      } else if (effect === "neon_flicker") {
+        neonFlickerEffect();
+      } else if (effect === "neon_box") {
+        neonBoxEffect();
+      } else if (effect === "neon_line") {
+        neonLineEffect();
+      } else if (effect === "particle_firework") {
+        particleFireworkEffect();
+      } else if (effect === "particle_confetti") {
+        particleConfettiEffect();
+      } else if (effect === "particle_rain") {
+        particleRainEffect();
+      } else if (effect === "particle_snow") {
+        particleSnowEffect();
+      } else if (effect === "energy_lightning") {
+        energyLightningEffect();
+      } else if (effect === "energy_shockwave") {
+        energyShockwaveEffect();
+      } else if (effect === "energy_laser") {
+        energyLaserEffect();
+      } else if (effect === "energy_circle") {
+        energyCircleEffect();
+      } else if (effect === "vintage_sepia") {
+        vintageSepiaEffect();
+      } else if (effect === "vintage_crt") {
+        vintageCrtEffect();
+      } else if (effect === "vintage_pixel") {
+        vintagePixelEffect();
+      } else if (effect === "vintage_vhs") {
+        vintageVhsEffect();
+      } else if (effect === "fade_fadein") {
+        fadeFadeinEffect();
+      } else if (effect === "fade_crossfade") {
+        fadeCrossfadeEffect();
+      } else if (effect === "fade_slidein") {
+        fadeSlideinEffect();
+      } else if (effect === "fade_scalein") {
+        fadeScaleinEffect();
+      } else if (effect === "typewriter_css") {
+        typewriterCssEffect();
+      } else if (effect === "typewriter_js") {
+        typewriterJsEffect();
+      } else if (effect === "typewriter_delete") {
+        typewriterDeleteEffect();
+      } else if (effect === "counter") {
+        counterEffect();
+      } else if (effect === "blur_focus") {
+        blurFocusEffect();
+      } else if (effect === "motion_blur") {
+        motionBlurEffect();
+      } else if (effect === "shadow_anim") {
+        shadowAnimEffect();
+      }
+    }
+    
+    /* ---------------------------
+       Einzelne Effekt-Funktionen (Ziel: jeweiliger Container)
+       --------------------------- */
+    
+    // Glitch Text Effekt (CSS): Zeigt in "glitchEffectDisplay"
+    function glitchTextEffect() {
+      const container = document.getElementById('glitchDisplay');
+      if (!container) return;
+      container.innerHTML = "<span class='glitch-text' data-text='GL!TCH'>GL!TCH</span>";
+      setTimeout(() => { container.innerHTML = "Glitch Effekt"; }, 2000);
+    }
+    
+    function glitchImageEffect() {
+      const container = document.getElementById('glitchDisplay');
+      const url1 = document.getElementById('imgUrlInput') ? document.getElementById('imgUrlInput').value : "";
+      if (!container || !url1) return;
+      container.innerHTML = `
+        <div style="position:relative; width:100%; height:100%;">
+          <img src="${url1}" style="position:absolute; width:100%; height:100%; object-fit:cover;">
+        </div>
+      `;
+      let style = document.createElement('style');
+      style.innerHTML = `
+        .glitch-text { animation: glitch 2s infinite; }
+        @keyframes glitch {
+          0% { clip: rect(0, 900px, 0, 0); }
+          50% { clip: rect(10px, 900px, 50px, 0); }
+          100% { clip: rect(0, 900px, 0, 0); }
+        }
+      `;
+      document.head.appendChild(style);
+    }
+    
+    function blackMirrorEffect() {
+      const container = document.getElementById('glitchDisplay');
+      if (!container) return;
+      container.style.color = "#fff";
+      container.style.background = "#000";
+      container.textContent = "BLACK MIRROR";
+      setTimeout(() => {
+        container.style.color = "";
+        container.style.background = "";
+        container.textContent = "Glitch Effekt";
+      }, 2000);
+    }
+    
+    function canvasGlitchEffect() {
+      // Für diesen einfachen Fall wird wieder Canvas-Effekt 0 genutzt
+      startCanvasAnimationEffectCustom(0);
+    }
+    
+    function horrorBloodEffect() {
+      const container = document.getElementById('horrorDisplay');
+      if (!container) return;
+      container.textContent = "GAME OVER";
+      container.style.color = "red";
+      setTimeout(() => {
+        container.textContent = "Horror Effekt";
+        container.style.color = "";
+      }, 3000);
+    }
+    
+    function horrorFlickerEffect() {
+      const container = document.getElementById('horrorDisplay');
+      if (!container) return;
+      container.textContent = "DANGER!";
+      container.style.animation = "flicker 1s infinite";
+      let style = document.createElement('style');
+      style.innerHTML = `
+        @keyframes flicker {
+          0% { opacity: 1; }
+          50% { opacity: 0.5; }
+          100% { opacity: 1; }
+        }
+      `;
+      document.head.appendChild(style);
+      setTimeout(() => {
+        container.textContent = "Horror Effekt";
+        container.style.animation = "";
+        document.head.removeChild(style);
+      }, 3000);
+    }
+    
+    function horrorShakeEffect() {
+      const container = document.getElementById('horrorDisplay');
+      if (!container) return;
+      container.textContent = "RUN!";
+      container.style.animation = "shake 0.5s";
+      let style = document.createElement('style');
+      style.innerHTML = `
+        @keyframes shake {
+          0% { transform: translate(0, 0); }
+          25% { transform: translate(5px, 0); }
+          50% { transform: translate(-5px, 0); }
+          75% { transform: translate(5px, 0); }
+          100% { transform: translate(0, 0); }
+        }
+      `;
+      document.head.appendChild(style);
+      setTimeout(() => {
+        container.textContent = "Horror Effekt";
+        container.style.animation = "";
+        document.head.removeChild(style);
+      }, 2000);
+    }
+    
+    function horrorFogEffect() {
+      const container = document.getElementById('horrorDisplay');
+      if (!container) return;
+      container.innerHTML = "";
+      const canvas = document.createElement('canvas');
+      canvas.width = container.clientWidth;
+      canvas.height = container.clientHeight;
+      container.appendChild(canvas);
+      const ctx = canvas.getContext('2d');
+      let particles = [];
+      for (let i = 0; i < 30; i++) {
+        particles.push({
+          x: Math.random() * canvas.width,
+          y: canvas.height + Math.random() * 50,
+          size: 20 + Math.random() * 30,
+          opacity: 0.1 + Math.random() * 0.4,
+          vy: -0.5 - Math.random() * 0.5
+        });
+      }
+      function drawFog() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach(p => {
+          ctx.fillStyle = `rgba(200,200,200,${p.opacity.toFixed(2)})`;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+          ctx.fill();
+          p.y += p.vy;
+          if (p.y + p.size < 0) { p.y = canvas.height + p.size; }
+        });
+        requestAnimationFrame(drawFog);
+      }
+      drawFog();
+    }
+    
+    function fantasyStarsEffect() {
+      const container = document.getElementById('fantasyDisplay');
+      if (!container) return;
+      container.innerHTML = "<div style='font-size:24px;'>✦ ✦ ✦</div>";
+    }
+    
+    function fantasyGlowEffect() {
+      const container = document.getElementById('fantasyDisplay');
+      if (!container) return;
+      container.innerHTML = "<div style='font-size:30px; text-shadow: 0 0 10px #4aff4a;'>★</div>";
+    }
+    
+    function fantasyFloatEffect() {
+      const container = document.getElementById('fantasyDisplay');
+      if (!container) return;
+      container.innerHTML = "<img src='https://i.imgur.com/At7GxhG.png' style='width:50px; animation: float 3s ease-in-out infinite;'>";
+      let style = document.createElement('style');
+      style.innerHTML = `
+        @keyframes float {
+          0% { transform: translateY(0); }
+          50% { transform: translateY(-15px); }
+          100% { transform: translateY(0); }
+        }
+      `;
+      document.head.appendChild(style);
+    }
+    
+    function fantasyTrailEffect() {
+      const container = document.getElementById('fantasyDisplay');
+      if (!container) return;
+      container.innerHTML = "";
+      const canvas = document.createElement('canvas');
+      canvas.width = container.clientWidth;
+      canvas.height = container.clientHeight;
+      container.appendChild(canvas);
+      const ctx = canvas.getContext('2d');
+      const stars = [];
+      window.addEventListener('mousemove', e => {
+        stars.push({
+          x: e.clientX % canvas.width,
+          y: e.clientY % canvas.height,
+          size: 2 + Math.random() * 3,
+          vx: (Math.random() - 0.5) * 2,
+          vy: -1 - Math.random(),
+          life: 60
+        });
+      });
+      function animateTrail() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        for (let i = stars.length - 1; i >= 0; i--) {
+          const s = stars[i];
+          ctx.fillStyle = 'rgba(255,255,150,' + (s.life / 60).toFixed(2) + ')';
+          ctx.beginPath();
+          ctx.arc(s.x, s.y, s.size, 0, 2 * Math.PI);
+          ctx.fill();
+          s.x += s.vx;
+          s.y += s.vy;
+          s.life--;
+          if (s.life <= 0) stars.splice(i, 1);
+        }
+        requestAnimationFrame(animateTrail);
+      }
+      animateTrail();
+    }
+    
+    function neonTextEffect() {
+      const container = document.getElementById('neonDisplay');
+      if (!container) return;
+      container.innerHTML = "<h1 style='text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px #fff, 0 0 40px #0fa, 0 0 80px #0fa;'>CYBERZONE</h1>";
+    }
+    
+    function neonFlickerEffect() {
+      const container = document.getElementById('neonDisplay');
+      if (!container) return;
+      container.innerHTML = "<h1 style='animation: neonBlink 5s infinite; text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px #fff, 0 0 40px #0fa, 0 0 80px #0fa;'>CYBERZONE</h1>";
+      let style = document.createElement('style');
+      style.innerHTML = `
+        @keyframes neonBlink {
+          0%, 80%, 100% { opacity: 1; }
+          81% { opacity: 0; }
+        }
+      `;
+      document.head.appendChild(style);
+    }
+    
+    function neonBoxEffect() {
+      const container = document.getElementById('neonDisplay');
+      if (!container) return;
+      container.innerHTML = "<div style='padding:10px; border:2px solid #f0f; box-shadow: 0 0 10px #f0f, 0 0 20px #0ff;'>Neon Button</div>";
+    }
+    
+    function neonLineEffect() {
+      // Nutzt hier wieder den Canvas-Effekt 7 (Rahmen) im Canvas-Bereich
+      startCanvasAnimationEffectCustom(7);
+    }
+    
+    function particleFireworkEffect() {
+      const canvas = document.getElementById('particleCanvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      let particles = [];
+      function explode(x, y) {
+        const colors = ['#ff0', '#0f0', '#00f', '#f0f'];
+        for (let i = 0; i < 50; i++) {
+          particles.push({
+            x, y,
+            vx: Math.cos((2 * Math.PI / 50) * i) * (2 + Math.random() * 2),
+            vy: Math.sin((2 * Math.PI / 50) * i) * (2 + Math.random() * 2),
+            color: colors[Math.floor(Math.random() * colors.length)],
+            life: 60
+          });
+        }
+      }
+      canvas.addEventListener('click', e => {
+        const rect = canvas.getBoundingClientRect();
+        explode(e.clientX - rect.left, e.clientY - rect.top);
+      });
+      function animFireworks() {
+        ctx.fillStyle = 'rgba(0,0,0,0.2)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        particles.forEach((p, i) => {
+          ctx.fillStyle = p.color;
+          ctx.fillRect(p.x, p.y, 3, 3);
+          p.x += p.vx;
+          p.y += p.vy;
+          p.vy += 0.05;
+          p.life--;
+          if (p.life <= 0) { particles.splice(i, 1); }
+        });
+        requestAnimationFrame(animFireworks);
+      }
+      animFireworks();
+    }
+    
+    function particleConfettiEffect() {
+      const canvas = document.getElementById('particleCanvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      let confetti = [];
+      const colors = ['#e74c3c','#f1c40f','#2ecc71','#3498db','#9b59b6'];
+      for (let i = 0; i < 100; i++) {
+        confetti.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height - canvas.height,
+          size: 5 + Math.random() * 5,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          rotation: Math.random() * 360,
+          speed: 1 + Math.random() * 2
+        });
+      }
+      function drawConfetti() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        confetti.forEach(p => {
+          ctx.fillStyle = p.color;
+          ctx.save();
+          ctx.translate(p.x, p.y);
+          ctx.rotate(p.rotation * Math.PI / 180);
+          ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+          ctx.restore();
+          p.y += p.speed;
+          p.rotation += p.speed;
+          if (p.y > canvas.height) p.y = -10;
+        });
+        requestAnimationFrame(drawConfetti);
+      }
+      drawConfetti();
+    }
+    
+    function particleRainEffect() {
+      const container = document.getElementById('particleEffectDisplay');
+      if (!container) return;
+      container.innerHTML = "<div style='width:100%; height:100%; display:flex; align-items:center; justify-content:center;'>Regen Effekt</div>";
+    }
+    
+    function particleSnowEffect() {
+      const container = document.getElementById('particleEffectDisplay');
+      if (!container) return;
+      container.innerHTML = "<div style='width:100%; height:100%; display:flex; align-items:center; justify-content:center;'>Schnee Effekt</div>";
+    }
+    
+    function energyLightningEffect() {
+      const canvas = document.getElementById('energyCanvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      function drawLightning() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        if (Math.random() > 0.5) {
+          ctx.strokeStyle = "#ffff88";
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.moveTo(50, 0);
+          const segments = 10;
+          for (let i = 1; i < segments; i++) {
+            let t = i / segments;
+            let cx = 50 + (Math.random() - 0.5) * 20;
+            let cy = (canvas.height * t) + (Math.random() - 0.5) * 20;
+            ctx.lineTo(cx, cy);
+          }
+          ctx.lineTo(50, canvas.height);
+          ctx.stroke();
+        }
+        requestAnimationFrame(drawLightning);
+      }
+      drawLightning();
+    }
+    
+    function energyShockwaveEffect() {
+      const container = document.getElementById('energyEffectDisplay');
+      if (!container) return;
+      container.innerHTML = "Shockwave!";
+      container.style.transform = 'scale(0)';
+      container.style.transition = 'transform 1s ease-out';
+      setTimeout(() => { container.style.transform = 'scale(1)'; }, 50);
+      setTimeout(() => {
+        container.style.transform = 'scale(0)';
+        container.innerHTML = "Energy Effekt";
+      }, 1000);
+    }
+    
+    function energyLaserEffect() {
+      const container = document.getElementById('energyEffectDisplay');
+      if (!container) return;
+      container.innerHTML = "<div style='width:2px; height:100px; background: linear-gradient(to bottom, #0ff, transparent); animation: shoot 0.5s linear forwards;'></div>";
+      let style = document.createElement('style');
+      style.innerHTML = `
+        @keyframes shoot {
+          from { transform: translateY(0); }
+          to { transform: translateY(-300px); }
+        }
+      `;
+      document.head.appendChild(style);
+    }
+    
+    function energyCircleEffect() {
+      const canvas = document.getElementById('energyCanvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      let charge = 0;
+      function drawCharge() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.lineWidth = 10;
+        ctx.strokeStyle = charge < 100 ? '#0f0' : '#ff0';
+        ctx.beginPath();
+        ctx.arc(canvas.width/2, canvas.height/2, 50, -Math.PI/2, -Math.PI/2 + (2*Math.PI*(charge/100)));
+        ctx.stroke();
+        ctx.fillStyle = '#fff';
+        ctx.font = '20px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(charge + '%', canvas.width/2, canvas.height/2);
+      }
+      let interval = setInterval(() => {
+        charge = Math.min(charge + 1, 100);
+        drawCharge();
+        if (charge === 100) clearInterval(interval);
+      }, 100);
+    }
+    
+    function vintageSepiaEffect() {
+      const container = document.getElementById('vintageDisplay');
+      if (!container) return;
+      container.style.filter = "sepia(0.7) contrast(1.2) brightness(0.9)";
+      setTimeout(() => { container.style.filter = ""; }, 3000);
+    }
+    
+    function vintageCrtEffect() {
+      const container = document.getElementById('vintageDisplay');
+      if (!container) return;
+      container.style.filter = "contrast(1.2) brightness(0.9)";
+      container.textContent = "CRT Effekt";
+      setTimeout(() => { container.style.filter = ""; container.textContent = "Vintage Effekt"; }, 3000);
+    }
+    
+    function vintagePixelEffect() {
+      const container = document.getElementById('vintageDisplay');
+      if (!container) return;
+      container.style.imageRendering = "pixelated";
+      setTimeout(() => { container.style.imageRendering = ""; }, 3000);
+    }
+    
+    function vintageVhsEffect() {
+      const canvas = document.getElementById('canvasEffectCanvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      function drawNoise() {
+        const imgData = ctx.createImageData(canvas.width, canvas.height);
+        const data = imgData.data;
+        for (let i = 0; i < data.length; i += 4) {
+          const shade = Math.floor(Math.random() * 256);
+          data[i] = data[i+1] = data[i+2] = shade;
+          data[i+3] = 50;
+        }
+        ctx.putImageData(imgData, 0, 0);
+      }
+      setInterval(drawNoise, 50);
+    }
+    
+    function fadeFadeinEffect() {
+      const container = document.getElementById('fadeDisplay');
+      if (!container) return;
+      container.style.opacity = 0;
+      container.style.transition = 'opacity 1s';
+      container.textContent = "Fade-In Effekt";
+      setTimeout(() => { container.style.opacity = 1; }, 100);
+    }
+    
+    function fadeCrossfadeEffect() {
+      const container = document.getElementById('fadeDisplay');
+      if (!container) return;
+      container.style.opacity = 1;
+      container.textContent = "Crossfade Effekt";
+      setTimeout(() => { container.style.opacity = 0; }, 500);
+      setTimeout(() => { container.style.opacity = 1; }, 1000);
+    }
+    
+    function fadeSlideinEffect() {
+      const container = document.getElementById('fadeDisplay');
+      if (!container) return;
+      container.style.transform = 'translateX(100%)';
+      container.style.opacity = 0;
+      container.style.transition = 'transform 1s, opacity 1s';
+      container.textContent = "Slide-In Effekt";
+      setTimeout(() => {
+        container.style.transform = 'translateX(0)';
+        container.style.opacity = 1;
+      }, 100);
+    }
+    
+    function fadeScaleinEffect() {
+      const container = document.getElementById('fadeDisplay');
+      if (!container) return;
+      container.style.transform = 'scale(0)';
+      container.style.transition = 'transform 0.5s';
+      container.textContent = "Scale-In Effekt";
+      setTimeout(() => {
+        container.style.transform = 'scale(1)';
+      }, 100);
+    }
+    
+    function typewriterCssEffect() {
+      const container = document.getElementById('typewriterDisplay');
+      if (!container) return;
+      container.innerHTML = "<h1 class='typewriter'>MISSION START</h1>";
+      let style = document.createElement('style');
+      style.innerHTML = `
+        .typewriter {
+          display: inline-block;
+          overflow: hidden;
+          white-space: nowrap;
+          border-right: 0.15em solid orange;
+          animation: typing 4s steps(14, end), blink 0.75s step-end infinite;
+        }
+        @keyframes typing { from { width: 0; } to { width: 100%; } }
+        @keyframes blink { from, to { border-color: transparent; } 50% { border-color: orange; } }
+      `;
+      document.head.appendChild(style);
+    }
+    
+    function typewriterJsEffect() {
+      const container = document.getElementById('typewriterDisplay');
+      if (!container) return;
+      const txt = ">> System Booting...";
+      let i = 0;
+      container.textContent = "";
+      function type() {
+        container.textContent = txt.substring(0, i) + (i % 2 ? "_" : "");
+        if (i < txt.length) {
+          i++;
+          setTimeout(type, 100);
+        } else {
+          container.textContent = txt;
+        }
+      }
+      type();
+    }
+    
+    function typewriterDeleteEffect() {
+      const container = document.getElementById('typewriterDisplay');
+      if (!container) return;
+      const words = ["Hello", "Hola", "Ciao", "Hej"];
+      let wordIndex = 0;
+      let charIndex = 0;
+      let deleting = false;
+      function typeLoop() {
+        const currentWord = words[wordIndex];
+        let displayed = currentWord.substring(0, charIndex);
+        container.textContent = displayed + "|";
+        if (!deleting) {
+          if (charIndex < currentWord.length) {
+            charIndex++;
+            setTimeout(typeLoop, 100);
+          } else {
+            deleting = true;
+            setTimeout(typeLoop, 1000);
+          }
+        } else {
+          if (charIndex > 0) {
+            charIndex--;
+            setTimeout(typeLoop, 50);
+          } else {
+            deleting = false;
+            wordIndex = (wordIndex + 1) % words.length;
+            setTimeout(typeLoop, 500);
+          }
+        }
+      }
+      typeLoop();
+    }
+    
+    function counterEffect() {
+      const container = document.getElementById('typewriterDisplay');
+      if (!container) return;
+      let score = 0;
+      const targetScore = 1000;
+      function increment() {
+        container.textContent = "Score: " + score;
+        if (score < targetScore) {
+          score += 10;
+          requestAnimationFrame(increment);
+        }
+      }
+      increment();
+    }
+    
+    function blurFocusEffect() {
+      const container = document.getElementById('blurDisplay');
+      if (!container) return;
+      container.style.filter = "blur(5px)";
+      container.textContent = "Blur Effekt";
+      setTimeout(() => { container.style.filter = ""; container.textContent = "Blur Effekt"; }, 3000);
+    }
+    
+    function motionBlurEffect() {
+      const container = document.getElementById('blurDisplay');
+      if (!container) return;
+      container.style.animation = "motionBlur 0.3s linear";
+      let style = document.createElement('style');
+      style.innerHTML = `
+        @keyframes motionBlur {
+          0% { filter: blur(0); }
+          50% { filter: blur(3px); }
+          100% { filter: blur(0); }
+        }
+      `;
+      document.head.appendChild(style);
+      setTimeout(() => {
+        container.style.animation = "";
+        document.head.removeChild(style);
+      }, 500);
+    }
+    
+    function shadowAnimEffect() {
+      const container = document.getElementById('blurDisplay');
+      if (!container) return;
+      container.style.textShadow = "2px 2px 2px #ff0000";
+      setTimeout(() => { container.style.textShadow = ""; }, 3000);
+    }
+    
+    function applyMorphEffect() {
+      const input = document.getElementById('morphInput').value;
+      const strength = parseInt(document.getElementById('morphStrength').value, 10);
+      const output = document.getElementById('morphOutput');
+      if (!output) return;
+      output.innerHTML = `<span id="morphBase">${input}</span> <span id="morphOverlay">${input}</span>`;
+      const skew = (strength / 100) * 30;
+      const scale = 1 + (strength / 200);
+      const baseEl = document.getElementById('morphBase');
+      const overlayEl = document.getElementById('morphOverlay');
+      baseEl.style.position = "relative";
+      overlayEl.style.position = "absolute";
+      overlayEl.style.top = "0";
+      overlayEl.style.left = "0";
+      overlayEl.style.color = "#ff4081";
+      overlayEl.style.transform = `skewX(${skew}deg) scale(${scale})`;
+      overlayEl.style.animation = "morphColor 2s infinite alternate";
+      let style = document.createElement('style');
+      style.innerHTML = `
+        @keyframes morphColor {
+          from { color: #ff4081; }
+          to { color: #40c4ff; }
+        }
+      `;
+      document.head.appendChild(style);
+    }
+    
+    function loadImageEffect() {
+      const url = document.getElementById('imgUrlInput').value;
+      const container = document.getElementById('loadedImageContainer');
+      if (!url || !container) return;
+      container.innerHTML = "<img src='" + url + "' style='max-width:100%; max-height:100%; object-fit:contain;'>";
+    }
+    
+    /* ---------------------------
+       Chat-Funktionalität
+       --------------------------- */
+    function sendChatMessage() {
+      const chatInput = document.getElementById('chatInput');
+      const chatMessages = document.getElementById('chatMessages');
+      if (!chatInput || !chatMessages) return;
+      const msg = chatInput.value;
+      if (msg.trim() === "") return;
+      const messageDiv = document.createElement('div');
+      messageDiv.textContent = msg;
+      chatMessages.appendChild(messageDiv);
+      chatInput.value = "";
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+  </script>
+</body>
+</html>

@@ -339,18 +339,39 @@
       height: 100%;
       transition: width 0.5s ease;
     }
-    /* Achievement-Popup */
-    .achievement {
-      margin-top: 20px;
-      padding: 15px;
-      background: rgba(255,215,0,0.8);
-      border-radius: 8px;
-      font-size: 1.2em;
-      font-weight: bold;
-      color: #333;
-      display: none;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-    }
+
+    .input-frame {
+  position: relative;  /* Wichtig: Damit absolute Positionierung im Inneren funktioniert */
+  display: inline-block;
+  width: calc(58ch + 70px);
+  height: 850px;
+  padding: 10px 35px 250px 35px;
+  background-image: url('https://i.imgur.com/q7KFSvH.png');
+  background-size: calc(58ch + 70px) 850px;
+  background-repeat: no-repeat;
+  background-position: top left;
+  margin-top: 10px;
+}
+
+#achievementPopup {
+  position: absolute;
+  /* Setze den Wert so, dass das Popup direkt über dem Texteingabefeld erscheint.
+     Beispiel: Wenn das Texteingabefeld etwa 300px hoch ist und am unteren Ende des Containers liegt,
+     könnte ein top-Wert von etwa 240px passen – passe diesen Wert nach Bedarf an. */
+  top: 1450px;
+  left: 42%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  background: rgba(255, 235, 59, 0.9);  /* Gelber Hintergrund */
+  color: #333;
+  padding: 10px 20px;
+  border-radius: 5px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+  display: none;  /* Wird per JavaScript ein-/ausgeblendet */
+  font-size: 1em;
+  text-align: center;
+}
+
     /* Erfolge & Belohnungen */
     .achievements-rewards-container {
       display: flex;

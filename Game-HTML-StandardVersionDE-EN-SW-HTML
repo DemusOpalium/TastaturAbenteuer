@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title data-translate="title">Schreibabenteuer DemusOpalium</title>
   <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@700&family=Roboto:wght@400;700&family=Merriweather:wght@400;700&family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@700&family=Roboto:wght@400;700&family=Merriweather:wght@400;700&family=Courier+Prime&display=swap" rel="stylesheet">
   <!-- Animate.css für Animationen -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
   <style>
@@ -167,78 +167,140 @@
       cursor: pointer;
     }
     .close-btn:hover { color: #000; }
-    /* Dropdowns & Buttons */
-    .design-controls, .extra-controls {
-      margin-bottom: 20px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      justify-content: center;
-    }
-    .design-controls select, .extra-controls select, .extra-controls button {
-      padding: 10px;
-      font-size: 1em;
-      border-radius: 5px;
-      background: rgba(255,255,255,0.2);
-      color: inherit;
-      cursor: pointer;
-      transition: background 0.3s ease;
-    }
-    .design-controls select:hover, .extra-controls select:hover, .extra-controls button:hover {
-      background: rgba(255,255,255,0.4);
-    }
-    /* Statusleiste */
-    .status-bar {
-      margin-bottom: 15px;
-      font-size: 1.1em;
-      background: rgba(0,0,0,0.3);
-      padding: 10px 15px;
-      border-radius: 5px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 15px;
-      justify-content: center;
-    }
-    .status-item { min-width: 100px; text-align: center; }
-    #copyScoreDisplay { display: none; }
-    /* Schreibbereich */
-    #writeArea {
-      width: 100%;
-      max-width: 800px;
-      height: 300px;
-      background: rgba(255,255,255,0.1);
-      color: inherit;
-      padding: 15px;
-      border: 2px solid;
-      border-radius: 8px;
-      outline: none;
-      overflow-y: auto;
-      font-size: 1.1em;
-      line-height: 1.5em;
-      transition: background 0.3s ease;
-    }
-    .theme-dark #writeArea { border-color: #444; }
-    .theme-light #writeArea { border-color: #ccc; }
-    .theme-vintage #writeArea { border-color: #a67c52; }
-    .theme-neon #writeArea { border-color: #39ff14; }
-    .theme-pastel #writeArea { border-color: #ff8fa3; }
-    .theme-ocean #writeArea { border-color: #a2d5f2; }
-    .theme-forest #writeArea { border-color: #cdeac0; }
-    .theme-sunset #writeArea { border-color: #4b134f; }
-    #writeArea.warning { background: rgba(200,50,50,0.5); animation: shake 0.5s infinite alternate; }
-    @keyframes shake { from { transform: translateX(0); } to { transform: translateX(3px); } }
-    /* Copy Challenge */
-    #copyTarget {
-      display: none;
-      border: 2px solid #000;
-      background: #fff;
-      color: #000;
-      padding: 10px;
-      font-size: 1.5em;
-      font-weight: bold;
-      margin-bottom: 10px;
-      border-radius: 5px;
-    }
+/* Dropdowns & Buttons */
+.design-controls, .extra-controls {
+  margin-bottom: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+.design-controls select, .extra-controls select, .extra-controls button {
+  padding: 10px;
+  font-size: 1em;
+  border-radius: 5px;
+  background: rgba(255,255,255,0.2);
+  color: inherit;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+.design-controls select:hover, .extra-controls select:hover, .extra-controls button:hover {
+  background: rgba(255,255,255,0.4);
+}
+/* Statusleiste */
+.status-bar {
+  margin-bottom: 15px;
+  font-size: 1.1em;
+  background: rgba(0,0,0,0.3);
+  padding: 10px 15px;
+  border-radius: 5px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: center;
+}
+.status-item { min-width: 100px; text-align: center; }
+#copyScoreDisplay { display: none; }
+/* Neuer Schreibbereich mit Hintergrund – direkt unter den Buttons */
+.input-frame {
+  display: inline-block;
+  width: calc(58ch + 70px);
+  height: 850px;
+  /* Padding: oben 10px, rechts 35px, unten 250px, links 35px */
+  padding: 10px 35px 250px 35px;
+  background-image: url('https://i.imgur.com/q7KFSvH.png');
+  background-size: calc(58ch + 70px) 850px;
+  background-repeat: no-repeat;
+  background-position: top left;
+  margin-top: 10px;
+}
+
+/* Für größere Bildschirme (ab 1200px) – Container doppelt so breit, aber auch hier den oberen Padding reduzieren */
+@media (min-width: 1200px) {
+  .input-frame {
+    width: 1200px;
+    height: 850px;
+    /* Auch hier: oberer Padding auf 10px statt 300px */
+    padding: 10px 300px 250px 300px;
+    background-size: 1200px 850px;
+  }
+}
+/* Textfeld: fest auf 58 Zeichen Breite (monospaced) und 300px Höhe – Zeilenumbrüche werden automatisch eingefügt */
+#writeArea {
+  width: 58ch;
+  max-width: 58ch;
+  height: 300px;
+  background: rgba(255,255,255,0.1);
+  color: inherit;
+  padding: 15px;
+  border: 2px solid;
+  border-radius: 8px;
+  outline: none;
+  overflow-y: auto;
+  font-size: 1.1em;
+  line-height: 1.5em;
+  font-family: 'Courier Prime', monospace;
+  margin: 0 auto;
+}
+.theme-dark #writeArea { border-color: #444; }
+.theme-light #writeArea { border-color: #ccc; }
+.theme-vintage #writeArea { border-color: #a67c52; }
+.theme-neon #writeArea { border-color: #39ff14; }
+.theme-pastel #writeArea { border-color: #ff8fa3; }
+.theme-ocean #writeArea { border-color: #a2d5f2; }
+.theme-forest #writeArea { border-color: #cdeac0; }
+.theme-sunset #writeArea { border-color: #4b134f; }
+#writeArea.warning { background: rgba(200,50,50,0.5); animation: shake 0.5s infinite alternate; }
+@keyframes shake { from { transform: translateX(0); } to { transform: translateX(3px); } }
+/* Copy Challenge */
+#copyTarget {
+  display: none;
+  border: 2px solid #000;
+  background: #fff;
+  color: #000;
+  padding: 10px;
+  font-size: 1.5em;
+  font-weight: bold;
+  margin-bottom: 10px;
+  border-radius: 5px;
+}
+
+/* --- Neuer CSS-Code für den Effekt Text, der in der Mitte des Hintergrunds liegt --- */
+#effectDisplay {
+  display: none;
+}
+
+#effectDisplay {
+  position: relative; /* Ermöglicht absolute Positionierung der Kindelemente */
+  margin-top: 0;
+  padding-top: 0;
+  /* Falls nötig, kannst du hier auch die Höhe anpassen */
+}
+
+/* Den Canvas kannst du wie gehabt belassen oder anpassen */
+#effectCanvas {
+  display: block;
+  margin: 0;
+  padding: 0;
+  height: 60px; /* Beispielwert – passe die Höhe nach Bedarf an */
+}
+
+/* Den Effekt Text weiter nach unten ziehen und zentrieren */
+#cssEffectText {
+  position: absolute;
+  bottom: 10px;         /* 10px Abstand vom unteren Rand des Containers */
+  left: 50%;            /* Horizontal in der Mitte */
+  transform: translateX(-50%);  /* Korrektur, damit der Text wirklich zentriert ist */
+  margin: 0;
+  padding: 0;
+  font-size: 0.8em;     /* Kleinere Schriftgröße */
+  color: inherit;       /* Vererbt die Schriftfarbe des übergeordneten Elements */
+  /* Optional: ein halbtransparenter Hintergrund, damit der Text besser lesbar ist */
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 4px;
+  padding: 2px 5px;
+}
+
     #targetSentence { font-weight: bold; }
     /* Steuerungselemente */
     .controls {
@@ -388,6 +450,13 @@
       to { opacity: 0; }
     }
     /* Responsive Layout */
+    @media (min-width: 1200px) {
+      .input-frame {
+        width: 1200px;
+        background-size: 1200px 850px;
+        padding: 300px 300px 250px 300px;
+      }
+    }
     @media (max-width: 600px) {
       #writeArea { height: 250px; }
       .status-bar, .controls, .design-controls, .extra-controls, .achievements-rewards-container {
@@ -496,7 +565,7 @@
       <option value="'Roboto', sans-serif" selected>Roboto</option>
       <option value="'Lora', serif">Lora</option>
       <option value="'Merriweather', serif">Merriweather</option>
-      <option value="'Open Sans', sans-serif">Open Sans</option>
+      <option value="'Courier Prime', monospace">Courier Prime</option>
       <option value="'Courier New', monospace">Courier New</option>
     </select>
   </div>
@@ -569,8 +638,18 @@
     <div id="bossHealthBar"><div id="bossHealth"></div></div>
   </div>
   
-  <!-- Schreibbereich -->
-  <div id="writeArea" contenteditable="true" data-translate-placeholder="writePlaceholder" placeholder="Hier beginnen zu schreiben..."></div>
+  <!-- Effekt-Anzeige Container (direkt unter den Buttons) -->
+  <div id="effectDisplay" class="effect-overlay">
+    <!-- Canvas für dynamische Grafikeffekte -->
+    <canvas id="effectCanvas" width="800" height="200"></canvas>
+    <!-- Optional: Div für CSS-basierte Texteffekte -->
+    <div id="cssEffectText">Effekt Text</div>
+  </div>
+  
+  <!-- Neuer Schreibbereich mit Hintergrundbild – direkt unter den Buttons -->
+  <div class="input-frame">
+    <div id="writeArea" contenteditable="true" data-translate-placeholder="writePlaceholder" placeholder="Hier beginnen zu schreiben..."></div>
+  </div>
   
   <!-- Achievement-Popup -->
   <div class="achievement animate__animated" id="achievementPopup">Achievement unlocked! 🎉</div>
@@ -802,7 +881,7 @@
         "xp": "XP: 0",
         "level": "Kiwango: 1",
         "wpm": "Maneno kwa Dakika: 0",
-        "apm": "Mabofya kwa Dakika: 0",
+        "apm": "APM: 0",
         "hotStreak": "MFAKA ZA MOJA!",
         "copyScore": "Alama za Nakili: 0",
         "mode": "Mpangilio:",
@@ -839,15 +918,22 @@
 
     // Sprachumschaltung zyklisch: de -> en -> sw -> de ...
     function toggleLanguage() {
-      if (currentLanguage === 'de') {
-        currentLanguage = 'en';
-      } else if (currentLanguage === 'en') {
-        currentLanguage = 'sw';
-      } else {
-        currentLanguage = 'de';
-      }
+      if (currentLanguage === 'de') { currentLanguage = 'en'; }
+      else if (currentLanguage === 'en') { currentLanguage = 'sw'; }
+      else { currentLanguage = 'de'; }
       updateLanguage();
     }
+
+    // Keypress-Listener, der in jeder Zeile nach 58 Zeichen automatisch einen Zeilenumbruch einfügt
+    document.getElementById("writeArea").addEventListener("keypress", function(e) {
+      if (e.key === "Enter") { return; }
+      let lines = this.innerText.split("\n");
+      let currentLine = lines[lines.length - 1];
+      if (currentLine.length >= 58) {
+        e.preventDefault();
+        document.execCommand("insertHTML", false, "<br>" + e.key);
+      }
+    });
 
     // Aktualisiert alle Elemente mit Übersetzungsschlüsseln
     function updateLanguage() {
@@ -869,7 +955,7 @@
     }
     updateLanguage();
 
-    /* --- Restlicher JavaScript-Code --- */
+    /* --- Restlicher JavaScript-Code (alle Funktionen und Event-Listener wie im Basis-Code) --- */
     let timerInterval = null, idleTimeout = null;
     let sessionActive = false;
     let sessionStartTime = null;
@@ -1746,9 +1832,7 @@ const sentenceLibraries_sw = {
   }
 };
 
-// Die Bibliotheken für Englisch und Kiswahili können ebenfalls weiter angepasst werden – siehe oben.
-
-console.log("Neue deutsche, englische und kiswahili Satzbibliotheken wurden erstellt.");
+    console.log("Neue deutsche, englische und kiswahili Satzbibliotheken wurden erstellt.");
 
     let boss = null, bossDefeated = false;
     let lastProcessedIndex = 0;
@@ -1790,7 +1874,7 @@ console.log("Neue deutsche, englische und kiswahili Satzbibliotheken wurden erst
         <p>${currentLanguage === 'de' ? "APM:" : (currentLanguage === 'en' ? "APM:" : "Mabofya kwa Dakika:")} ${apm}</p>
         <p>${currentLanguage === 'de' ? "Fehler:" : (currentLanguage === 'en' ? "Errors:" : "Makosa:")} ${errorCount}</p>
         <p>${currentLanguage === 'de' ? "Session Score:" : (currentLanguage === 'en' ? "Session Score:" : "Alama za Muda:")} ${sessionScore}</p>
-        <p>${currentLanguage === 'de' ? "Bonus Wissenspunkte:" : (currentLanguage === 'en' ? "Bonus Knowledge Points:" : "Alama za Ziada:")} ${bonusWissenspunkte}</p>
+        <p>${currentLanguage === 'de' ? "Bonus Wissenspunkte:" : (currentLanguage === 'en' ? "Bonus Knowledge Points:" : "Alama za Ziada: ")} ${bonusWissenspunkte}</p>
         <button onclick="closeResultsPopup()">${currentLanguage === 'de' ? "Schließen" : (currentLanguage === 'en' ? "Close" : "Funga")}</button>
       `;
       endSessionPopup.innerHTML = resultHTML;
@@ -2279,7 +2363,6 @@ console.log("Neue deutsche, englische und kiswahili Satzbibliotheken wurden erst
     
     /* --- Neue Funktion: Schreibimpuls-Popup im Kreativ-Modus --- */
     function showPromptPopup() {
-      // Positioniere das Popup über dem Schreibbereich
       const writeAreaRect = writeArea.getBoundingClientRect();
       const promptPopup = document.createElement("div");
       promptPopup.style.position = "absolute";
@@ -2292,10 +2375,8 @@ console.log("Neue deutsche, englische und kiswahili Satzbibliotheken wurden erst
       promptPopup.style.borderRadius = "5px";
       promptPopup.style.textAlign = "center";
       promptPopup.style.zIndex = "400";
-      // Wähle einen zufälligen Prompt aus
       promptPopup.textContent = prompts[Math.floor(Math.random() * prompts.length)];
       document.body.appendChild(promptPopup);
-      // Entferne das Popup nach 10 Sekunden
       setTimeout(() => { promptPopup.remove(); }, 10000);
     }
     
@@ -2325,7 +2406,6 @@ console.log("Neue deutsche, englische und kiswahili Satzbibliotheken wurden erst
         lastHotStreakWordCount = countWords(writeArea.innerText);
       }
       
-      // Wenn Kreativ-Modus ausgewählt: Zeige Schreibimpuls-Popup für 10 Sekunden
       if (modeSelect.value === "creative") { showPromptPopup(); }
     
       updateTimerDisplay();
@@ -2389,7 +2469,6 @@ console.log("Neue deutsche, englische und kiswahili Satzbibliotheken wurden erst
       sessionActive = false;
       
       if (modeSelect.value !== "copy") {
-        // Ergebnis-Popup wird in showSessionResults() angezeigt
       } else {
         let message = currentLanguage === 'de' ? "Deine Copy Challenge Punkte: " + copyScore : (currentLanguage === 'en' ? "Your Copy Challenge score: " + copyScore : "Alama zako za Copy Challenge: " + copyScore);
         endSessionPopup.innerHTML = `<h2>${currentLanguage === 'de' ? "Session beendet!" : (currentLanguage === 'en' ? "Session Ended!" : "Muda umekwisha!")}</h2>
@@ -2530,20 +2609,15 @@ console.log("Neue deutsche, englische und kiswahili Satzbibliotheken wurden erst
       if (hotStreakCounter >= hotStreakRequired) { showHotStreakIndicator(); }
     });
     
-    // ... bereits vorhandene Event-Listener und Funktionen
-    
-    // Event-Listener für das Theme-Dropdown
     document.getElementById("themeSelect").addEventListener("change", function() {
       document.body.className = "";
       document.body.classList.add(this.value);
     });
     
-    // Event-Listener für das Schriftart-Dropdown
     document.getElementById("fontSelect").addEventListener("change", function() {
       document.body.style.fontFamily = this.value;
     });
     
-    // Initiales Rendern
     renderShop();
     renderInventory();
     updateLeaderboard();

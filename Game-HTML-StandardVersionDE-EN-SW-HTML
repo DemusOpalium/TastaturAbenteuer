@@ -22,15 +22,15 @@
       padding: 20px;
     }
     /* Vorhandene Themes */
-    .theme-dark { background: linear-gradient(135deg, #2c3e50, #4ca1af); color: #f0f0f0; }
-    .theme-light { background: #f7f7f7; color: #333; }
-    .theme-vintage { background: #f4e8c1; color: #5a4b3b; }
+    .theme-dark { background: linear-gradient(135deg, #2c3e50, #6b7a7a); color: #a9aaa9; }
+    .theme-light { background: #f5e9bd; color: #333; }
+    .theme-vintage { background: #e9cc98; color: #5a4b3b; }
     /* Neue Themes */
-    .theme-neon { background: #0f0f0f; color: #39ff14; }
-    .theme-pastel { background: #ffe6f0; color: #ff8fa3; }
-    .theme-ocean { background: #1e3d59; color: #a2d5f2; }
-    .theme-forest { background: #2d4739; color: #cdeac0; }
-    .theme-sunset { background: #ff9a8d; color: #4b134f; }
+    .theme-neon { background: #1b011b; color: #49b833; }
+    .theme-pastel { background: #80676d; color: #57095a; }
+    .theme-ocean { background: #1e3d59; color: #3ba2af; }
+    .theme-forest { background: #114115; color: #927c02; }
+    .theme-sunset { background: #b68602; color: #490000; }
     /* Rahmen für Buttons, Selects und Labels */
     .theme-dark button, .theme-dark select, .theme-dark label { border: 1px solid #444; }
     .theme-light button, .theme-light select, .theme-light label { border: 1px solid #ccc; }
@@ -39,7 +39,7 @@
     .theme-pastel button, .theme-pastel select, .theme-pastel label { border: 1px solid #ff8fa3; }
     .theme-ocean button, .theme-ocean select, .theme-ocean label { border: 1px solid #a2d5f2; }
     .theme-forest button, .theme-forest select, .theme-forest label { border: 1px solid #cdeac0; }
-    .theme-sunset button, .theme-sunset select, .theme-sunset label { border: 1px solid #4b134f; }
+    .theme-sunset button, .theme-sunset select, .theme-sunset label { border: 1px solid #755601; }
     /* Überschrift */
     .title {
       font-family: 'Lora', serif;
@@ -167,141 +167,140 @@
       cursor: pointer;
     }
     .close-btn:hover { color: #000; }
-/* Dropdowns & Buttons */
-.design-controls, .extra-controls {
-  margin-bottom: 20px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  justify-content: center;
-}
-.design-controls select, .extra-controls select, .extra-controls button {
-  padding: 10px;
-  font-size: 1em;
-  border-radius: 5px;
-  background: rgba(255,255,255,0.2);
-  color: inherit;
-  cursor: pointer;
-  transition: background 0.3s ease;
-}
-.design-controls select:hover, .extra-controls select:hover, .extra-controls button:hover {
-  background: rgba(255,255,255,0.4);
-}
-/* Statusleiste */
-.status-bar {
-  margin-bottom: 15px;
-  font-size: 1.1em;
-  background: rgba(0,0,0,0.3);
-  padding: 10px 15px;
-  border-radius: 5px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
-  justify-content: center;
-}
-.status-item { min-width: 100px; text-align: center; }
-#copyScoreDisplay { display: none; }
-/* Neuer Schreibbereich mit Hintergrund – direkt unter den Buttons */
-.input-frame {
-  display: inline-block;
-  width: calc(58ch + 70px);
-  height: 850px;
-  /* Padding: oben 10px, rechts 35px, unten 250px, links 35px */
-  padding: 10px 35px 250px 35px;
-  background-image: url('https://i.imgur.com/q7KFSvH.png');
-  background-size: calc(58ch + 70px) 850px;
-  background-repeat: no-repeat;
-  background-position: top left;
-  margin-top: 10px;
-}
-
-/* Für größere Bildschirme (ab 1200px) – Container doppelt so breit, aber auch hier den oberen Padding reduzieren */
-@media (min-width: 1200px) {
-  .input-frame {
-    width: 1200px;
-    height: 850px;
-    /* Auch hier: oberer Padding auf 10px statt 300px */
-    padding: 10px 300px 250px 300px;
-    background-size: 1200px 850px;
-  }
-}
-/* Textfeld: fest auf 58 Zeichen Breite (monospaced) und 300px Höhe – Zeilenumbrüche werden automatisch eingefügt */
-#writeArea {
-  width: 58ch;
-  max-width: 58ch;
-  height: 300px;
-  background: rgba(255,255,255,0.1);
-  color: inherit;
-  padding: 15px;
-  border: 2px solid;
-  border-radius: 8px;
-  outline: none;
-  overflow-y: auto;
-  font-size: 1.1em;
-  line-height: 1.5em;
-  font-family: 'Courier Prime', monospace;
-  margin: 0 auto;
-}
-.theme-dark #writeArea { border-color: #444; }
-.theme-light #writeArea { border-color: #ccc; }
-.theme-vintage #writeArea { border-color: #a67c52; }
-.theme-neon #writeArea { border-color: #39ff14; }
-.theme-pastel #writeArea { border-color: #ff8fa3; }
-.theme-ocean #writeArea { border-color: #a2d5f2; }
-.theme-forest #writeArea { border-color: #cdeac0; }
-.theme-sunset #writeArea { border-color: #4b134f; }
-#writeArea.warning { background: rgba(200,50,50,0.5); animation: shake 0.5s infinite alternate; }
-@keyframes shake { from { transform: translateX(0); } to { transform: translateX(3px); } }
-/* Copy Challenge */
-#copyTarget {
-  display: none;
-  border: 2px solid #000;
-  background: #fff;
-  color: #000;
-  padding: 10px;
-  font-size: 1.5em;
-  font-weight: bold;
-  margin-bottom: 10px;
-  border-radius: 5px;
-}
-
-/* --- Neuer CSS-Code für den Effekt Text, der in der Mitte des Hintergrunds liegt --- */
-#effectDisplay {
-  display: none;
-}
-
-#effectDisplay {
-  position: relative; /* Ermöglicht absolute Positionierung der Kindelemente */
-  margin-top: 0;
-  padding-top: 0;
-  /* Falls nötig, kannst du hier auch die Höhe anpassen */
-}
-
-/* Den Canvas kannst du wie gehabt belassen oder anpassen */
-#effectCanvas {
-  display: block;
-  margin: 0;
-  padding: 0;
-  height: 60px; /* Beispielwert – passe die Höhe nach Bedarf an */
-}
-
-/* Den Effekt Text weiter nach unten ziehen und zentrieren */
-#cssEffectText {
-  position: absolute;
-  bottom: 10px;         /* 10px Abstand vom unteren Rand des Containers */
-  left: 50%;            /* Horizontal in der Mitte */
-  transform: translateX(-50%);  /* Korrektur, damit der Text wirklich zentriert ist */
-  margin: 0;
-  padding: 0;
-  font-size: 0.8em;     /* Kleinere Schriftgröße */
-  color: inherit;       /* Vererbt die Schriftfarbe des übergeordneten Elements */
-  /* Optional: ein halbtransparenter Hintergrund, damit der Text besser lesbar ist */
-  background: rgba(0, 0, 0, 0.4);
-  border-radius: 4px;
-  padding: 2px 5px;
-}
-
+    /* Dropdowns & Buttons */
+    .design-controls, .extra-controls {
+      margin-bottom: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+    }
+    .design-controls select, .extra-controls select, .extra-controls button {
+      padding: 10px;
+      font-size: 1em;
+      border-radius: 5px;
+      background: rgba(255,255,255,0.2);
+      color: inherit;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    .design-controls select:hover, .extra-controls select:hover, .extra-controls button:hover {
+      background: rgba(255,255,255,0.4);
+    }
+    /* Statusleiste */
+    .status-bar {
+      margin-bottom: 15px;
+      font-size: 1.1em;
+      background: rgba(0,0,0,0.3);
+      padding: 10px 15px;
+      border-radius: 5px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      justify-content: center;
+    }
+    .status-item { min-width: 100px; text-align: center; }
+    #copyScoreDisplay { display: none; }
+    /* Neuer Schreibbereich mit Hintergrund – Hier kommt das Layer-System */
+    .input-frame {
+      position: relative;
+      width: calc(58ch + 70px);
+      height: 850px;
+      margin-top: 10px;
+    }
+    /* Hintergrund-Ebene */
+    .background-layer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('https://i.imgur.com/q7KFSvH.png');
+      background-size: cover;
+      background-repeat: no-repeat;
+      z-index: 1;
+    }
+    /* Effekt-Ebene */
+    .effect-layer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+      pointer-events: none;
+    }
+    /* Texteingabe-Ebene */
+    .text-input-layer {
+      position: relative;
+      z-index: 3;
+      width: 58ch;
+      height: 300px;
+      margin: 0 auto;
+      background: rgba(255,255,255,0.1);
+      padding: 15px;
+      border: 2px solid;
+      border-radius: 8px;
+      overflow-y: auto;
+      font-size: 1.1em;
+      line-height: 1.5em;
+      font-family: 'Courier Prime', monospace;
+    }
+    /* Bestehende Styles für den ursprünglichen writeArea (falls nötig) */
+    .theme-dark .text-input-layer { border-color: #444; }
+    .theme-light .text-input-layer { border-color: #444; }
+    .theme-vintage .text-input-layer { border-color: #a67c52; }
+    .theme-neon .text-input-layer { border-color: #444; }
+    .theme-pastel .text-input-layer { border-color: #444; }
+    .theme-ocean .text-input-layer { border-color: #444; }
+    .theme-forest .text-input-layer { border-color: #444; }
+    .theme-sunset .text-input-layer { border-color: #444f; }
+    #writeArea.warning { background: rgba(200,50,50,0.5); animation: shake 0.5s infinite alternate; }
+    @keyframes shake { from { transform: translateX(0); } to { transform: translateX(3px); } }
+    /* Copy Challenge */
+    #checkBtn {
+      display: none !important;
+    }
+    #copyTarget {
+      display: none;
+      border: 2px solid #000;
+      background: #fff;
+      color: #000;
+      padding: 10px;
+      font-size: 1.5em;
+      font-weight: bold;
+      margin-bottom: 10px;
+      border-radius: 5px;
+    }
     #targetSentence { font-weight: bold; }
+    /* Effekt-Anzeige für dynamische Grafikeffekte (falls noch benötigt) */
+    #effectDisplay {
+      display: none;
+    }
+    #effectDisplay {
+      position: relative;
+      margin-top: 0;
+      padding-top: 0;
+    }
+    #effectCanvas {
+      display: block;
+      margin: 0;
+      padding: 0;
+      height: 60px;
+    }
+    #cssEffectText {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      margin: 0;
+      padding: 0;
+      font-size: 0.8em;
+      color: inherit;
+      background: rgba(0, 0, 0, 0.4);
+      border-radius: 4px;
+      padding: 2px 5px;
+    }
     /* Steuerungselemente */
     .controls {
       margin-top: 15px;
@@ -339,39 +338,21 @@
       height: 100%;
       transition: width 0.5s ease;
     }
-
-    .input-frame {
-  position: relative;  /* Wichtig: Damit absolute Positionierung im Inneren funktioniert */
-  display: inline-block;
-  width: calc(58ch + 70px);
-  height: 850px;
-  padding: 10px 35px 250px 35px;
-  background-image: url('https://i.imgur.com/q7KFSvH.png');
-  background-size: calc(58ch + 70px) 850px;
-  background-repeat: no-repeat;
-  background-position: top left;
-  margin-top: 10px;
-}
-
-#achievementPopup {
-  position: absolute;
-  /* Setze den Wert so, dass das Popup direkt über dem Texteingabefeld erscheint.
-     Beispiel: Wenn das Texteingabefeld etwa 300px hoch ist und am unteren Ende des Containers liegt,
-     könnte ein top-Wert von etwa 240px passen – passe diesen Wert nach Bedarf an. */
-  top: 1450px;
-  left: 42%;
-  transform: translateX(-50%);
-  z-index: 1000;
-  background: rgba(255, 235, 59, 0.9);  /* Gelber Hintergrund */
-  color: #333;
-  padding: 10px 20px;
-  border-radius: 5px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-  display: none;  /* Wird per JavaScript ein-/ausgeblendet */
-  font-size: 1em;
-  text-align: center;
-}
-
+    #achievementPopup {
+      position: absolute;
+      top: 1450px;
+      left: 42%;
+      transform: translateX(-50%);
+      z-index: 1000;
+      background: rgba(255, 235, 59, 0.9);
+      color: #333;
+      padding: 10px 20px;
+      border-radius: 5px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+      display: none;
+      font-size: 1em;
+      text-align: center;
+    }
     /* Erfolge & Belohnungen */
     .achievements-rewards-container {
       display: flex;
@@ -649,7 +630,7 @@
     <button id="promptBtn" style="display:none;" data-translate="showPrompt">Schreibimpuls anzeigen</button>
   </div>
   
-  <!-- Copy Challenge -->
+  <!-- Copy Challenge --> 
   <div id="copyTarget" style="display:none;">&gt; <span id="targetSentence"></span></div>
   <button id="checkBtn" style="display:none;" data-translate="checkSentence">Satz prüfen</button>
   
@@ -659,17 +640,20 @@
     <div id="bossHealthBar"><div id="bossHealth"></div></div>
   </div>
   
-  <!-- Effekt-Anzeige Container (direkt unter den Buttons) -->
+  <!-- Effekt-Anzeige Container (optional, falls noch genutzt) -->
   <div id="effectDisplay" class="effect-overlay">
-    <!-- Canvas für dynamische Grafikeffekte -->
     <canvas id="effectCanvas" width="800" height="200"></canvas>
-    <!-- Optional: Div für CSS-basierte Texteffekte -->
     <div id="cssEffectText">Effekt Text</div>
   </div>
   
-  <!-- Neuer Schreibbereich mit Hintergrundbild – direkt unter den Buttons -->
+  <!-- Neuer Schreibbereich mit dreischichtiger Struktur -->
   <div class="input-frame">
-    <div id="writeArea" contenteditable="true" data-translate-placeholder="writePlaceholder" placeholder="Hier beginnen zu schreiben..."></div>
+    <!-- Hintergrund-Ebene -->
+    <div class="background-layer"></div>
+    <!-- Effekt-Ebene (diese Schicht kannst du per JS dynamisch belegen) -->
+    <div class="effect-layer" id="effectLayer"></div>
+    <!-- Texteingabe-Ebene -->
+    <div id="writeArea" class="text-input-layer" contenteditable="true" data-translate-placeholder="writePlaceholder" placeholder="Hier beginnen zu schreiben..."></div>
   </div>
   
   <!-- Achievement-Popup -->
@@ -1896,8 +1880,7 @@ const sentenceLibraries_sw = {
         <p>${currentLanguage === 'de' ? "Fehler:" : (currentLanguage === 'en' ? "Errors:" : "Makosa:")} ${errorCount}</p>
         <p>${currentLanguage === 'de' ? "Session Score:" : (currentLanguage === 'en' ? "Session Score:" : "Alama za Muda:")} ${sessionScore}</p>
         <p>${currentLanguage === 'de' ? "Bonus Wissenspunkte:" : (currentLanguage === 'en' ? "Bonus Knowledge Points:" : "Alama za Ziada: ")} ${bonusWissenspunkte}</p>
-        <button onclick="closeResultsPopup()">${currentLanguage === 'de' ? "Schließen" : (currentLanguage === 'en' ? "Close" : "Funga")}</button>
-      `;
+        <button onclick="closeResultsPopup()">${currentLanguage === 'de' ? "Schließen" : (currentLanguage === 'en' ? "Close" : "Funga")}</button>`;
       endSessionPopup.innerHTML = resultHTML;
       endSessionPopup.style.display = "block";
     }
@@ -2179,6 +2162,7 @@ const sentenceLibraries_sw = {
     const modeSelect = document.getElementById("modeSelect");
     const timeSelect = document.getElementById("timeSelect");
     const difficultySelect = document.getElementById("difficultySelect");
+    // Beachte: Jetzt ist writeArea die Texteingabe-Ebene in unserem Layer-System
     const writeArea = document.getElementById("writeArea");
     const timerDisplay = document.getElementById("timer");
     const wordCountDisplay = document.getElementById("wordCount");
@@ -2201,10 +2185,10 @@ const sentenceLibraries_sw = {
     let sessionAchievements = {};
     let copyAchieved = {};
     const prompts = [
-      "Es war einmal ein geheimnisvoller Wald, in dem die Zeit stillzustehen schien...",
-      "Als die Sonne hinter den Bergen verschwand, begann ein Abenteuer, das alles verändern sollte...",
-      "Plötzlich ertönte ein seltsames Geräusch, und niemand wusste, was als Nächstes passieren würde...",
-      "In einer Stadt, in der jeder Bewohner ein Geheimnis hatte, wurde ein unscheinbarer Brief gefunden..."
+      "Es war einmal ein geheimnisvoller Wald, in dem die Zeit stillzustehen schien.",
+      "Als die Sonne hinter den Bergen verschwand, begann ein Abenteuer, das alles verändern sollte.",
+      "Plötzlich ertönte ein seltsames Geräusch, und niemand wusste, was als Nächstes passieren würde.",
+      "In einer Stadt, in der jeder Bewohner ein Geheimnis hatte, wurde ein unscheinbarer Brief gefunden."
     ];
     const warningSound = new Audio('warning.mp3');
     
@@ -2562,6 +2546,7 @@ const sentenceLibraries_sw = {
       if (boss.currentHealth <= 0 && !bossDefeated) { bossDefeated = true; winGame(); }
     }
     
+    // WIN GAME: Hier wird der Effekt beim Sieg getriggert
     function winGame() {
       let bonusXP = 50;
       let bonusWissenspunkte = 50;
@@ -2577,6 +2562,8 @@ const sentenceLibraries_sw = {
                                    <button onclick="closeResultsPopup()">${currentLanguage === 'de' ? "Schließen" : (currentLanguage === 'en' ? "Close" : "Funga")}</button>`;
       endSessionPopup.style.display = "block";
       updateProfileUI();
+      // Effekt beim Sieg auslösen – hier der zufällige Effekt aus der Bibliothek
+      randomEffect();
     }
     
     function generateAchievements() {
@@ -2643,6 +2630,382 @@ const sentenceLibraries_sw = {
     renderInventory();
     updateLeaderboard();
     updateProfileUI();
+
+ /* ---------------------------
+   Effekte im Texteingabefeld (Spielfeld) – gemeinsamer Container: effectLayer
+--------------------------- */
+
+// Neuer Horror Fog Effekt (Canvas-Partikel) – ersetzt den alten Nebel-Effekt
+function horrorFogEffect() {
+  const effectLayer = document.getElementById('effectLayer');
+  const canvas = document.createElement("canvas");
+  canvas.width = effectLayer.clientWidth;
+  canvas.height = effectLayer.clientHeight;
+  canvas.style.position = "absolute";
+  canvas.style.top = "0";
+  canvas.style.left = "0";
+  effectLayer.appendChild(canvas);
+  
+  const ctx = canvas.getContext("2d");
+  let particles = [];
+  for (let i = 0; i < 30; i++) {
+    particles.push({
+      x: Math.random() * canvas.width,
+      y: canvas.height + Math.random() * 50,
+      size: 20 + Math.random() * 30,
+      opacity: 0.1 + Math.random() * 0.4,
+      vy: -0.5 - Math.random() * 0.5
+    });
+  }
+  function drawFog() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(p => {
+      ctx.fillStyle = `rgba(200,200,200,${p.opacity.toFixed(2)})`;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+      ctx.fill();
+      p.y += p.vy;
+      if (p.y + p.size < 0) { p.y = canvas.height + p.size; }
+    });
+    requestAnimationFrame(drawFog);
+  }
+  drawFog();
+  setTimeout(() => { effectLayer.removeChild(canvas); }, 5000);
+}
+
+// Angepasster Fantasy Float Effekt – alle Elemente werden in effectLayer eingefügt
+function fantasyFloatEffect() {
+  const effectLayer = document.getElementById('effectLayer');
+  let floatDiv = document.createElement("div");
+  floatDiv.style.position = "absolute";
+  floatDiv.style.top = "50%";
+  floatDiv.style.left = "50%";
+  floatDiv.style.transform = "translate(-50%, -50%)";
+  floatDiv.innerHTML = "<img src='https://i.imgur.com/At7GxhG.png' style='width:50px; animation: fantasyFloat 3s ease-in-out infinite;'>";
+  effectLayer.appendChild(floatDiv);
+  
+  // Falls der Keyframe noch nicht definiert ist, fügen wir ihn einmalig hinzu:
+  if (!document.getElementById("fantasyFloatKeyframes")) {
+    let style = document.createElement('style');
+    style.id = "fantasyFloatKeyframes";
+    style.innerHTML = `
+      @keyframes fantasyFloat {
+        0% { transform: translateY(0); }
+        50% { transform: translateY(-15px); }
+        100% { transform: translateY(0); }
+      }
+    `;
+    document.head.appendChild(style);
+  }
+  
+  setTimeout(() => { effectLayer.removeChild(floatDiv); }, 5000);
+}
+
+// Angepasster Energy Lightning Effekt (Canvas) – arbeitet im effectLayer
+function energyLightningEffect() {
+  const effectLayer = document.getElementById('effectLayer');
+  const canvas = document.createElement("canvas");
+  canvas.width = effectLayer.clientWidth;
+  canvas.height = effectLayer.clientHeight;
+  canvas.style.position = "absolute";
+  canvas.style.top = "0";
+  canvas.style.left = "0";
+  effectLayer.appendChild(canvas);
+  
+  const ctx = canvas.getContext("2d");
+  function drawLightning() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    if (Math.random() > 0.5) {
+      ctx.strokeStyle = "#ffff88";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(canvas.width/2, 0);
+      const segments = 10;
+      for (let i = 1; i < segments; i++) {
+        let t = i / segments;
+        let cx = canvas.width/2 + (Math.random() - 0.5) * 20;
+        let cy = canvas.height * t + (Math.random() - 0.5) * 20;
+        ctx.lineTo(cx, cy);
+      }
+      ctx.lineTo(canvas.width/2, canvas.height);
+      ctx.stroke();
+    }
+    requestAnimationFrame(drawLightning);
+  }
+  drawLightning();
+  setTimeout(() => { effectLayer.removeChild(canvas); }, 5000);
+}
+
+// Angepasster Particle Firework Effekt (Canvas) – nutzt effectLayer
+function particleFireworkEffect() {
+  const effectLayer = document.getElementById('effectLayer');
+  const canvas = document.createElement("canvas");
+  canvas.width = effectLayer.clientWidth;
+  canvas.height = effectLayer.clientHeight;
+  canvas.style.position = "absolute";
+  canvas.style.top = "0";
+  canvas.style.left = "0";
+  effectLayer.appendChild(canvas);
+  
+  const ctx = canvas.getContext('2d');
+  let particles = [];
+  function explode(x, y) {
+    const colors = ['#ff0', '#0f0', '#00f', '#f0f'];
+    for (let i = 0; i < 50; i++) {
+      particles.push({
+        x: x,
+        y: y,
+        vx: Math.cos((2 * Math.PI / 50) * i) * (2 + Math.random() * 2),
+        vy: Math.sin((2 * Math.PI / 50) * i) * (2 + Math.random() * 2),
+        color: colors[Math.floor(Math.random() * colors.length)],
+        life: 60
+      });
+    }
+  }
+  // Explosion im Zentrum des effectLayer
+  explode(canvas.width/2, canvas.height/2);
+  function animFireworks() {
+    ctx.fillStyle = 'rgba(0,0,0,0.2)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    particles.forEach((p, i) => {
+      ctx.fillStyle = p.color;
+      ctx.fillRect(p.x, p.y, 3, 3);
+      p.x += p.vx;
+      p.y += p.vy;
+      p.vy += 0.05;
+      p.life--;
+      if (p.life <= 0) { particles.splice(i, 1); }
+    });
+    requestAnimationFrame(animFireworks);
+  }
+  animFireworks();
+  setTimeout(() => { effectLayer.removeChild(canvas); }, 5000);
+}
+
+function particleConfettiEffect() {
+      const canvas = document.getElementById('particleCanvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      let confetti = [];
+      const colors = ['#e74c3c','#f1c40f','#2ecc71','#3498db','#9b59b6'];
+      for (let i = 0; i < 100; i++) {
+        confetti.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height - canvas.height,
+          size: 5 + Math.random() * 5,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          rotation: Math.random() * 360,
+          speed: 1 + Math.random() * 2
+        });
+      }
+      function drawConfetti() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        confetti.forEach(p => {
+          ctx.fillStyle = p.color;
+          ctx.save();
+          ctx.translate(p.x, p.y);
+          ctx.rotate(p.rotation * Math.PI / 180);
+          ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+          ctx.restore();
+          p.y += p.speed;
+          p.rotation += p.speed;
+          if (p.y > canvas.height) p.y = -10;
+        });
+        requestAnimationFrame(drawConfetti);
+      }
+      drawConfetti();
+    }
+
+
+/* ---------------------------
+   Cooldown-Logik & Zufallstrigger für Effekte
+--------------------------- */
+
+let lastEffectTime = 0;
+const effectCooldown = 5000; // 5 Sekunden Cooldown
+
+function triggerEffect(effectFunc) {
+  const now = Date.now();
+  if (now - lastEffectTime < effectCooldown) return;
+  lastEffectTime = now;
+  effectFunc();
+}
+
+function triggerRandomEffect() {
+  const effects = [horrorFogEffect, fantasyFloatEffect, energyLightningEffect, particleFireworkEffect, particleConfettiEffect];
+  if (effects.length === 0) {
+    triggerEffect(horrorFogEffect);
+    return;
+  }
+  const randomEffect = effects[Math.floor(Math.random() * effects.length)];
+  triggerEffect(randomEffect);
+}
+
+/* ---------------------------
+   WIN GAME – Effekt beim Sieg auslösen
+--------------------------- */
+
+function winGame() {
+  let bonusXP = 50;
+  let bonusWissenspunkte = 50;
+  showAchievement(
+    currentLanguage === 'de'
+      ? "Boss besiegt! Bonus XP und Wissenspunkte erhalten!"
+      : currentLanguage === 'en'
+      ? "Boss defeated! Bonus XP and points awarded!"
+      : "Boss imefanywa! Pokea bonus XP na alama!"
+  );
+  userStats.xp += bonusXP;
+  userStats.wissenspunkte += bonusWissenspunkte;
+  unlockReward("🏆 Boss-Besieger Emoji");
+  clearInterval(timerInterval);
+  clearTimeout(idleTimeout);
+  endSessionPopup.innerHTML = `
+    <h2>${
+      currentLanguage === 'de'
+        ? "Gewonnen! Boss besiegt!"
+        : currentLanguage === 'en'
+        ? "You Won! Boss Defeated!"
+        : "Umeshinda! Boss imeshindwa!"
+    }</h2>
+    <p>${
+      currentLanguage === 'de'
+        ? "Bonus XP:"
+        : currentLanguage === 'en'
+        ? "Bonus XP:"
+        : "Bonus XP:"
+    } ${bonusXP}</p>
+    <p>${
+      currentLanguage === 'de'
+        ? "Bonus Wissenspunkte:"
+        : currentLanguage === 'en'
+        ? "Bonus Points:"
+        : "Bonus Alama:"
+    } ${bonusWissenspunkte}</p>
+    <button onclick="closeResultsPopup()">${
+      currentLanguage === 'de'
+        ? "Schließen"
+        : currentLanguage === 'en'
+        ? "Close"
+        : "Funga"
+    }</button>
+  `;
+  endSessionPopup.style.display = "block";
+  updateProfileUI();
+  // Zufälligen Effekt aus der Bibliothek auslösen
+  triggerRandomEffect();
+}
+
+/* ---------------------------
+   Zusätzliche Funktionen und Event Listener
+--------------------------- */
+
+// Beispiel für die Erstellung von Achievements
+function generateAchievements() {
+  sessionAchievements = {};
+  let threshold = 25;
+  while (threshold <= window.baseTarget) {
+    sessionAchievements[threshold] = { 
+      achieved: false, 
+      category: (threshold < 100 ? "Freewrite" : threshold < 200 ? "Copy" : "Allgemein") 
+    };
+    threshold += 25;
+  }
+  updateAchievementsTable();
+}
+
+function updateAchievementsTable() {
+  const tbody = document.getElementById("achievementBody");
+  tbody.innerHTML = "";
+  const tier = (difficultySelect.value === "easy")
+    ? "Bronze"
+    : (difficultySelect.value === "normal")
+    ? "Silber"
+    : "Gold";
+  const timeMode = parseInt(timeSelect.value);
+  const timeLabel = (timeMode === 1) ? "Minute" : "Minuten";
+  for (let threshold in sessionAchievements) {
+    const ach = sessionAchievements[threshold];
+    const row = document.createElement("tr");
+    row.setAttribute("data-category", ach.category);
+    row.innerHTML = `<td>${timeMode} ${timeLabel}: ${tier} ${threshold}+ Wörter</td>
+                     <td>Mindestens ${threshold} Wörter in ${timeMode} ${timeLabel}</td>
+                     <td id="achieve${threshold}">${ach.achieved ? "Erreicht" : "Nicht erreicht"}</td>`;
+    tbody.appendChild(row);
+  }
+}
+
+// Beispiel für den Keydown-Event im Texteingabefeld
+writeArea.addEventListener("keydown", (e) => {
+  if (!sessionActive && waitingForStart && e.key === "Enter") {
+    e.preventDefault();
+    waitingForStart = false;
+    writeArea.innerText = "";
+    startSession();
+    return;
+  }
+  if (!sessionActive) return;
+  if (modeSelect.value === "copy" && e.key === "Enter") {
+    e.preventDefault();
+    checkCopySentence();
+    return;
+  }
+  resetIdleTimer();
+  updateWordCount();
+  keyPressCount++;
+  const currentTime = Date.now();
+  if (currentTime - lastKeyTime < hotStreakTimeThreshold) { 
+    hotStreakCounter++; 
+  } else { 
+    hotStreakCounter = 1; 
+  }
+  lastKeyTime = currentTime;
+  if (hotStreakCounter >= hotStreakRequired) { 
+    showHotStreakIndicator(); 
+  }
+});
+
+// Event Listener für Theme- und Font-Auswahl
+document.getElementById("themeSelect").addEventListener("change", function() {
+  document.body.className = "";
+  document.body.classList.add(this.value);
+});
+
+document.getElementById("fontSelect").addEventListener("change", function() {
+  document.body.style.fontFamily = this.value;
+});
+
+// Weitere Render-Funktionen (Shop, Inventory, Leaderboard, Profil)
+renderShop();
+renderInventory();
+updateLeaderboard();
+updateProfileUI();
+
+// Zusätzliche CSS-Keyframes für neue Effekte
+const additionalKeyframes = document.createElement('style');
+additionalKeyframes.innerHTML = `
+  @keyframes fogAnimation {
+    0% { transform: translateY(-100%); opacity: 0.5; }
+    50% { transform: translateY(0%); opacity: 0.8; }
+    100% { transform: translateY(100%); opacity: 0.5; }
+  }
+  @keyframes rainFall {
+    to { transform: translateY(120px); opacity: 0; }
+  }
+  .rain .drop {
+    position: absolute;
+    top: -20px;
+    width: 2px;
+    height: 10px;
+    background: #66f;
+    animation: rainFall 0.5s linear infinite;
+  }
+  .rain .drop:nth-child(1) { left: 20px; animation-delay: 0s; }
+  .rain .drop:nth-child(2) { left: 50px; animation-delay: 0.2s; }
+  .rain .drop:nth-child(3) { left: 80px; animation-delay: 0.4s; }
+`;
+document.head.appendChild(additionalKeyframes);
+
   </script>
 </body>
 </html>
